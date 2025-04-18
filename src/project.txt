@@ -1,0 +1,49 @@
+travel-app/
+├── public/
+│   ├── index.html
+│   └── favicon.ico
+├── src/
+│   ├── components/
+│   │   ├── auth/
+│   │   │   ├── Login.js           # 로그인 컴포넌트
+│   │   │   └── Register.js        # 회원가입 컴포넌트
+│   │   ├── common/
+│   │   │   ├── Navbar.js          # 네비게이션 바
+│   │   │   └── Footer.js          # 푸터
+│   │   ├── itinerary/
+│   │   │   ├── TripForm.js        # 여행 일정 생성/편집 폼
+│   │   │   └── MapComponent.js    # Google Maps 지도 컴포넌트
+│   │   ├── expense/
+│   │   │   ├── ExpenseForm.js     # 경비 입력 폼
+│   │   │   └── CurrencyConverter.js # 환율 변환기
+│   │   ├── community/
+│   │   │   ├── PostList.js        # 게시글 목록
+│   │   │   └── PostDetail.js      # 게시글 상세
+│   │   ├── checklist/
+│   │   │   └── ChecklistComponent.js # 준비물 체크리스트
+│   │   └── profile/
+│   │       └── ProfileComponent.js # 프로필 컴포넌트
+│   ├── pages/
+│   │   ├── HomePage.js            # 홈 페이지
+│   │   ├── AuthPage.js            # 로그인/회원가입 페이지
+│   │   ├── TripPage.js            # 여행 일정 페이지
+│   │   ├── ExpensePage.js         # 경비 계산 페이지
+│   │   ├── CommunityPage.js       # 커뮤니티 페이지
+│   │   ├── ChecklistPage.js       # 체크리스트 페이지
+│   │   └── ProfilePage.js         # 마이 페이지
+│   ├── api/
+│   │   ├── auth.js                # 인증 API 요청
+│   │   ├── trips.js               # 여행 일정 API 요청
+│   │   ├── expenses.js            # 경비 API 요청
+│   │   ├── currency.js            # 환율 API 요청
+│   │   ├── posts.js               # 게시글 API 요청
+│   │   └── users.js               # 사용자 정보 API 요청
+│   ├── context/
+│   │   └── AuthContext.js         # 인증 상태 관리
+│   ├── utils/
+│   │   ├── api.js                 # API 공통 함수 
+│   │   └── helpers.js             # 유틸리티 함수
+│   ├── App.js                     # 앱 컴포넌트 및 라우팅
+│   └── index.js                   # 진입점
+├── package.json                   # 의존성 및 스크립트
+└── README.md                      # 프로젝트 설명
