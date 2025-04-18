@@ -1,0 +1,189 @@
+.SignUp-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 20px;
+  }
+  
+  .SignUp-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 100%;
+    max-width: 450px;
+  }
+  
+  .SignUp-card h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+  }
+  
+  .SignUp-form {
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #555;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .form-group input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+  }
+  
+  .input-error {
+    color: #e74c3c;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  
+  .terms-agreement {
+    margin: 20px 0;
+  }
+  
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .checkbox-label input {
+    margin-right: 10px;
+  }
+  
+  .checkbox-label span {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .SignUp-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .SignUp-button:hover {
+    background-color: #2980b9;
+  }
+  
+  .SignUp-button:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+  }
+  
+  .login-link {
+    text-align: center;
+    margin: 20px 0;
+    color: #555;
+  }
+  
+  .login-link a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .login-link a:hover {
+    text-decoration: underline;
+  }
+  
+  .error-message {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    text-align: center;
+  }
+  
+  .social-SignUp {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .social-SignUp p {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 15px;
+    position: relative;
+  }
+  
+  .social-SignUp p::before,
+  .social-SignUp p::after {
+    content: "";
+    display: inline-block;
+    width: 25%;
+    height: 1px;
+    background-color: #ddd;
+    vertical-align: middle;
+    margin: 0 10px;
+  }
+  
+  .social-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .social-button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.3s;
+  }
+  
+  .social-button:hover {
+    opacity: 0.9;
+  }
+  
+  .social-button.google {
+    background-color: #fff;
+    color: #555;
+    border: 1px solid #ddd;
+  }
+  
+  .social-button.kakao {
+    background-color: #FEE500;
+    color: #3C1E1E;
+  }
+  
+  /* 반응형 스타일 */
+  @media (max-width: 480px) {
+    .SignUp-card {
+      padding: 20px;
+    }
+    
+    .social-SignUp p::before,
+    .social-SignUp p::after {
+      width: 20%;
+    }
+  }

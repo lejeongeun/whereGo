@@ -1,38 +1,179 @@
 .App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* HomePage.css */
+.home-container {
+  padding-bottom: 40px;
+}
+
+.hero-section {
+  background-color: #3498db;
+  color: white;
+  padding: 80px 20px;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.hero-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #fff;
+  color: #3498db;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.btn-large {
+  padding: 15px 30px;
+  font-size: 1.1rem;
+}
+
+.features-section {
+  padding: 40px 20px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.features-section h2 {
+  margin-bottom: 40px;
+  font-size: 2rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background-color: #f8f9fa;
+  padding: 30px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.feature-card i {
+  font-size: 2.5rem;
+  color: #3498db;
+  margin-bottom: 15px;
+  display: inline-block;
+}
+
+.feature-card h3 {
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+}
+
+.cta-section {
+  background-color: #f0f0f0;
+  padding: 60px 20px;
+  text-align: center;
+  margin: 40px 0;
+}
+
+.cta-section h2 {
+  margin-bottom: 15px;
+  font-size: 2rem;
+}
+
+.cta-section p {
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+}
+
+.popular-destinations {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.popular-destinations h2 {
+  margin-bottom: 40px;
+  font-size: 2rem;
+}
+
+.destinations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.destination-card {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.destination-card:hover {
+  transform: translateY(-5px);
+}
+
+.destination-image {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+}
+
+.destination-card h3 {
+  padding: 15px;
+  background-color: white;
+  margin: 0;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2rem;
   }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+  
+  .hero-buttons {
+    flex-direction: column;
+    gap: 10px;
   }
-  to {
-    transform: rotate(360deg);
+  
+  .features-grid, 
+  .destinations-grid {
+    grid-template-columns: 1fr;
   }
 }
