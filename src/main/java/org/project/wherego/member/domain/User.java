@@ -4,6 +4,8 @@ package org.project.wherego.member.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+
 @Entity
 @Getter
 @Setter
@@ -25,8 +27,7 @@ public class User {
     @Column(nullable = false)
     private String nickname; // 닉네임
 
-    // 역할 (USER, ADMIN)
-    @Column(nullable = false)
-    private String role;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createAd = new Date();
 
 }
