@@ -1,5 +1,6 @@
 package org.project.wherego.member.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.project.wherego.member.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -8,13 +9,10 @@ import org.project.wherego.member.service.MemberService;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class MemberController {
-
-    @Autowired
-    private MemberService memberService;
-
-    @Autowired
-    PasswordEncoder pEncoder;
+    private final MemberService memberService;
+    private final PasswordEncoder pEncoder;
 
     @PostMapping("/login")
     public String login(@RequestBody UserDto userDto) {

@@ -1,5 +1,6 @@
 package org.project.wherego.member.service;
 
+import lombok.RequiredArgsConstructor;
 import org.project.wherego.member.domain.User;
 import org.project.wherego.member.dto.UserDto;
 import org.project.wherego.member.repository.MemberRepository;
@@ -9,10 +10,9 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class MemberService {
-
-    @Autowired
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     public UserDto login(UserDto userDto) {
         User user = new User();
