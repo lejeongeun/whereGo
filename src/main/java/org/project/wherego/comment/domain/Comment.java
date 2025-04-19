@@ -1,4 +1,4 @@
-package org.project.wherego.board.domain;
+package org.project.wherego.comment.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,18 +9,18 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Board {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
 
     @Column(nullable = false)
-    private Long userId; // 작성자 ID
+    private Long boardId; // 게시글 ID
 
     @Column(nullable = false)
-    private String title; // 제목
+    private String email;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String content; // 내용
+    @Column(nullable = false)
+    private String content; // 댓글 내용
 }

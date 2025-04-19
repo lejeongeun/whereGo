@@ -1,9 +1,7 @@
-package org.project.wherego.comment;
+package org.project.wherego.checklist.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.catalina.User;
-import org.project.wherego.board.domain.Board;
 
 @Entity
 @Getter
@@ -11,18 +9,17 @@ import org.project.wherego.board.domain.Board;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Comment {
-
+public class Checklist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
 
     @Column(nullable = false)
-    private Long boardId; // 게시글 ID
+    private String itemName; // 항목 이름
 
     @Column(nullable = false)
-    private Long userId; // 작성자 ID
+    private Boolean isChecked = false; // 체크 여부
 
     @Column(nullable = false)
-    private String content; // 댓글 내용
+    private Long userId;
 }
