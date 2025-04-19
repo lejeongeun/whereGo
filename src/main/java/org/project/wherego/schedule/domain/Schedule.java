@@ -2,7 +2,6 @@ package org.project.wherego.schedule.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -26,6 +25,7 @@ public class Schedule {
     private String description; // 일정 설명
 
     @Column(nullable = false)
+
     private LocalDateTime startDate; // 시작 날짜
 
     @Column(nullable = false)
