@@ -3,10 +3,14 @@ package org.project.wherego.community.service;
 import lombok.RequiredArgsConstructor;
 import org.project.wherego.community.domain.Community;
 import org.project.wherego.community.dto.CommunityRequestDto;
+import org.project.wherego.community.dto.CommunityResponseDto;
 import org.project.wherego.community.repository.CommunityRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,4 +30,20 @@ public class CommunityService {
         communityRepository.save(community);
 
     }
+
+    public List<CommunityResponseDto> getAllPosts(){
+        List<Community> communities = communityRepository.findAll();
+
+        return communities.stream()
+                .map(community -> CommunityResponseDto.builder()
+                        .id(community.getId())
+                        .title(community.getTitle())
+                        .content(community.getContent())
+                        .userId(community.getUserId())
+                        .createdAt(community.getCreatedAt())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+
 }
