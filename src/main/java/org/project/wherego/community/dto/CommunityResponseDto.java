@@ -2,7 +2,6 @@ package org.project.wherego.community.dto;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -13,5 +12,4 @@ public class CommunityResponseDto {
     private String title;
     private String content;
     private Long userId;
-    private LocalDateTime createdAt;
 }

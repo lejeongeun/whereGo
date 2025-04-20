@@ -2,7 +2,6 @@ package org.project.wherego.community.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -10,7 +9,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Community {
+public class Community extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,8 +26,6 @@ public class Community {
     private Long userId; // Member의 PK
 
     @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now(); // 작성일자
-
-    @Column(nullable = false)
     private Boolean isDeleted = false; // 삭제 여부
+
 }
