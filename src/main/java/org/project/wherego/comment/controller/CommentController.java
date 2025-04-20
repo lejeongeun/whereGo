@@ -21,8 +21,15 @@ public class CommentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> commentEdit(@RequestBody CommentRequestDto requestDto){
+    public ResponseEntity<String> commentEdit(@PathVariable Long id, @Valid @RequestBody CommentRequestDto requestDto){
+        commentService.commentEdit(id, requestDto.getContent());
         return ResponseEntity.ok("댓글 수정 완료");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> commentDelete(@PathVariable Long id){
+        commentService.commentDelete(id);
+        return ResponseEntity.ok("댓글 삭제 완료");
     }
 
 

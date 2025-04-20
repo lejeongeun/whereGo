@@ -1,6 +1,7 @@
 package org.project.wherego.community.domain;
 import jakarta.persistence.*;
 import lombok.*;
+import org.project.wherego.common.domain.BaseEntity;
 
 
 @Entity
@@ -9,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Community extends BaseEntity{
+public class Community extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

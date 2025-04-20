@@ -2,6 +2,7 @@ package org.project.wherego.comment.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.project.wherego.common.domain.BaseEntity;
 
 @Entity
 @Getter
@@ -9,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Comment {
+public class Comment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

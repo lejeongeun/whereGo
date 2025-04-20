@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class CommentRequestDto {
+    private Long boardId;
     private String email;
     private String content; // 댓글 내용
 }

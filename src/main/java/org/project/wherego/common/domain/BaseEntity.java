@@ -1,4 +1,4 @@
-package org.project.wherego.community.domain;
+package org.project.wherego.common.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
