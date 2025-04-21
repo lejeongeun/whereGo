@@ -12,7 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,7 +21,6 @@ import java.util.ArrayList;
 @RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
     // 회원가입
@@ -36,7 +34,6 @@ public class MemberService implements UserDetailsService {
                 .email(signupRequest.getEmail())
                 .password((signupRequest.getPassword()))
                 .nickname((signupRequest.getNickname()))
-                .createAd((signupRequest.getCreateAd()))
                 .build();
 
         User savedUser = memberRepository.save(user);
@@ -45,7 +42,6 @@ public class MemberService implements UserDetailsService {
                 .email(savedUser.getEmail())
                 .password(savedUser.getPassword())
                 .nickname(savedUser.getNickname())
-                .createAd(savedUser.getCreateAd())
                 .build();
 
         return result;

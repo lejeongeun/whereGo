@@ -19,12 +19,10 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-import java.util.logging.Logger;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private static final Logger logger = Logger.getLogger(SecurityConfig.class.getName());
     private final MemberService memberService;
 
     @Bean

@@ -56,6 +56,4 @@ public class CommentService {
                 .orElseThrow(()-> new IllegalArgumentException("댓글이 존재하지 않습니다."));
         commentRepository.delete(comment);
     }
-
-
 }
