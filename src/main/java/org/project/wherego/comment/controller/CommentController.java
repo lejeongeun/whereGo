@@ -7,6 +7,9 @@ import org.project.wherego.comment.service.CommentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/community/comment")
@@ -18,6 +21,13 @@ public class CommentController {
     public ResponseEntity<String> commentCreate(@Valid @RequestBody CommentRequestDto requestDto){
         commentService.commentCreate(requestDto);
         return ResponseEntity.ok("댓글 생성 완료");
+    }
+
+    @GetMapping("/allList")
+    public ResponseEntity<List<CommentRequestDto>> allCommentList(){
+        List<CommentRequestDto> commentList= commentService.allCommentList();
+
+        return ResponseEntity.ok(commentList);
     }
 
     @PutMapping("/{id}")

@@ -7,6 +7,9 @@ import org.project.wherego.comment.repository.CommentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -23,6 +26,19 @@ public class CommentService {
 
         commentRepository.save(newComment);
     }
+    // 댓글 조회
+    @Transactional
+    public List<CommentRequestDto> allCommentList(){
+        List<Comment> commentList = commentRepository.findAll();
+
+        return commentList.stream().map(comment -> CommentRequestDto.builder()
+                .boardId(comment.getBoardId())
+                .email(comment.getEmail())
+                .content(comment.getContent())
+                .build()
+        ).collect(Collectors.toList());
+    }
+
     // 댓글 수정
     @Transactional
     public void commentEdit(Long id, String content){
@@ -38,9 +54,7 @@ public class CommentService {
     public void commentDelete(Long id){
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(()-> new IllegalArgumentException("댓글이 존재하지 않습니다."));
-
         commentRepository.delete(comment);
-
     }
 
 
