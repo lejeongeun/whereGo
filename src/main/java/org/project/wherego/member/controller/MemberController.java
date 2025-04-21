@@ -1,7 +1,6 @@
 package org.project.wherego.member.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.project.wherego.member.dto.LoginRequest;
 import org.project.wherego.member.dto.SignupRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;

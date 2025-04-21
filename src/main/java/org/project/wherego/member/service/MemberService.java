@@ -2,7 +2,6 @@ package org.project.wherego.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.project.wherego.member.domain.User;
-import org.project.wherego.member.dto.LoginRequest;
 import org.project.wherego.member.dto.SignupRequest;
 import org.project.wherego.member.repository.MemberRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
