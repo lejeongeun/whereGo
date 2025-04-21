@@ -21,5 +21,5 @@ public class Checklist {
     private Boolean isChecked = false; // 체크 여부
 
     @Column(nullable = false)
-    private Long userId;
+    private Long userId; // user id
 }

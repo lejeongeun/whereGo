@@ -13,7 +13,6 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
@@ -28,6 +27,6 @@ public class User {
     private String nickname; // 닉네임
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createAd = new Date();
+    private Date createAd = new Date(); // 생성일
 
 }

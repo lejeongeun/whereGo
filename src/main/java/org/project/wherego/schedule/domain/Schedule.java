@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class Schedule {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
@@ -25,7 +24,6 @@ public class Schedule {
     private String description; // 일정 설명
 
     @Column(nullable = false)
-
     private LocalDateTime startDate; // 시작 날짜
 
     @Column(nullable = false)

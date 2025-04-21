@@ -14,7 +14,7 @@ public class Community extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // PK
+    private Long id; // PK키
 
     @Column(nullable = false)
     private String title; // 게시글 제목

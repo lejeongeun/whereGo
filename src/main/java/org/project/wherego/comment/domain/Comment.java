@@ -11,7 +11,6 @@ import org.project.wherego.common.domain.BaseEntity;
 @AllArgsConstructor
 @Builder
 public class Comment extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
@@ -20,7 +19,7 @@ public class Comment extends BaseEntity {
     private Long boardId; // 게시글 ID
 
     @Column(nullable = false)
-    private String email;
+    private String email; // 이메일
 
     @Column(nullable = false)
     private String content; // 댓글 내용
