@@ -1,32 +1,25 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './HomePage.css';
 
 function HomePage() {
+  const navigate = useNavigate();
+  
   return (
     <div className="home-page">
       <div className="sidebar">
         <div className="logo">어디GO</div>
         <ul className="menu">
-          <li>일정리스트</li>
-          <li>나라별 날씨</li>
-          <li>나라별 환율</li>
-          <li>체크리스트</li>
-          <li>커뮤니티</li>
+          <li><Link to="/schedule">일정리스트</Link></li>
+          <li><Link to="/weather">나라별 날씨</Link></li>
+          <li><Link to="/exchange">나라별 환율</Link></li>
+          <li><Link to="/checklist">체크리스트</Link></li>
+          <li><Link to="/community">커뮤니티</Link></li>
         </ul>
       </div>
 
-      <div className="main-content">
-        <div className="header">
-          <div className="user-links">
-            <span>로그인</span>
-            <span>회원가입</span>
-          </div>
-        </div>
-
         <div className="content-container">
           <div className="featured-image-container">
-            {/* 파리 에펠탑 이미지 - 실제 앱에서는 저작권 문제가 없는 이미지로 교체하세요 */}
             <img src="/resources/img/effel.png" alt="파리 에펠탑" className="featured-image" />
           </div>
           
@@ -34,22 +27,22 @@ function HomePage() {
             <h2>인기 여행지</h2>
             <div className="destinations-grid">
               <div className="destination-card">
-                <img src="/resources/img/뽜리.jpg" alt="파리 에펠탑" className="featured-image" />
+                <img src="/resources/img/뽜리.jpg" alt="파리" className="featured-image" />
                 <h3>파리</h3>
                 <p>프랑스의 아름다운 수도</p>
               </div>
               <div className="destination-card">
-                <img src="/resources/img/도쿄.jpg" alt="파리 에펠탑" className="featured-image" />
+                <img src="/resources/img/도쿄.jpg" alt="도쿄" className="featured-image" />
                 <h3>도쿄</h3>
                 <p>일본의 활기찬 도시</p>
               </div>
               <div className="destination-card">
-                <img src="/resources/img/뉴욕.jpg" alt="파리 에펠탑" className="featured-image" />
+                <img src="/resources/img/뉴욕.jpg" alt="뉴욕" className="featured-image" />
                 <h3>뉴욕</h3>
                 <p>잠들지 않는 도시</p>
               </div>
               <div className="destination-card">
-                <img src="/resources/img/로마.jpg" alt="파리 에펠탑" className="featured-image" />
+                <img src="/resources/img/로마.jpg" alt="로마" className="featured-image" />
                 <h3>로마</h3>
                 <p>이탈리아의 역사적인 도시</p>
               </div>
@@ -78,7 +71,7 @@ function HomePage() {
           </div>
         </div>
       </div>
-    </div>
+
   );
 }
 

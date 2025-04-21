@@ -137,6 +137,10 @@
     }
     
     .social-icons {
+      font-size: 18px; 
+      font-weight: bold;
+      margin-bottom: 30px;
+      padding: 8px 0;
       justify-content: center;
     }
     
@@ -144,4 +148,6 @@
       max-width: 300px;
       margin: 15px auto 0;
     }
+
   }
+  

@@ -44,31 +44,6 @@ function Navbar() {
         </div>
 
         <ul className={menuOpen ? 'nav-menu active' : 'nav-menu'}>
-          <li className="nav-item">
-            <Link to="/" className="nav-link" onClick={() => setMenuOpen(false)}>
-              일정리스트
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/weather" className="nav-link" onClick={() => setMenuOpen(false)}>
-              나라별 날씨
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/currency" className="nav-link" onClick={() => setMenuOpen(false)}>
-              나라별 환율
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/checklist" className="nav-link" onClick={() => setMenuOpen(false)}>
-              체크리스트
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/community" className="nav-link" onClick={() => setMenuOpen(false)}>
-              커뮤니티
-            </Link>
-          </li>
           
           {isLoggedIn ? (
             <>
@@ -84,11 +59,22 @@ function Navbar() {
               </li>
             </>
           ) : (
-            <li className="nav-item">
-              <Link to="/auth" className="nav-link login-btn" onClick={() => setMenuOpen(false)}>
+            <li className="nav-item user-links-container">
+            <div className="user-links">
+              <span onClick={() => {
+                navigate('/login');
+                setMenuOpen(false);
+              }} style={{ cursor: 'pointer' }}>
                 로그인
-              </Link>
-            </li>
+              </span> &emsp;
+              <span onClick={() => {
+                navigate('/signup');
+                setMenuOpen(false);
+              }} style={{ cursor: 'pointer' }}>
+                회원가입
+              </span>
+            </div>
+          </li>
           )}
         </ul>
       </div>

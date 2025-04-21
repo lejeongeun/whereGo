@@ -71,7 +71,7 @@ function SignUp() {
     
     try {
       // 실제 구현에서는 여기서 API 호출
-      // 예시: const response = await SignUpUser(formData);
+      // ex: const response = await SignUpUser(formData);
       
       // 회원가입 성공 처리 (임시 구현)
       setTimeout(() => {
