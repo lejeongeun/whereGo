@@ -13,9 +13,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
+import java.util.logging.Logger;
+
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private static final Logger logger = Logger.getLogger(SecurityConfig.class.getName());
     private final MemberService memberService;
 
     @Bean
@@ -32,6 +35,9 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginProcessingUrl("/api/login") // REST API 로그인 엔드포인트
                         .successHandler((request, response, authentication) -> {
+                            String email = authentication.getName();
+                            logger.info("로그인 성공 - 이메일: " + email);
+
                             response.setStatus(HttpStatus.OK.value()); // JSON 성공 응답
                             response.setContentType("application/json");
                             response.getWriter().write("{\"message\": \"로그인 성공\", \"username\": \"" + authentication.getName() + "\"}");
