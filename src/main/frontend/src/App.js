@@ -12,6 +12,7 @@ import Footer from './components/common/Footer';
 import SignUp from './components/auth/SignUp';
 import Login from './components/auth/Login';
 import './App.css';
+import MapComponent from "./components/map/MapComponent";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/map" element={<MapComponent />} />
           </Routes>
         </div>
         <Footer />
