@@ -3,9 +3,12 @@ package org.project.wherego.map.controller;
 import com.google.maps.model.PlaceDetails;
 import lombok.RequiredArgsConstructor;
 import org.project.wherego.map.domain.Place;
+import org.project.wherego.map.dto.PlaceSearchResponse;
 import org.project.wherego.map.service.GoogleMapsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/places")
@@ -24,4 +27,10 @@ public class GoogleMapsController {
         Place savedPlace = googleMapsService.savePlace(place);
         return ResponseEntity.ok(savedPlace);
     }
+    @GetMapping("/search")
+    public ResponseEntity<List<PlaceSearchResponse>> searchPlaces(@RequestParam String query) throws Exception {
+        List<PlaceSearchResponse> results = googleMapsService.searchPlaces(query);
+        return ResponseEntity.ok(results);
+    }
+
 }

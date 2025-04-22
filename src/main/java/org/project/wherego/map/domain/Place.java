@@ -1,6 +1,7 @@
 package org.project.wherego.map.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 import org.project.wherego.common.domain.BaseEntity;
 import org.project.wherego.member.domain.User;
@@ -16,8 +17,6 @@ public class Place extends BaseEntity {
     private double longitude;
     private String address;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private User user;
+    private String email;
 
 }

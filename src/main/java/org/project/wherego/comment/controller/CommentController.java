@@ -26,7 +26,6 @@ public class CommentController {
     @GetMapping("/allList")
     public ResponseEntity<List<CommentRequestDto>> allCommentList(){
         List<CommentRequestDto> commentList= commentService.allCommentList();
-
         return ResponseEntity.ok(commentList);
     }
 

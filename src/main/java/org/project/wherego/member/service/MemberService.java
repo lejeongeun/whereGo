@@ -2,8 +2,14 @@ package org.project.wherego.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.project.wherego.member.domain.User;
+import org.project.wherego.member.dto.MyPageResponse;
 import org.project.wherego.member.dto.SignupRequest;
 import org.project.wherego.member.repository.MemberRepository;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +17,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+
 
     // 회원가입
     public SignupRequest insert(SignupRequest signupRequest) {
@@ -35,5 +43,23 @@ public class MemberService {
                 .nickname(savedUser.getNickname())
                 .build();
     }
+
+    public Authentication authenticate(String email, String password) throws AuthenticationException {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(email, password)
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return authentication;
+    }
+
+    public void logout() {
+        SecurityContextHolder.clearContext(); // 세션 삭제
+    }
+
+//
+//    public MyPageResponse mypageInfo(String email) {
+//
+//
+//    }
 
 }
