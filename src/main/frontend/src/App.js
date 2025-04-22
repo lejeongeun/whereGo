@@ -1,4 +1,5 @@
 import './App.css';
+import Community from "./pages/Community";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <button className="Exchange">2. 나라별 환율</button>
             <button className="CheckList">3. 체크리스트</button>
             <button className="Community">4. 커뮤니티</button>
+            <Community />
           </nav>
         </aside>
 
