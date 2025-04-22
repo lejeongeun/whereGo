@@ -9,6 +9,9 @@ import Footer from './components/common/Footer';
 import Sidebar from './components/common/Sidebar';
 import SignUp from './components/auth/SignUp';
 import Login from './components/auth/Login';
+import CommunityDetailPage from './pages/community/CommunityDetailPage';
+import CommunityWritePage from './pages/community/CommunityWritePage';
+import CommunityPage from './pages/community/CommunityPage';
 import './App.css';
 
 function App() {
@@ -26,6 +29,9 @@ function App() {
                 <Route path="/checklist" element={<ChecklistPage />} />
                 <Route path="/checklist/new" element={<NewChecklistPage />} />
                 <Route path="/checklist/edit" element={<EditChecklistPage />} />
+                <Route path="/community" element={<CommunityPage />} />
+                <Route path="/community/:id" element={<CommunityDetailPage />} />
+                <Route path="/community/write" element={<CommunityWritePage />} />
               </Routes>
             </div>
             <Footer className="footer" />
