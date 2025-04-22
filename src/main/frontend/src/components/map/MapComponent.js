@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from '@react-google-maps/api';
-import api from '../api'; // ✅ api 인스턴스 사용
+import api from '../../api';
 import { useNavigate } from 'react-router-dom';
 
 const containerStyle = {
@@ -61,6 +61,7 @@ function MapComponent() {
                         longitude: location.lng,
                         address: place.formatted_address,
                     });
+
                     console.log('Place saved:', response.data);
                 } catch (error) {
                     console.error('Error saving place:', error.response?.data || error.message);
@@ -86,6 +87,7 @@ function MapComponent() {
                     }}
                 />
             </Autocomplete>
+            
             <GoogleMap
                 mapContainerStyle={containerStyle}
                 center={center}

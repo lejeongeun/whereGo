@@ -4,6 +4,9 @@ package org.project.wherego.member.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.project.wherego.common.domain.BaseEntity;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -12,7 +15,7 @@ import org.project.wherego.common.domain.BaseEntity;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User extends BaseEntity {
+public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
@@ -25,6 +28,10 @@ public class User extends BaseEntity {
 
     @Column(nullable = false)
     private String nickname; // 닉네임
+
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
 
 
 }

@@ -12,3 +12,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+google:
+  map:
+    api_key: AIzaSyB63gpLTMYZ1RuMjpUq7S5AgnTL_B-DEXs
