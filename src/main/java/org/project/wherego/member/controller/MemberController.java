@@ -54,5 +54,16 @@ public class MemberController {
         MyPageResponse mypageresponse = memberService.mypageInfo(email);
         return ResponseEntity.ok(mypageresponse);
     }
+
+    @PostMapping("/changePwd")
+    public ResponseEntity<?> changePwd(@RequestBody ChangePwdRequest changePwdRequest) {
+        try {
+            memberService.changwPwd(changePwdRequest);
+            return ResponseEntity.ok(new ChangePwdResponse("비밀번호 변경 성공", changePwdRequest.getEmail()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ErrorResponse("등록되어 있지 않은 이메일입니다."));
+        }
+    }
 }
 

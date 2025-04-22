@@ -48,10 +48,6 @@ dependencies {
     // Mysql
     implementation 'mysql:mysql-connector-java:8.0.32'
 
-    // google 데이터 json 파싱
-    implementation 'com.google.code.gson:gson'
-    implementation 'com.google.maps:google-maps-services:0.18.0'
-
 
 }
 

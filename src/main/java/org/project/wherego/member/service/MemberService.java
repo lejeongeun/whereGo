@@ -2,6 +2,7 @@ package org.project.wherego.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.project.wherego.member.domain.User;
+import org.project.wherego.member.dto.ChangePwdRequest;
 import org.project.wherego.member.dto.MyPageResponse;
 import org.project.wherego.member.dto.SignupRequest;
 import org.project.wherego.member.repository.MemberRepository;
@@ -10,8 +11,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -58,7 +62,29 @@ public class MemberService {
 
 
     public MyPageResponse mypageInfo(String email) {
+        User user = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다."));
 
+        return new MyPageResponse(user.getEmail(), user.getPassword(), user.getNickname());
+    }
+
+    public ChangePwdRequest changwPwd(ChangePwdRequest changePwdRequest) {
+        Optional<User> OpUser = memberRepository.findByEmail(changePwdRequest.getEmail());
+
+        if (OpUser.isPresent()) {
+            User user = OpUser.get();
+
+            String enPass = passwordEncoder.encode(changePwdRequest.getNewPwd());
+            user.setPassword(enPass);
+
+            memberRepository.save(user);
+
+            return changePwdRequest.builder()
+                    .email(user.getEmail())
+                    .newPwd(user.getPassword())
+                    .build();
+        }
+        throw new IllegalArgumentException("사용자 정보를 찾을 수 없습니다.");
     }
 
 }
