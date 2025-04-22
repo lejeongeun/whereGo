@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
+
 
     // 회원가입
     public SignupRequest insert(SignupRequest signupRequest) {
@@ -24,24 +27,21 @@ public class MemberService {
         if (memberRepository.existsByEmail(signupRequest.getEmail())){
             throw new IllegalArgumentException("이미 존재하는 이메일 입니다.");
         }
+        String enPass = passwordEncoder.encode(signupRequest.getPassword());
 
         User user = User.builder()
                 .email(signupRequest.getEmail())
-                .password((signupRequest.getPassword()))
+                .password(enPass) // 요청 데이터 자체가 아닌 암호화 후 설정
                 .nickname((signupRequest.getNickname()))
-                .createAd((signupRequest.getCreateAd()))
                 .build();
 
         User savedUser = memberRepository.save(user);
 
-        SignupRequest result = SignupRequest.builder()
+        return SignupRequest.builder()
                 .email(savedUser.getEmail())
                 .password(savedUser.getPassword())
                 .nickname(savedUser.getNickname())
-                .createAd(savedUser.getCreateAd())
                 .build();
-
-        return result;
     }
 
     public Authentication authenticate(String email, String password) throws AuthenticationException {
@@ -60,4 +60,5 @@ public class MemberService {
     public MyPageResponse mypageInfo(String email) {
 
     }
+
 }

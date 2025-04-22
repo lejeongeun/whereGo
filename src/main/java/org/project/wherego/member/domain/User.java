@@ -3,8 +3,8 @@ package org.project.wherego.member.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.project.wherego.common.domain.BaseEntity;
 
-import java.util.Date;
 
 @Entity
 @Getter
@@ -12,8 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
-
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
@@ -27,7 +26,5 @@ public class User {
     @Column(nullable = false)
     private String nickname; // 닉네임
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createAd = new Date();
 
 }

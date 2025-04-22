@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.project.wherego.member.service.MemberService;
 
@@ -20,13 +19,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
-    private final PasswordEncoder pEncoder;
 
     //Valid : null 값 유효성 체크 자동
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> signup(@Valid @RequestBody SignupRequest signupRequest) {
-        String enPass = pEncoder.encode(signupRequest.getPassword());
-        signupRequest.setPassword(enPass);
         SignupRequest u = memberService.insert(signupRequest);
 
         Map<String, String> response = new HashMap<>();
@@ -58,6 +54,5 @@ public class MemberController {
         MyPageResponse mypageresponse = memberService.mypageInfo(email);
         return ResponseEntity.ok(mypageresponse);
     }
-
 }
 
