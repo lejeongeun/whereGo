@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/homepage/HomePage';
-import ChecklistPage from './pages/ChecklistPage';
-import NewChecklistPage from './pages/NewChecklistPage';
-import EditChecklistPage from './pages/EditChecklistPage';
+import ChecklistPage from './pages/checklist/ChecklistPage';
+import NewChecklistPage from './pages/checklist/NewChecklistPage';
+import EditChecklistPage from './pages/checklist/EditChecklistPage';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
 import Sidebar from './components/common/Sidebar';
