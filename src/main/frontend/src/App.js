@@ -1,10 +1,13 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
+import ChecklistPage from './pages/ChecklistPage';
+import NewChecklistPage from './pages/NewChecklistPage';
+import EditChecklistPage from './pages/EditChecklistPage';
 // import AuthPage from './pages/AuthPage';
 // import TripPage from './pages/TripPage';
 // import ExpensePage from './pages/ExpensePage';
-import CommunityPage from './pages/CommunityPage';
+// import CommunityPage from './pages/CommunityPage';
 // import ChecklistPage from './pages/ChecklistPage';
 // import ProfilePage from './pages/ProfilePage';
 import Navbar from './components/common/Navbar';
@@ -23,6 +26,9 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/checklist" element={<ChecklistPage />} />
+            <Route path="/checklist/new" element={<NewChecklistPage />} />
+            <Route path="/checklist/edit" element={<EditChecklistPage />} />
           </Routes>
         </div>
         <Footer />
