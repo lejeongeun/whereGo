@@ -5,7 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.project.wherego.community.dto.CommunityRequestDto;
 import org.project.wherego.community.dto.CommunityResponseDto;
 import org.project.wherego.community.service.CommunityService;
+import org.project.wherego.member.config.CustomUserDetails;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +22,10 @@ public class CommunityController {
 
     // 게시글 생성
     @PostMapping("/create")
-    public ResponseEntity<String> create(@Valid @RequestBody CommunityRequestDto requestDto){
-        communityService.create(requestDto);
+    public ResponseEntity<String> create(@Valid @RequestBody CommunityRequestDto requestDto,
+                                         @AuthenticationPrincipal CustomUserDetails userDetails){
+        String email = userDetails.getMember().getEmail();
+        communityService.create(requestDto, email);
         return ResponseEntity.ok("게시글이 성공적으로 작성되었습니다.");
     }
 
@@ -30,10 +35,17 @@ public class CommunityController {
         List<CommunityResponseDto> allPosts = communityService.getAllPosts();
         return ResponseEntity.ok(allPosts);
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<CommunityResponseDto> getPost(@PathVariable Long id,
+                                                        @AuthenticationPrincipal CustomUserDetails userDetails){
+        CommunityRequestDto post = communityService.getPosts(id, userDetails.getMember());
+        return ResponseEntity.ok(post);
+
+    }
     // 게시글 수정
     @PutMapping("/{id}")
     public ResponseEntity<String> edit (@PathVariable Long id, @Valid @RequestBody CommunityRequestDto requestDto){
-        communityService.edit(id, requestDto.getTitle(), requestDto.getContent());
+        communityService.edit(id,requestDto);
         return ResponseEntity.ok("글 수정 완료");
     }
 

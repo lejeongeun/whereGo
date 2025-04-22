@@ -3,6 +3,8 @@ package org.project.wherego.comment.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.project.wherego.common.domain.BaseEntity;
+import org.project.wherego.community.domain.Community;
+import org.project.wherego.member.domain.Member;
 
 @Entity
 @Getter
@@ -15,11 +17,14 @@ public class Comment extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
 
-    @Column(nullable = false)
-    private Long boardId; // 게시글 ID
+    @ManyToOne(fetch = FetchType.LAZY) // 댓글 작성자
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
-    @Column(nullable = false)
-    private String email; // 이메일
+    @ManyToOne(fetch = FetchType.LAZY) // 댓글이 달린 게시글
+    @JoinColumn(name = "community_id", nullable = false)
+    private Community community;
+
 
     @Column(nullable = false)
     private String content; // 댓글 내용

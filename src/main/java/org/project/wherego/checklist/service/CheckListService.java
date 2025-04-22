@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.project.wherego.checklist.domain.Checklist;
 import org.project.wherego.checklist.dto.CheckListDto;
 import org.project.wherego.checklist.repository.CheckListRepository;
+import org.project.wherego.member.domain.Member;
+import org.project.wherego.member.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,13 +16,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CheckListService {
     private final CheckListRepository checkListRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
-    public void create(CheckListDto requestDto){
+    public void create(CheckListDto requestDto, String email){
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(()-> new IllegalArgumentException("사용자가 존재하지 않습니다."));
+
         Checklist checklist = Checklist.builder()
                 .itemName(requestDto.getItemName())
-                .isChecked(true)
-                .userId(1L) // 임시
+                .isChecked(false)
+                .member(member)
                 .build();
         checkListRepository.save(checklist);
     }
@@ -31,12 +37,14 @@ public class CheckListService {
 
         return checklists.stream().map(
                 checklist -> CheckListDto.builder()
-                        .id(checklist.getId())
                         .itemName(checklist.getItemName())
-                        .isChecked(checklist.getIsChecked())
-                        .userId(checklist.getUserId())
                         .build()
         ).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void delete(Long id){
+        checkListRepository.deleteById(id);
     }
 
 

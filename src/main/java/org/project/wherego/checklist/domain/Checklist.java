@@ -2,6 +2,7 @@ package org.project.wherego.checklist.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.project.wherego.member.domain.Member;
 
 @Entity
 @Getter
@@ -20,6 +21,7 @@ public class Checklist {
     @Column(nullable = false)
     private Boolean isChecked = false; // 체크 여부
 
-    @Column(nullable = false)
-    private Long userId; // user id
+    @ManyToOne(fetch = FetchType.LAZY) // 체크리스트 주인
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 }
