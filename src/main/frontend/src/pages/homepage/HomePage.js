@@ -2,21 +2,13 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './HomePage.css';
 
+
 function HomePage() {
   const navigate = useNavigate();
   
   return (
     <div className="home-page">
-      <div className="sidebar">
-        <div className="logo">어디GO</div>
-        <ul className="menu">
-          <li><Link to="/schedule">일정리스트</Link></li>
-          <li><Link to="/weather">나라별 날씨</Link></li>
-          <li><Link to="/exchange">나라별 환율</Link></li>
-          <li><Link to="/checklist">체크리스트</Link></li>
-          <li><Link to="/community">커뮤니티</Link></li>
-        </ul>
-      </div>
+      
 
         <div className="content-container">
           <div className="featured-image-container">
