@@ -3,9 +3,12 @@ package org.project.wherego.member.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.wherego.member.dto.*;
+
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -13,12 +16,15 @@ import org.project.wherego.member.service.MemberService;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
+
 
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     //Valid : null 값 유효성 체크 자동
     @PostMapping("/signup")
@@ -36,9 +42,14 @@ public class MemberController {
         try {
             Authentication authentication = memberService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
             return ResponseEntity.ok(new LoginResponse("로그인 성공", authentication.getName()));
-        } catch (Exception e) {
+        } catch (AuthenticationException e) {
+            logger.severe("로그인 인증 실패: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ErrorResponse("유효하지 않은 이메일 혹은 비밀번호 입니다."));
+        } catch (Exception e) {
+            logger.severe("알 수 없는 오류 발생: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요."));
         }
     }
 

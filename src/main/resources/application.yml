@@ -12,3 +12,12 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+logging:
+  level:
+    root: INFO
+    org.project.wherego: DEBUG # 해당 패키지의 로그 레벨을 DEBUG로 설정
+    org.springframework.security: DEBUG # Spring Security 관련 로그를 DEBUG로 설정
+  console:
+    enabled: true
+    log-pattern: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"  # 로그 출력 포맷 설정
