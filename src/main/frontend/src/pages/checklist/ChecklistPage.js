@@ -25,7 +25,7 @@ const ChecklistPage = () => {
     }
     setInitialized(true);
   }, []);
-
+ 
   // 체크리스트 데이터가 변경될 때마다 localStorage에 저장
   useEffect(() => {
     // 초기화가 완료된 후에만 저장 실행
