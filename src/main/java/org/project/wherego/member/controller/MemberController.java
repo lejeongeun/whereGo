@@ -48,12 +48,22 @@ public class MemberController {
         memberService.logout();
         return ResponseEntity.ok(new LogoutResponse("로그아웃 성공"));
     }
+    @GetMapping("/mypage")          // 로그인된 사용자 정보 받기
+    public ResponseEntity<?> mypageInfo(@AuthenticationPrincipal UserDetails userDetails) {
+        String email = userDetails.getUsername();
+        MyPageResponse mypageresponse = memberService.mypageInfo(email);
+        return ResponseEntity.ok(mypageresponse);
+    }
 
-//    @GetMapping("/mypage")          // 로그인된 사용자 정보 받기
-//    public ResponseEntity<?> mypageInfo(@AuthenticationPrincipal UserDetails userDetails) {
-//        String email = userDetails.getUsername();
-//        MyPageResponse mypageresponse = memberService.mypageInfo(email);
-//        return ResponseEntity.ok(mypageresponse);
-//    }
+    @PostMapping("/changePwd")
+    public ResponseEntity<?> changePwd(@RequestBody ChangePwdRequest changePwdRequest) {
+        try {
+            memberService.changwPwd(changePwdRequest);
+            return ResponseEntity.ok(new ChangePwdResponse("비밀번호 변경 성공", changePwdRequest.getEmail()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ErrorResponse("등록되어 있지 않은 이메일입니다."));
+        }
+    }
 }
 

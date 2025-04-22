@@ -3,7 +3,6 @@ package org.project.wherego.member.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.project.wherego.common.domain.BaseEntity;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -32,6 +31,5 @@ public class User{
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
-
 
 }
