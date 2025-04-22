@@ -1,6 +1,7 @@
 package org.project.wherego.member.config;
 
 import lombok.RequiredArgsConstructor;
+import org.project.wherego.member.service.CustomUserDetailsService;
 import org.project.wherego.member.service.MemberService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +26,7 @@ import java.util.logging.Logger;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private static final Logger logger = Logger.getLogger(SecurityConfig.class.getName());
-    private final MemberService memberService;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -55,7 +56,7 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return memberService;
+        return customUserDetailsService;
     }
 
     @Bean
