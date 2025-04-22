@@ -1,39 +1,33 @@
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+// import AuthPage from './pages/AuthPage';
+// import TripPage from './pages/TripPage';
+// import ExpensePage from './pages/ExpensePage';
+import CommunityPage from './pages/CommunityPage';
+// import ChecklistPage from './pages/ChecklistPage';
+// import ProfilePage from './pages/ProfilePage';
+import Navbar from './components/common/Navbar';
+import Footer from './components/common/Footer';
+import SignUp from './components/auth/SignUp';
+import Login from './components/auth/Login';
 import './App.css';
-import Community from "./pages/Community";
 
 function App() {
   return (
-    <div className="WhereGo">
-      <div className="MainTop">
-      {/* 상단 바 */}
-      <header>
-        <h1 className="Logo">어디GO</h1>
-        <div className="Join">
-          <button className="Login">로그인</button>
-          <button className="SignUp">회원가입</button>
+    <BrowserRouter>
+      <div className="app-container">
+        <Navbar />
+        <div className="main-container">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
         </div>
-      </header>
-
-      {/* 본문 영역 */}
-      <div className="Main">
-        {/* 왼쪽 카테고리 바 */}
-        <aside className="Category">
-          <nav className="Clist">
-            <button className="SList">1. 일정 리스트</button>
-            <button className="Exchange">2. 나라별 환율</button>
-            <button className="CheckList">3. 체크리스트</button>
-            <button className="Community">4. 커뮤니티</button>
-            <Community />
-          </nav>
-        </aside>
-
-        {/* 메인 콘텐츠 - 이미지 영역 */}
-        <main className="MainImg">
-          {/* 추가 콘텐츠나 오버레이가 필요하면 여기에 작성 */}
-        </main>
+        <Footer />
       </div>
-    </div>
-    </div>
+    </BrowserRouter>
   );
 }
 
