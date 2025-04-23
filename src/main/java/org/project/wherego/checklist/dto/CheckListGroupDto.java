@@ -4,13 +4,11 @@ import lombok.*;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CheckListDto {
+@Builder
+public class CheckListGroupDto {
     private Long id;
-    private String item;
-    private Boolean isChecked;
-    private Long groupId; // 그룹 id
+    private String title;
 
 }
