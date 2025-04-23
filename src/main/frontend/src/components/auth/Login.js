@@ -1,44 +1,47 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
-
+import api from '../../api.js';
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
+    console.log('전송할 데이터:', { email, password });
     // 입력값 검증
     if (!email || !password) {
       setError('이메일과 비밀번호를 모두 입력해주세요.');
       return;
     }
-    
+
     try {
       setIsLoading(true);
       setError('');
-      
-      // 실제 구현에서는 여기서 API 호출
-      // 예시: const response = await loginUser(email, password);
-      
-      // 로그인 성공 처리 (임시 구현)
-      setTimeout(() => {
-        // 로컬 스토리지에 토큰 저장 (실제 구현에서는 API 응답에서 받은 토큰 사용)
-        localStorage.setItem('token', 'dummy-token');
-        localStorage.setItem('user', JSON.stringify({ email, name: '사용자' }));
+
+      // 로그인 API 호출
+      const response = await api.post('/login', { email, password });
+
+      // 로그인 성공 처리
+      if (response.data && response.data.email) {
+        // 사용자 정보와 메시지를 로컬 스토리지에 저장
+        localStorage.setItem('user', JSON.stringify({ 
+          email: response.data.email 
+        }));
         
         // 홈페이지로 리다이렉트
         navigate('/');
-        setIsLoading(false);
-      }, 1000);
-      
+}
+
     } catch (err) {
-      setError('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
+      // api.js의 인터셉터에서 처리된 에러 메시지 사용
+      setError(err);
+    } finally {
       setIsLoading(false);
     }
   };
