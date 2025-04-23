@@ -43,10 +43,24 @@ public class CheckListService {
     }
 
     @Transactional
+    public void editCheckList(Long id, CheckListDto requestDto, String email) {
+
+        Checklist checklist = checkListRepository.findById(id).orElseThrow(
+                ()-> new IllegalArgumentException("항목이 존재하지 않습니다")
+        );
+
+        if (!checklist.getMember().getEmail().equals(email)){
+            throw new IllegalArgumentException("자신의 댓글만 수정 가능합니다.");
+        }
+        checklist.setItemName(requestDto.getItemName());
+
+
+    }
+
+    @Transactional
     public void delete(Long id){
         checkListRepository.deleteById(id);
     }
-
 
 
 }
