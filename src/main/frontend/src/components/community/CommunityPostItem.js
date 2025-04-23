@@ -1,6 +1,9 @@
 // src/components/CommunityPostItem.js
 import './CommunityPostItem.css';
 import { Link } from 'react-router-dom';
+import { AiOutlineLike } from "react-icons/ai";
+import { LuEye } from "react-icons/lu";
+import { FaRegComment } from "react-icons/fa";
 
 function CommunityPostItem({ id, title, content, author, time, likes, views, comments }) {
   return (
@@ -14,9 +17,9 @@ function CommunityPostItem({ id, title, content, author, time, likes, views, com
         <div className="post-footer">
           <span className="post-meta">{time}</span>
           <div className="post-stats">
-            <span>👍 {likes}</span>
-            <span>👁 {views}</span>
-            <span>💬 {comments}</span>
+            <span><AiOutlineLike />{likes}</span>
+            <span><LuEye /> {views}</span>
+            <span><FaRegComment /> {comments}</span>
           </div>
         </div>
       </Link>

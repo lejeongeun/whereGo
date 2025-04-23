@@ -1,0 +1,24 @@
+.trip-schedule-container {
+  display: flex;
+  height: calc(100vh - 80px); /* 헤더 뺀 높이 조절 */
+  padding: 20px;
+  gap: 20px;
+}
+
+/* 왼쪽 지도 + 검색 */
+.left-panel {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 오른쪽 내 일정 리스트 */
+.right-panel {
+  flex: 1;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  padding: 20px;
+  overflow-y: auto;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
