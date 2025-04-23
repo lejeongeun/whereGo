@@ -6,7 +6,6 @@ import NewChecklistPage from './pages/checklist/NewChecklistPage';
 import EditChecklistPage from './pages/checklist/EditChecklistPage';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
-import Sidebar from './components/common/Sidebar';
 import SignUp from './components/auth/SignUp';
 import Login from './components/auth/Login';
 import CommunityDetailPage from './pages/community/CommunityDetailPage';
@@ -19,7 +18,7 @@ function App() {
   return (
       <BrowserRouter>
         <div className="app-layout">
-          <Sidebar />
+          
           <div className="main-container">
             <Navbar className="navbar" />
             <div className="content">
