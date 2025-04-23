@@ -18,5 +18,5 @@
 //    private Long id; // PK
 //
 //    private Board board; // 좋아요 누른 게시글
-//    private User user; // 좋아요 누른 사용자
+//    private Member user; // 좋아요 누른 사용자
 //}

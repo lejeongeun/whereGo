@@ -5,6 +5,8 @@ import org.project.wherego.community.domain.Community;
 import org.project.wherego.community.dto.CommunityRequestDto;
 import org.project.wherego.community.dto.CommunityResponseDto;
 import org.project.wherego.community.repository.CommunityRepository;
+import org.project.wherego.member.domain.Member;
+import org.project.wherego.member.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,20 +17,23 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CommunityService {
     private final CommunityRepository communityRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
-    public void create(CommunityRequestDto requestDto) {
+    public void create(CommunityRequestDto requestDto, String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(()-> new IllegalArgumentException("회원이 존재하지 않습니다. 다시 로그인 해주세요."));
 
         Community community = Community.builder()
                 .title(requestDto.getTitle())
                 .content(requestDto.getContent())
-                .userId(1L) // 테스트용 임시 설정
+                .member(member)
                 .isDeleted(false)
                 .build();
         communityRepository.save(community);
 
     }
-
+    // 모든 게시물 가져오기
     public List<CommunityResponseDto> getAllPosts(){
         List<Community> communities = communityRepository.findAll();
 
@@ -37,31 +42,47 @@ public class CommunityService {
                         .id(community.getId())
                         .title(community.getTitle())
                         .content(community.getContent())
-                        .userId(community.getUserId())
+                        .nickname(community.getMember().getNickname())
+                        .createdAt(community.getCreatedAt())
                         .build())
                 .collect(Collectors.toList());
     }
 
+    // 한개의 게시물 가져오기
+    public CommunityResponseDto getPosts(Long id, Member member) {
+        Community community = communityRepository.findById(id)
+                .orElseThrow(()-> new IllegalArgumentException("게시물 존재하지 않습니다."));
+        Member members = memberRepository.findByEmail(member.getEmail())
+                .orElseThrow(()-> new IllegalArgumentException("사용자가 존재하지 않습니다."));
+
+        return CommunityResponseDto.builder()
+                .title(community.getTitle())
+                .content(community.getContent())
+                .nickname(members.getNickname())
+                .createdAt(community.getCreatedAt())
+                .build();
+    }
+
+    // 수정하기
     @Transactional
-    public void edit(Long id, String title, String content){
+    public void edit(Long id,CommunityRequestDto requestDto){
         // id로 기존 게시글 조회
         Community community = communityRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다. "));
 
-
         // title, content, 수정 날짜 반영 후 자동 저장
-        community.setTitle(title);
-        community.setContent(content);
+        community.setTitle(requestDto.getTitle());
+        community.setContent(requestDto.getContent());
 
     }
-
+    // 삭제 하기
     @Transactional
     public void delete (Long id){
         Community community = communityRepository.findById(id)
                 .orElseThrow(()-> new IllegalArgumentException("게시글이 존재하지 않습니다. "));
-
         communityRepository.delete(community);
     }
+
 
 
 }

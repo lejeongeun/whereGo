@@ -56,7 +56,8 @@ public class SecurityConfig {
                         })
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
-                );
+                )
+                .userDetailsService(customUserDetailsService);
 
         return http.build();
     }

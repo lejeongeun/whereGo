@@ -18,7 +18,6 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
 api.interceptors.response.use(
   (response) => {
     return response;
@@ -38,5 +37,4 @@ api.interceptors.response.use(
     );
   }
 );
-
 export default api;

@@ -1,29 +1,34 @@
 package org.project.wherego.member.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.project.wherego.member.config.CustomUserDetails;
 import org.project.wherego.member.dto.*;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 import org.project.wherego.member.service.MemberService;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
-
 
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class MemberController {
+
     private final MemberService memberService;
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final AuthenticationManager authenticationManager;
 
     //Valid : null 값 유효성 체크 자동
     @PostMapping("/signup")
@@ -35,20 +40,24 @@ public class MemberController {
         response.put("email", u.getEmail());
         return ResponseEntity.ok(response);
     }
-
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest dto, HttpServletRequest request) {
+        UsernamePasswordAuthenticationToken token =
+                new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword());
+
         try {
-            Authentication authentication = memberService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
+            Authentication authentication = authenticationManager.authenticate(token);
+            SecurityContext context = SecurityContextHolder.createEmptyContext();
+            context.setAuthentication(authentication);
+
+            // 명시적으로 세션에 SecurityContext 저장
+            request.getSession(true)
+                    .setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
+
             return ResponseEntity.ok(new LoginResponse("로그인 성공", authentication.getName()));
-        } catch (AuthenticationException e) {
-            logger.severe("로그인 인증 실패: " + e.getMessage());
+        } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ErrorResponse("유효하지 않은 이메일 혹은 비밀번호 입니다."));
-        } catch (Exception e) {
-            logger.severe("알 수 없는 오류 발생: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponse("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요."));
+                    .body(Map.of("message", "이메일 또는 비밀번호가 잘못되었습니다."));
         }
     }
 
@@ -57,10 +66,9 @@ public class MemberController {
         memberService.logout();
         return ResponseEntity.ok(new LogoutResponse("로그아웃 성공"));
     }
-
     @GetMapping("/mypage")          // 로그인된 사용자 정보 받기
-    public ResponseEntity<?> mypageInfo(@AuthenticationPrincipal UserDetails userDetails) {
-        String email = userDetails.getUsername();
+    public ResponseEntity<?> mypageInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        String email = userDetails.getMember().getEmail();
         MyPageResponse mypageresponse = memberService.mypageInfo(email);
         return ResponseEntity.ok(mypageresponse);
     }
