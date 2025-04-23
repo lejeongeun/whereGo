@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './SignUp.css';
+import api from '../../api';
 
 function SignUp() {
   const [formData, setFormData] = useState({
-    name: '',
+    nickname: '', 
     email: '',
     password: '',
     confirmPassword: ''
@@ -14,7 +15,7 @@ function SignUp() {
   
   const navigate = useNavigate();
 
-  const { name, email, password, confirmPassword } = formData;
+  const { nickname, email, password, confirmPassword } = formData;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,9 +28,9 @@ function SignUp() {
   const validate = () => {
     const newErrors = {};
     
-    // 이름 검증
-    if (!name.trim()) {
-      newErrors.name = '이름을 입력해주세요';
+    // 닉네임 검증
+    if (!nickname.trim()) {
+      newErrors.nickname = '닉네임을 입력해주세요';
     }
     
     // 이메일 검증
@@ -42,8 +43,8 @@ function SignUp() {
     // 비밀번호 검증
     if (!password) {
       newErrors.password = '비밀번호를 입력해주세요';
-    } else if (password.length < 6) {
-      newErrors.password = '비밀번호는 최소 6자 이상이어야 합니다';
+    } else if (password.length < 4) {
+      newErrors.password = '비밀번호는 최소 4자 이상이어야 합니다';
     }
     
     // 비밀번호 확인 검증
@@ -70,26 +71,26 @@ function SignUp() {
     setErrors({});
     
     try {
-      // 실제 구현에서는 여기서 API 호출
-      // ex: const response = await SignUpUser(formData);
+      // 백엔드 API 호출
+      const response = await api.post('/signup', {
+        nickname: nickname,
+        email: email,
+        password: password
+      });
       
-      // 회원가입 성공 처리 (임시 구현)
-      setTimeout(() => {
-        // 성공적으로 가입 후 자동 로그인을 위한 토큰 저장 (실제 API 응답에서 받을 것)
-        localStorage.setItem('token', 'dummy-SignUp-token');
-        localStorage.setItem('user', JSON.stringify({ 
-          name: formData.name,
-          email: formData.email
-        }));
-        
-        // 홈페이지로 리다이렉트 또는 로그인 페이지로 이동
-        navigate('/');
-        setIsLoading(false);
-      }, 1000);
+      // 회원가입 성공 처리
+      if (response.data) {
+        // 로그인 페이지로 리다이렉트
+        navigate('/login');
+        alert('회원가입이 완료되었습니다. 로그인해주세요.');
+      }
       
     } catch (err) {
       // 에러 처리
-      setErrors({ submit: '회원가입에 실패했습니다. 다시 시도해주세요.' });
+      setErrors({ 
+        submit: err?.response?.data?.message || '회원가입에 실패했습니다. 다시 시도해주세요.' 
+      });
+    } finally {
       setIsLoading(false);
     }
   };
@@ -103,17 +104,17 @@ function SignUp() {
         
         <form onSubmit={handleSubmit} className="SignUp-form">
           <div className="form-group">
-            <label htmlFor="name">이름</label>
+            <label htmlFor="nickname">닉네임</label>
             <input
               type="text"
-              id="name"
-              name="name"
-              value={name}
+              id="nickname"
+              name="nickname"
+              value={nickname}
               onChange={handleChange}
-              placeholder="이름을 입력하세요"
+              placeholder="닉네임을 입력하세요"
               disabled={isLoading}
             />
-            {errors.name && <div className="input-error">{errors.name}</div>}
+            {errors.nickname && <div className="input-error">{errors.nickname}</div>}
           </div>
           
           <div className="form-group">
