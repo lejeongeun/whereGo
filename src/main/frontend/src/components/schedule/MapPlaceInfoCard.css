@@ -1,0 +1,51 @@
+.map-place-info-card {
+    display: flex;
+    align-items: flex-start;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 16px;
+    padding: 16px;
+    gap: 16px;
+    max-width: 600px;
+  }
+  
+  .place-card-image {
+    width: 120px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+  
+  .place-card-content {
+    flex: 1;
+  }
+  
+  .place-card-title {
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  .place-card-desc {
+    font-size: 14px;
+    color: #555;
+    margin: 0 0 12px;
+  }
+  
+  .place-card-add-button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .place-card-add-button:hover {
+    background-color: #43a047;
+  }
+  
