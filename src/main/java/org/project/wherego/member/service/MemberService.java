@@ -7,9 +7,6 @@ import org.project.wherego.member.dto.MyPageResponse;
 import org.project.wherego.member.dto.SignupRequest;
 import org.project.wherego.member.repository.MemberRepository;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,14 +43,6 @@ public class MemberService {
                 .password(savedMember.getPassword())
                 .nickname(savedMember.getNickname())
                 .build();
-    }
-
-    public Authentication authenticate(String email, String password) throws AuthenticationException {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password)
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return authentication;
     }
 
     public void logout() {

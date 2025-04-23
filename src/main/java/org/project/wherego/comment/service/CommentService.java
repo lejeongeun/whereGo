@@ -54,7 +54,7 @@ public class CommentService {
 
     // 댓글 수정
     @Transactional
-    public void commentEdit(Long commentId, String content, String email){
+    public void commentEdit(Long commentId,CommentRequestDto requestDto, String email){
         // 기존 댓글 확인
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(()-> new IllegalArgumentException("댓글이 존재하지 않습니다."));
@@ -64,7 +64,8 @@ public class CommentService {
         }
 
         // 댓글 수정
-        comment.setContent(content);
+        comment.setContent(requestDto.getContent());
+        commentRepository.save(comment);
     }
 
     // 댓글 삭제

@@ -10,7 +10,6 @@ import org.project.wherego.member.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,7 +33,7 @@ public class CommunityService {
         communityRepository.save(community);
 
     }
-
+    // 모든 게시물 가져오기
     public List<CommunityResponseDto> getAllPosts(){
         List<Community> communities = communityRepository.findAll();
 
@@ -48,14 +47,23 @@ public class CommunityService {
                         .build())
                 .collect(Collectors.toList());
     }
-    public R
 
+    // 한개의 게시물 가져오기
+    public CommunityResponseDto getPosts(Long id, Member member) {
+        Community community = communityRepository.findById(id)
+                .orElseThrow(()-> new IllegalArgumentException("게시물 존재하지 않습니다."));
+        Member members = memberRepository.findByEmail(member.getEmail())
+                .orElseThrow(()-> new IllegalArgumentException("사용자가 존재하지 않습니다."));
 
+        return CommunityResponseDto.builder()
+                .title(community.getTitle())
+                .content(community.getContent())
+                .nickname(members.getNickname())
+                .createdAt(community.getCreatedAt())
+                .build();
+    }
 
-
-
-
-
+    // 수정하기
     @Transactional
     public void edit(Long id,CommunityRequestDto requestDto){
         // id로 기존 게시글 조회
@@ -67,7 +75,7 @@ public class CommunityService {
         community.setContent(requestDto.getContent());
 
     }
-
+    // 삭제 하기
     @Transactional
     public void delete (Long id){
         Community community = communityRepository.findById(id)
@@ -75,16 +83,6 @@ public class CommunityService {
         communityRepository.delete(community);
     }
 
-    public CommunityRequestDto getPosts(Long id, Member member) {
-        Community community = communityRepository.findById(id)
-                .orElseThrow(()-> new IllegalArgumentException("게시물 존재하지 않습니다."));
-        Member members = memberRepository.findByEmail(member.getEmail())
-                .orElseThrow(()-> new IllegalArgumentException("사용자가 존재하지 않습니다."));
-        return CommunityResponseDto.builder()
-                .title(community.getTitle())
-                .content(community.getContent())
-                .nickname(members.getNickname())
-//                .createdAt(community.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
-                .build();
-    }
+
+
 }

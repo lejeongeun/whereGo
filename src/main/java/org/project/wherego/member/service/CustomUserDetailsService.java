@@ -1,6 +1,7 @@
 package org.project.wherego.member.service;
 
 import lombok.RequiredArgsConstructor;
+import org.project.wherego.member.config.CustomUserDetails;
 import org.project.wherego.member.domain.Member;
 import org.project.wherego.member.repository.MemberRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,10 +21,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("이메일로 사용자를 찾을 수 없습니다: " + email));
-        return new org.springframework.security.core.userdetails.User( //사용자 인증에 필요한 정보를 캡슐화(이메일, 비번, 권한 등)
-                member.getEmail(),
-                member.getPassword(),
-                new ArrayList<>() // 권한 목록 (필요 시 추가)
-        );
+        return new CustomUserDetails(member);
     }
 }
