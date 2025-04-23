@@ -1,4 +1,5 @@
 import CommunityPostItem from './CommunityPostItem';
+import { getPosts } from '../../api/communityApi';
 
 const posts = [
   {

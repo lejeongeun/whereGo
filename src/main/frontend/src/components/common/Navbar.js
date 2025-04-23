@@ -4,14 +4,14 @@ import './Navbar.css';
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
+  const [member, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     // 로컬 스토리지에서 사용자 정보 및 토큰 확인
     const token = localStorage.getItem('token');
-    const userData = localStorage.getItem('user');
+    const userData = localStorage.getItem('member');
     
     if (token && userData) {
       setIsLoggedIn(true);
@@ -22,7 +22,7 @@ function Navbar() {
   const handleLogout = () => {
     // 로그아웃 처리
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem('member');
     setIsLoggedIn(false);
     setUser(null);
     navigate('/');
@@ -56,8 +56,8 @@ function Navbar() {
             </>
           ) : (
             <>
-              <li className="nav-item user-links-container">
-                <div className="user-links">
+              <li className="nav-item member-links-container">
+                <div className="member-links">
                   <span onClick={() => {
                     navigate('/login');
                     setMenuOpen(false);

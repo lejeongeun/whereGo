@@ -6,6 +6,7 @@ import org.project.wherego.exchange.dto.ConversionResponse;
 import org.project.wherego.exchange.dto.ExchangeRateResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -20,15 +21,19 @@ import java.util.Set;
         private final Logger logger = LoggerFactory.getLogger(ExchangeRateService.class);
         private static final Set<String> VALID_CURRENCIES = Set.of("USD", "KRW", "EUR", "JPY", "VND");
 
+        @Value("${exchangerate.api.key}")
+        private String apiKey;
+
         public Mono<ExchangeRateResponse> getExchangeRate(String base, String target) {
             logger.info("Fetching exchange rate for base: {}, target: {}", base, target);
             validateCurrency(base, target);
 
             return webClient.get()
                     .uri(uriBuilder -> uriBuilder // 외부 API 호출
-                            .path("/latest")
-                            .queryParam("base", base)
-                            .queryParam("symbols", target)
+                            .path("/live")
+                            .queryParam("source", base)
+                            .queryParam("currencies", target)
+                            .queryParam("access_key", apiKey)
                             .build())
                     .retrieve() // API 응답 받아오기
                     .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), // onStatus(조건 검증 람다식, 조건 만족 시 수행할 람다식)
@@ -39,17 +44,22 @@ import java.util.Set;
                     .bodyToMono(Map.class)
                     .map(response -> {
                         if (!(Boolean) response.getOrDefault("success", false)) {
+                            Map<String, Object> error = (Map<String, Object>) response.get("error");
+                            String errorMsg = error != null ? error.toString() : "Unknown error";
                             logger.error("API request failed: {}", response);
-                            throw new RuntimeException("API request failed");
+                            throw new RuntimeException("API request failed" + errorMsg);
                         }
-                        Map<String, Object> rates = (Map<String, Object>) response.get("rates");
-                        if (rates == null || !rates.containsKey(target)) {
+                        Map<String, Object> quotes = (Map<String, Object>) response.get("quotes");
+                        String quoteKey = base + target;
+                        if (quotes == null || !quotes.containsKey(quoteKey)) {
                             logger.error("Target currency not found: {}", target);
                             throw new RuntimeException("Target currency not found: " + target);
                         }
-                        double rate = Double.parseDouble(rates.get(target).toString());
+                        double rate = Double.parseDouble(quotes.get(quoteKey).toString());
                         ExchangeRateResponse exchangeRateResponse = new ExchangeRateResponse(base, target, rate);
-                        exchangeRateResponse.setTimestamp((String)response.get("date"));
+                        Object timestampObj = response.get("timestamp");
+                        String timestamp = timestampObj != null ? timestampObj.toString() : "Unknown timestamp";
+                        exchangeRateResponse.setTimestamp(timestamp);
                         return exchangeRateResponse;
                     })
                     .onErrorMap(ex -> {
@@ -71,6 +81,7 @@ import java.util.Set;
                             .queryParam("from", from)
                             .queryParam("to", to)
                             .queryParam("amount", amount)
+                            .queryParam("access_key", apiKey)
                             .build())
                     .retrieve()
                     .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(),

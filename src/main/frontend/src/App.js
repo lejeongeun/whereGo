@@ -14,6 +14,7 @@ import CommunityWritePage from './pages/community/CommunityWritePage';
 import CommunityPage from './pages/community/CommunityPage';
 import TripSchedulePage from './pages/schedule/TripSchedulePage';
 import './App.css';
+import MapComponent from "./components/map/MapComponent";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/map" element={<MapComponent />} />
                 <Route path="/checklist" element={<ChecklistPage />} />
                 <Route path="/checklist/new" element={<NewChecklistPage />} />
                 <Route path="/checklist/edit" element={<EditChecklistPage />} />
