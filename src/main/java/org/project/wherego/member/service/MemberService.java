@@ -1,15 +1,12 @@
 package org.project.wherego.member.service;
 
 import lombok.RequiredArgsConstructor;
-import org.project.wherego.member.domain.User;
+import org.project.wherego.member.domain.Member;
 import org.project.wherego.member.dto.ChangePwdRequest;
 import org.project.wherego.member.dto.MyPageResponse;
 import org.project.wherego.member.dto.SignupRequest;
 import org.project.wherego.member.repository.MemberRepository;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,55 +30,46 @@ public class MemberService {
         }
         String enPass = passwordEncoder.encode(signupRequest.getPassword());
 
-        User user = User.builder()
+        Member member = Member.builder()
                 .email(signupRequest.getEmail())
                 .password(enPass) // 요청 데이터 자체가 아닌 암호화 후 설정
                 .nickname((signupRequest.getNickname()))
                 .build();
 
-        User savedUser = memberRepository.save(user);
+        Member savedMember = memberRepository.save(member);
 
         return SignupRequest.builder()
-                .email(savedUser.getEmail())
-                .password(savedUser.getPassword())
-                .nickname(savedUser.getNickname())
+                .email(savedMember.getEmail())
+                .password(savedMember.getPassword())
+                .nickname(savedMember.getNickname())
                 .build();
-    }
-
-    public Authentication authenticate(String email, String password) throws AuthenticationException {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password)
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return authentication;
     }
 
     public void logout() {
         SecurityContextHolder.clearContext(); // 세션 삭제
     }
 
-
     public MyPageResponse mypageInfo(String email) {
-        User user = memberRepository.findByEmail(email)
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다."));
 
-        return new MyPageResponse(user.getEmail(), user.getPassword(), user.getNickname());
+        return new MyPageResponse(member.getEmail(), member.getPassword(), member.getNickname());
     }
 
     public ChangePwdRequest changwPwd(ChangePwdRequest changePwdRequest) {
-        Optional<User> OpUser = memberRepository.findByEmail(changePwdRequest.getEmail());
+        Optional<Member> OpUser = memberRepository.findByEmail(changePwdRequest.getEmail());
 
         if (OpUser.isPresent()) {
-            User user = OpUser.get();
+            Member member = OpUser.get();
 
             String enPass = passwordEncoder.encode(changePwdRequest.getNewPwd());
-            user.setPassword(enPass);
+            member.setPassword(enPass);
 
-            memberRepository.save(user);
+            memberRepository.save(member);
 
             return changePwdRequest.builder()
-                    .email(user.getEmail())
-                    .newPwd(user.getPassword())
+                    .email(member.getEmail())
+                    .newPwd(member.getPassword())
                     .build();
         }
         throw new IllegalArgumentException("사용자 정보를 찾을 수 없습니다.");

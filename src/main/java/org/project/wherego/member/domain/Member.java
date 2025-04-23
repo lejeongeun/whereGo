@@ -3,7 +3,6 @@ package org.project.wherego.member.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.project.wherego.common.domain.BaseEntity;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -15,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
@@ -32,4 +31,5 @@ public class User {
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
 }
