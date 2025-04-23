@@ -21,3 +21,10 @@ logging:
   console:
     enabled: true
     log-pattern: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"  # 로그 출력 포맷 설정
+
+exchangerate:
+  api:
+    key: 79f5de0b194c5a0f615fd99134ae8f62
+
+server:
+  port: 8080
