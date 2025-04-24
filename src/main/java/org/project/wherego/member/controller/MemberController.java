@@ -74,13 +74,26 @@ public class MemberController {
     }
 
     @PostMapping("/changePwd")
-    public ResponseEntity<?> changePwd(@RequestBody ChangePwdRequest changePwdRequest) {
+    public ResponseEntity<?> changePwd(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                       @RequestBody ChangePwdRequest Pwdrequest) {
         try {
-            memberService.changwPwd(changePwdRequest);
-            return ResponseEntity.ok(new ChangePwdResponse("비밀번호 변경 성공", changePwdRequest.getEmail()));
+            Member member = userDetails.getMember();
+            memberService.changwPwd(member, Pwdrequest);
+            return ResponseEntity.ok(new ChangePwdResponse("비밀번호 변경 성공", member.getEmail()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ErrorResponse("등록되어 있지 않은 이메일입니다."));
+        }
+    }
+
+    @PostMapping("/findPwd")
+    public ResponseEntity<?> findPwd(@RequestBody FindPwdRequest Pwdrequest) {
+        try {
+            memberService.findPassword(Pwdrequest);
+            return ResponseEntity.ok(new ChangePwdResponse("비밀번호 변경 성공", Pwdrequest.getEmail()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("닉네임 또는 이메일이 일치하지 않습니다."));
         }
     }
 }
