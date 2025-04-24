@@ -46,6 +46,8 @@ public class CommunityService {
                             .nickname(community.getMember().getNickname())
                             .createdAt(community.getCreatedAt())
                             .viewCount(community.getViewCount())
+                            .likeCount(community.getLikes().size())
+                            .commentCount(community.getComments().size())
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -67,6 +69,8 @@ public class CommunityService {
                 .nickname(members.getNickname())
                 .createdAt(community.getCreatedAt())
                 .viewCount(community.getViewCount())
+                .likeCount(community.getLikes().size()) // 좋아요 수
+                .commentCount(community.getComments().size()) // 댓글 수
                 .build();
     }
 

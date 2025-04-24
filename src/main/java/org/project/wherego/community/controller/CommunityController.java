@@ -36,6 +36,7 @@ public class CommunityController {
         List<CommunityResponseDto> allPosts = communityService.getAllPosts();
         return ResponseEntity.ok(allPosts);
     }
+
     // 하나의 게시물 조회
     @GetMapping("/{id}")
     public ResponseEntity<CommunityResponseDto> getPost(@PathVariable Long id,
@@ -44,6 +45,7 @@ public class CommunityController {
         return ResponseEntity.ok(post);
 
     }
+
     // 게시글 수정
     @PutMapping("/{id}/edit")
     public ResponseEntity<String> edit (@PathVariable Long id, @Valid @RequestBody CommunityRequestDto requestDto){
