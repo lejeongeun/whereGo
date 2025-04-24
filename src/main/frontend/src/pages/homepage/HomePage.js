@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './HomePage.css';
 
 
 function HomePage() {
-  const navigate = useNavigate();
+  
   
   return (
     <div className="home-page">
