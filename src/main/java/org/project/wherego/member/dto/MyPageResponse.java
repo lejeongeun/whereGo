@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.project.wherego.community.dto.CommunityResponseDto;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -11,6 +14,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MyPageResponse {
     private String email;
-    private String password;
     private String nickname;
+    private List<CommunityResponseDto> comunities;
 }

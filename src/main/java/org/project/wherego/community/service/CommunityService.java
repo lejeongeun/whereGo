@@ -38,13 +38,16 @@ public class CommunityService {
         List<Community> communities = communityRepository.findAll();
 
         return communities.stream()
-                .map(community -> CommunityResponseDto.builder()
-                        .id(community.getId())
-                        .title(community.getTitle())
-                        .content(community.getContent())
-                        .nickname(community.getMember().getNickname())
-                        .createdAt(community.getCreatedAt())
-                        .build())
+                .map(community -> {
+                    return CommunityResponseDto.builder()
+                            .id(community.getId())
+                            .title(community.getTitle())
+                            .content(community.getContent())
+                            .nickname(community.getMember().getNickname())
+                            .createdAt(community.getCreatedAt())
+                            .viewCount(community.getViewCount())
+                            .build();
+                })
                 .collect(Collectors.toList());
     }
 
@@ -55,11 +58,15 @@ public class CommunityService {
         Member members = memberRepository.findByEmail(member.getEmail())
                 .orElseThrow(()-> new IllegalArgumentException("사용자가 존재하지 않습니다."));
 
+        community.setViewCount(community.getViewCount() + 1);
+        communityRepository.save(community);
+
         return CommunityResponseDto.builder()
                 .title(community.getTitle())
                 .content(community.getContent())
                 .nickname(members.getNickname())
                 .createdAt(community.getCreatedAt())
+                .viewCount(community.getViewCount())
                 .build();
     }
 

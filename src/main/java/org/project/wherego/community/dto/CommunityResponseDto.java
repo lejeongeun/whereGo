@@ -15,4 +15,5 @@ public class CommunityResponseDto {
     private String content;
     private String nickname;
     private LocalDateTime createdAt;
+    private Long viewCount;
 }

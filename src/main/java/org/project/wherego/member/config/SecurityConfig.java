@@ -57,7 +57,7 @@ public class SecurityConfig {
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                 )
-                .userDetailsService(customUserDetailsService);
+                .userDetailsService(customUserDetailsService); // 유저 조회 인터페이스 설정
 
         return http.build();
     }
@@ -65,14 +65,6 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean // 필요할 때 자동으로 사용
-    public DaoAuthenticationProvider authenticationProvider() { // 스프링 시큐리티가 사용자 정보를 DB에서 가져와서 인증하는 데 사용하는 기본 제공 클래스
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(); // Data Access Object :  DB에 접근해서 유저 정보 GET
-        authProvider.setUserDetailsService(customUserDetailsService); // 유저 조회 인터페이스 설정
-        authProvider.setPasswordEncoder(passwordEncoder()); // 입력된 비밀번호 enPASS 하여 DB와 비교
-        return authProvider;
     }
 
     @Bean //AuthenticationManager : 실제 유저 인증 처리, AuthenticationConfiguration : 상위 객체
