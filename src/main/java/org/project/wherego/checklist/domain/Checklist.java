@@ -16,12 +16,11 @@ public class Checklist {
     private Long id; // PK
 
     @Column(nullable = false)
-    private String itemName; // 항목 이름
+    private String item; // 체크리스트 항목
 
     @Column(nullable = false)
     private Boolean isChecked = false; // 체크 여부
 
-    @ManyToOne(fetch = FetchType.LAZY) // 체크리스트 주인
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    @ManyToOne
+    private ChecklistGroup group;
 }

@@ -2,7 +2,8 @@
 //
 //import jakarta.persistence.*;
 //import lombok.*;
-//import org.project.wherego.board.domain.Board;
+//import org.project.wherego.community.domain.Community;
+//import org.project.wherego.member.domain.Member;
 //
 //@Entity
 //@Getter
@@ -17,6 +18,6 @@
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    private Long id; // PK
 //
-//    private Board board; // 좋아요 누른 게시글
-//    private Member user; // 좋아요 누른 사용자
+//    private Community community;
+//    private Member user;
 //}
