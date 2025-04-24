@@ -75,6 +75,14 @@ public class MemberService {
         if (OpUser.isPresent()) {
             Member m = OpUser.get();
 
+            if (!passwordEncoder.matches(pwdrequest.getOldPassword(), m.getPassword())) {
+                throw new IllegalArgumentException("기존 비밀번호가 일치하지 않습니다.");
+            }
+
+            if (!pwdrequest.getNewPassword().equals(pwdrequest.getConfirmPassword())) {
+                throw new IllegalArgumentException("새 비밀번호가 일치하지 않습니다.");
+            }
+
             String enPass = passwordEncoder.encode(pwdrequest.getNewPassword());
             m.setPassword(enPass);
 
@@ -84,7 +92,7 @@ public class MemberService {
                     .newPassword(m.getPassword())
                     .build();
         }
-        throw new IllegalArgumentException("사용자 정보를 찾을 수 없습니다.");
+        throw new IllegalArgumentException("등록되어 있지 않은 이메일입니다.");
     }
 
     public FindPwdRequest findPassword(FindPwdRequest pwdrequest) {

@@ -41,6 +41,7 @@ public class MemberController {
         response.put("email", u.getEmail());
         return ResponseEntity.ok(response);
     }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest dto, HttpServletRequest request) {
         UsernamePasswordAuthenticationToken token =
@@ -80,9 +81,12 @@ public class MemberController {
             Member member = userDetails.getMember();
             memberService.changwPwd(member, Pwdrequest);
             return ResponseEntity.ok(new ChangePwdResponse("비밀번호 변경 성공", member.getEmail()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(new ErrorResponse(e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ErrorResponse("등록되어 있지 않은 이메일입니다."));
+                    .body(new ErrorResponse("서버 오류가 발생했습니다."));
         }
     }
 
