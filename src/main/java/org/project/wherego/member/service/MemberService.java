@@ -1,18 +1,16 @@
 package org.project.wherego.member.service;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.project.wherego.community.domain.Community;
 import org.project.wherego.community.dto.CommunityResponseDto;
 import org.project.wherego.community.repository.CommunityRepository;
 import org.project.wherego.member.domain.Member;
 import org.project.wherego.member.dto.ChangePwdRequest;
+import org.project.wherego.member.dto.FindPwdRequest;
 import org.project.wherego.member.dto.MyPageResponse;
 import org.project.wherego.member.dto.SignupRequest;
 import org.project.wherego.member.repository.MemberRepository;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -71,23 +69,39 @@ public class MemberService {
         return new MyPageResponse(member.getEmail(), member.getNickname(), communityDtos);
     }
 
-    public ChangePwdRequest changwPwd(ChangePwdRequest changePwdRequest) {
-        Optional<Member> OpUser = memberRepository.findByEmail(changePwdRequest.getEmail());
+    public ChangePwdRequest changwPwd(Member member, ChangePwdRequest pwdrequest) {
+        Optional<Member> OpUser = memberRepository.findByEmail(member.getEmail());
 
         if (OpUser.isPresent()) {
-            Member member = OpUser.get();
+            Member m = OpUser.get();
 
-            String enPass = passwordEncoder.encode(changePwdRequest.getNewPwd());
-            member.setPassword(enPass);
+            String enPass = passwordEncoder.encode(pwdrequest.getNewPassword());
+            m.setPassword(enPass);
 
-            memberRepository.save(member);
+            memberRepository.save(m);
 
-            return changePwdRequest.builder()
-                    .email(member.getEmail())
-                    .newPwd(member.getPassword())
+            return pwdrequest.builder()
+                    .newPassword(m.getPassword())
                     .build();
         }
         throw new IllegalArgumentException("사용자 정보를 찾을 수 없습니다.");
     }
 
+    public FindPwdRequest findPassword(FindPwdRequest pwdrequest) {
+        Optional<Member> OpUser = memberRepository.findByEmailAndNickname(pwdrequest.getEmail(), pwdrequest.getNickname());
+        if (OpUser.isPresent()) {
+            Member m = OpUser.get();
+
+            String enPass = passwordEncoder.encode(pwdrequest.getNewPassword());
+            m.setPassword(enPass);
+
+            memberRepository.save(m);
+
+            return pwdrequest.builder()
+                    .newPassword(m.getPassword())
+                    .build();
+        }
+        throw new IllegalArgumentException("사용자 정보를 찾을 수 없습니다.");
+
+    }
 }

@@ -7,6 +7,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ChangePwdRequest {
+public class FindPwdRequest {
+    private String email;
+    private String nickname;
     private String newPassword;
 }
