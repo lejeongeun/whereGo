@@ -12,17 +12,18 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class LikeService {
-    private LikeRepository likeRepository;
-    private MemberRepository memberRepository;
-    private CommunityRepository communityRepository;
+    private final LikeRepository likeRepository;
+    private final MemberRepository memberRepository;
+    private final CommunityRepository communityRepository;
 
 
     public void toggleLike(String email, Long postId) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(()-> new IllegalArgumentException("정보 조회가 불가능 합니다."));
+
         Community community = communityRepository.findById(postId).orElseThrow(
-                ()-> new IllegalArgumentException("게시글이 존재하지 않습니다.")
-        );
+                ()-> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+
         likeRepository.findByMemberAndCommunity(member, community)
                 .ifPresentOrElse(
                         likeRepository::delete,

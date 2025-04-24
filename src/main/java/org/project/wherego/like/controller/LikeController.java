@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class LikeController {
     private final LikeService likeService;
 
+
     @PostMapping
     public ResponseEntity<?> toggleLike(@PathVariable Long postId, @AuthenticationPrincipal CustomUserDetails userDetails){
         likeService.toggleLike(userDetails.getMember().getEmail(), postId);

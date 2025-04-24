@@ -1,8 +1,12 @@
 package org.project.wherego.community.domain;
 import jakarta.persistence.*;
 import lombok.*;
+import org.project.wherego.comment.domain.Comment;
 import org.project.wherego.common.domain.BaseEntity;
+import org.project.wherego.like.domain.Like;
 import org.project.wherego.member.domain.Member;
+
+import java.util.List;
 
 
 @Entity
@@ -33,5 +37,12 @@ public class Community extends BaseEntity {
     @Column(columnDefinition = "BIGINT DEFAULT 0")
     @Builder.Default
     private Long viewCount = 0L; // 조회수
+
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes;
+
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
+
 
 }
