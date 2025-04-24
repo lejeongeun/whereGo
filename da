@@ -1,0 +1,291 @@
+[33mcommit 8d57075c9e1e128badda8e7e531f384d36f52c03[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32myuyeseong[m[33m, [m[1;31morigin/develop[m[33m)[m
+Merge: cce2a31 5263a88
+Author: hansol04 <gksthf0428@naver.com>
+Date:   Wed Apr 23 18:10:45 2025 +0900
+
+    Merge pull request #16 from lejeongeun/hansol
+    
+    Hansol
+
+[33mcommit 5263a88bbf2d00b8be8ecb5e37260920d382ece8[m
+Merge: 63f10e3 cce2a31
+Author: hansol04 <gksthf0428@naver.com>
+Date:   Wed Apr 23 18:07:41 2025 +0900
+
+    merge: develop 브랜치 병합
+
+[33mcommit 63f10e353d2656e0fe4055bd68338017477acb88[m
+Merge: 1c08a5c 520f6cd
+Author: hansol04 <gksthf0428@naver.com>
+Date:   Wed Apr 23 18:03:17 2025 +0900
+
+    일정리스트+커뮤니티api하는중
+
+[33mcommit cce2a31ad37fe0827da9026eebb3732936c5593b[m
+Author: 김태형 <wig7227@naver.com>
+Date:   Wed Apr 23 17:49:41 2025 +0900
+
+    navbar_edit, Sidebar_delete, member 기능 연동
+
+[33mcommit f6ebc3a5b2eb34021e97db3c9c671bc94eddcbd7[m
+Author: 김태형 <wig7227@naver.com>
+Date:   Wed Apr 23 14:35:21 2025 +0900
+
+    회원가입 연동
+
+[33mcommit 1c08a5c32c9481019503e9fc7bb1ba6072b8c6da[m
+Author: hansol04 <gksthf0428@naver.com>
+Date:   Wed Apr 23 17:20:39 2025 +0900
+
+    일정리스트 뼈대만듬
+
+[33mcommit 520f6cddc6e4d6ab6f783eeeb51e8791ab5e4fb9[m
+Merge: e175490 61e5812
+Author: SB96-Lee <silee7575@gmail.com>
+Date:   Wed Apr 23 14:58:33 2025 +0900
+
+    Merge pull request #15 from lejeongeun/SBL
+    
+    cfmed by SBL
+
+[33mcommit 61e581220d2f52b574fc9c67fbc7565d79b6aa8e[m
+Author: SB96-Lee <silee7575@gmail.com>
+Date:   Wed Apr 23 14:57:23 2025 +0900
+
+    reupload2
+
+[33mcommit 9f4976d00130c0326acd03ae87c0e75c1b9cb971[m
+Author: SB96-Lee <silee7575@gmail.com>
+Date:   Wed Apr 23 14:55:58 2025 +0900
+
+    reupload
+
+[33mcommit a04f0996f891109d1eac9786d4ad0859d77e6185[m
+Merge: e25afbf e175490
+Author: SB96-Lee <silee7575@gmail.com>
+Date:   Wed Apr 23 14:26:04 2025 +0900
+
+    fix:member
+
+[33mcommit e175490b79773b882ac5f51eea2fcca52806f998[m
+Merge: 7c50568 0ebeb45
+Author: lejeongeun <106296983+lejeongeun@users.noreply.github.com>
+Date:   Wed Apr 23 14:16:24 2025 +0900
+
+    Merge pull request #13 from lejeongeun/jeongeun
+    
+    Jeongeun_git_push_develop
+
+[33mcommit 0ebeb45f02a3575cad11bad2213edf02db2f8b10[m
+Merge: 3f33187 7c50568
+Author: lejeongeun <106296983+lejeongeun@users.noreply.github.com>
+Date:   Wed Apr 23 14:16:04 2025 +0900
+
+    Merge branch 'develop' into jeongeun
+
+[33mcommit 3f331870ac8c9c867287b7e9003f1e73b5c1d803[m
+Author: jeong eun <lje7370@gamil.com>
+Date:   Wed Apr 23 14:11:05 2025 +0900
+
+    gitignore
+
+[33mcommit e0850e9a972c1b9178e0e07b4ff5523e70a64ace[m
+Author: jeong eun <lje7370@gamil.com>
+Date:   Wed Apr 23 14:08:11 2025 +0900
+
+    fix:checklist_edit
+
+[33mcommit e25afbfb5f233bdb9cc929cbbace34401a5743d8[m
+Author: SB96-Lee <silee7575@gmail.com>
+Date:   Wed Apr 23 12:43:29 2025 +0900
+
+    fix:exchange
+
+[33mcommit 7267cf8e0f9b48bc60817d8760f4e2096208c873[m
+Author: jeong eun <lje7370@gamil.com>
+Date:   Wed Apr 23 12:39:21 2025 +0900
+
+    member_community_comment_add
+
+[33mcommit df88f040b6b0c5756db4e5b09b8bd452f8594a87[m
+Author: jeong eun <lje7370@gamil.com>
+Date:   Tue Apr 22 22:25:56 2025 +0900
+
+    fix:all_entity_co_se_edit
+
+[33mcommit 7c50568a2ccea75d62507e4b8ec8775c0dde7121[m[33m ([m[1;31morigin/yuyeseong[m[33m)[m
+Merge: 0f41eb4 16d840c
+Author: SB96-Lee <silee7575@gmail.com>
+Date:   Tue Apr 22 18:38:17 2025 +0900
+
+    Merge pull request #12 from lejeongeun/SBL
+    
+    Sbl set set
+
+[33mcommit 16d840cc1726f2adad3b85ee763d10547416e1c9[m
+Merge: 61702c9 f3be16d
+Author: SB96-Lee <silee7575@gmail.com>
+Date:   Tue Apr 22 18:36:38 2025 +0900
+
+    Merge branch 'master' of https://github.com/lejeongeun/whereGo into SBL
+
+[33mcommit 61702c93fa24db6f2026c3814c17a4ada3451bed[m
+Merge: 52a954d 0f41eb4
+Author: SB96-Lee <silee7575@gmail.com>
+Date:   Tue Apr 22 18:35:50 2025 +0900
+
+    Merge branch 'develop' of https://github.com/lejeongeun/whereGo into SBL
+
+[33mcommit 52a954d095bc6fe198f97fb19444eb17a108d4b9[m
+Author: SB96-Lee <silee7575@gmail.com>
+Date:   Tue Apr 22 18:34:50 2025 +0900
+
+    fix:login_edit
+
+[33mcommit e8c80355db3f723eafaad134f50fcee5271ae6d6[m
+Merge: 836e7a8 f3be16d
+Author: jeong eun <lje7370@gamil.com>
+Date:   Tue Apr 22 18:32:26 2025 +0900
+
+    Merge branch 'master' of https://github.com/lejeongeun/whereGo into jeongeun
+
+[33mcommit f3be16d84a02869983bc6328cf5a06bf517c177b[m
+Merge: 10e4db6 df2a5fd
+Author: yuyeseong <yuyeseong@naver.com>
+Date:   Tue Apr 22 18:27:36 2025 +0900
+
+    Merge pull request #11 from lejeongeun/yuyeseong
+    
+    체크리스트 폴더구조 변경 edit
+
+[33mcommit df2a5fd1d79b875e20be8b281b23f8c8f836c7c0[m
+Author: yuyeseong <yuyeseong@naver.com>
+Date:   Tue Apr 22 18:26:27 2025 +0900
+
+    checklist_folder_edit
+
+[33mcommit 836e7a8556e40d9c306411678529c772ea41ec00[m
+Merge: 7c65949 0f41eb4
+Author: jeong eun <lje7370@gamil.com>
+Date:   Tue Apr 22 18:12:49 2025 +0900
+
+    Merge branch 'develop' of https://github.com/lejeongeun/whereGo into jeongeun
+
+[33mcommit 0f41eb49d543e18d22670168565025211fe883b2[m
+Merge: 21ef023 043680a
+Author: hansol04 <gksthf0428@naver.com>
+Date:   Tue Apr 22 18:12:07 2025 +0900
+
+    Merge pull request #10 from lejeongeun/hansol
+    
+    커뮤니티 추가
+
+[33mcommit 043680a2c67948489d42efb3f26163390f841e34[m
+Merge: a853db1 21ef023
+Author: hansol04 <gksthf0428@naver.com>
+Date:   Tue Apr 22 18:03:28 2025 +0900
+
+    marge app.js
+
+[33mcommit 7c65949ddedb38f94413d67afab5a6da93b6df88[m
+Merge: 196a48b 21ef023
+Author: jeong eun <lje7370@gamil.com>
+Date:   Tue Apr 22 17:56:04 2025 +0900
+
+    merge_error_add
+
+[33mcommit 196a48bc18cfd9e991dff0cb84ba007beb59c173[m
+Author: jeong eun <lje7370@gamil.com>
+Date:   Tue Apr 22 17:54:34 2025 +0900
+
+    gradle
+
+[33mcommit 21ef023d61cd4285fa9f8fb39470518e187b8691[m
+Merge: 82675a7 96f2489
+Author: wig7227 <wig7227@naver.com>
+Date:   Tue Apr 22 17:48:10 2025 +0900
+
+    Merge pull request #9 from lejeongeun/TaeHyeong
+    
+    Navbar 수정 및 충돌 해결
+
+[33mcommit 96f2489791ad261f26d8bad610ce6448d64c3317[m
+Author: tae <wig7227@naver.com>
+Date:   Tue Apr 22 17:46:27 2025 +0900
+
+    Navbar 수정 및 충돌 해결
+
+[33mcommit 1a4ae1ff25c8fa8b7cb1f7eeec19e6c1835c4443[m
+Merge: 6fb8835 82675a7
+Author: jeong eun <lje7370@gamil.com>
+Date:   Tue Apr 22 17:04:25 2025 +0900
+
+    develop_error_add
+
+[33mcommit a853db1b181793096626ceee314879b60b367ec7[m
+Author: hansol04 <gksthf0428@naver.com>
+Date:   Tue Apr 22 16:52:30 2025 +0900
+
+    게시글 화면, 게시글 상세페이지, 글쓰기페이지
+
+[33mcommit 82675a7935eae6bc56876c87ce2fcf421b7770eb[m
+Merge: 1031c72 e345eb1
+Author: wig7227 <wig7227@naver.com>
+Date:   Tue Apr 22 16:39:30 2025 +0900
+
+    Merge pull request #8 from lejeongeun/TaeHyeong
+    
+    Tae hyeong
+
+[33mcommit e345eb1ecc1485aaea97c2baf3ace413b36a24d7[m
+Merge: 1606289 1031c72
+Author: wig7227 <wig7227@naver.com>
+Date:   Tue Apr 22 16:38:55 2025 +0900
+
+    Merge branch 'develop' into TaeHyeong
+
+[33mcommit 6fb88357a6fc6398d0c0e0c53c6ef04bb142ac76[m
+Merge: b39b570 fe717c0
+Author: jeong eun <lje7370@gamil.com>
+Date:   Tue Apr 22 16:29:03 2025 +0900
+
+    feat:edit_map_checklist_add
+
+[33mcommit 160628931c7572a3a18b14738c972fe3eb9b3931[m
+Author: tae <wig7227@naver.com>
+Date:   Tue Apr 22 16:20:56 2025 +0900
+
+    common edit
+
+[33mcommit e3d75fc7a885bd0e79325920a16a0824b0c7eca9[m
+Merge: 712c999 1031c72
+Author: hansol04 <gksthf0428@naver.com>
+Date:   Tue Apr 22 14:31:02 2025 +0900
+
+    태형,예성님꺼 병합
+
+[33mcommit 712c9992550f6558c999d47fd6d373e7b82a63d2[m
+Merge: 89acbdb 894672a
+Author: hansol04 <gksthf0428@naver.com>
+Date:   Tue Apr 22 14:21:12 2025 +0900
+
+    태형님꺼 가져옴
+
+[33mcommit 4a8e32040e401fc2cd7dac4213f8b43200c10516[m
+Merge: 163f19e 10e4db6
+Author: tae <wig7227@naver.com>
+Date:   Tue Apr 22 14:12:43 2025 +0900
+
+    Merge branch 'develop' into TaeHyeong
+
+[33mcommit 1031c72ae968fcb4cca3c866d94143d0aebfdeb1[m
+Merge: e2f8cad e1807e0
+Author: SB96-Lee <silee7575@gmail.com>
+Date:   Tue Apr 22 14:06:04 2025 +0900
+
+    Merge pull request #7 from lejeongeun/SBL
+    
+    Sbl
+
+[33mcommit e1807e027b60ed5e713f060df500ec68c32edc63[m
+Auth
