@@ -2,6 +2,7 @@
     border-bottom: 1px solid #e5e5e5;
     padding: 20px 0;
     font-family: 'Pretendard', sans-serif;
+    margin-left: 100px;
   }
   
   .post-header {
@@ -31,22 +32,7 @@
     color: #4b5563;
     font-size: 0.95rem;
   }
-  
-  .post-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 10px;
-  }
-  
-  .tag {
-    background-color: #f3f4f6;
-    color: #374151;
-    font-size: 0.75rem;
-    padding: 4px 10px;
-    border-radius: 10px;
-  }
-  
+
   .post-footer {
     display: flex;
     justify-content: space-between;

@@ -30,5 +30,8 @@ public class Community extends BaseEntity {
     @Column(nullable = false)
     private Boolean isDeleted = false; // 삭제 여부
 
+    @Column(columnDefinition = "BIGINT DEFAULT 0")
+    @Builder.Default
+    private Long viewCount = 0L; // 조회수
 
 }

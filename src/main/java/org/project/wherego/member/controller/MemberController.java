@@ -4,7 +4,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.wherego.member.config.CustomUserDetails;
+import org.project.wherego.member.domain.Member;
 import org.project.wherego.member.dto.*;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,7 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 import org.project.wherego.member.service.MemberService;
@@ -68,8 +69,7 @@ public class MemberController {
     }
     @GetMapping("/mypage")          // 로그인된 사용자 정보 받기
     public ResponseEntity<?> mypageInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        String email = userDetails.getMember().getEmail();
-        MyPageResponse mypageresponse = memberService.mypageInfo(email);
+        MyPageResponse mypageresponse = memberService.mypageInfo(userDetails.getMember());
         return ResponseEntity.ok(mypageresponse);
     }
 

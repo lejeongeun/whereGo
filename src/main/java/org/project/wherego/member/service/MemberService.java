@@ -1,6 +1,10 @@
 package org.project.wherego.member.service;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.project.wherego.community.domain.Community;
+import org.project.wherego.community.dto.CommunityResponseDto;
+import org.project.wherego.community.repository.CommunityRepository;
 import org.project.wherego.member.domain.Member;
 import org.project.wherego.member.dto.ChangePwdRequest;
 import org.project.wherego.member.dto.MyPageResponse;
@@ -12,13 +16,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final AuthenticationManager authenticationManager;
+    private final CommunityRepository communityRepository;
     private final PasswordEncoder passwordEncoder;
 
 
@@ -49,11 +55,20 @@ public class MemberService {
         SecurityContextHolder.clearContext(); // 세션 삭제
     }
 
-    public MyPageResponse mypageInfo(String email) {
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다."));
+    public MyPageResponse mypageInfo(Member member) {
+        List<Community> communities = communityRepository.findByMemberAndIsDeletedFalse(member);
+        List<CommunityResponseDto> communityDtos = communities.stream()
+                .map(community -> CommunityResponseDto.builder()
+                        .id(community.getId())
+                        .title(community.getTitle())
+                        .content(community.getContent())
+                        .nickname(community.getMember().getNickname()) // Member에서 nickname 가져오기
+                        .createdAt(community.getCreatedAt()) // BaseEntity의 createdAt
+                        .viewCount(community.getViewCount())
+                        .build())
+                .collect(Collectors.toList());
 
-        return new MyPageResponse(member.getEmail(), member.getPassword(), member.getNickname());
+        return new MyPageResponse(member.getEmail(), member.getNickname(), communityDtos);
     }
 
     public ChangePwdRequest changwPwd(ChangePwdRequest changePwdRequest) {

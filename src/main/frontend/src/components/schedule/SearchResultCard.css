@@ -1,0 +1,49 @@
+.search-result-card {
+    display: flex;
+    align-items: flex-start;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin: 16px auto;
+    max-width: 640px;
+    overflow: hidden;
+  }
+  
+  .result-card-image {
+    width: 120px;
+    height: 100px;
+    object-fit: cover;
+    border-right: 1px solid #eee;
+  }
+  
+  .result-card-content {
+    padding: 12px 16px;
+    flex: 1;
+  }
+  
+  .result-card-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  .result-card-desc {
+    margin: 6px 0 12px;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .result-card-add-button {
+    padding: 6px 12px;
+    font-size: 14px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .result-card-add-button:hover {
+    background-color: #449c47;
+  }
+  

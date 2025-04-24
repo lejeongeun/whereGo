@@ -6,12 +6,12 @@ import NewChecklistPage from './pages/checklist/NewChecklistPage';
 import EditChecklistPage from './pages/checklist/EditChecklistPage';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
-import Sidebar from './components/common/Sidebar';
 import SignUp from './components/auth/SignUp';
 import Login from './components/auth/Login';
 import CommunityDetailPage from './pages/community/CommunityDetailPage';
 import CommunityWritePage from './pages/community/CommunityWritePage';
 import CommunityPage from './pages/community/CommunityPage';
+import TripSchedulePage from './pages/schedule/TripSchedulePage';
 import './App.css';
 import MapComponent from "./components/map/MapComponent";
 
@@ -19,7 +19,7 @@ function App() {
   return (
       <BrowserRouter>
         <div className="app-layout">
-          <Sidebar />
+          
           <div className="main-container">
             <Navbar className="navbar" />
             <div className="content">
@@ -34,6 +34,7 @@ function App() {
                 <Route path="/community" element={<CommunityPage />} />
                 <Route path="/community/:id" element={<CommunityDetailPage />} />
                 <Route path="/community/write" element={<CommunityWritePage />} />
+                <Route path="/schedule" element={<TripSchedulePage />} />
               </Routes>
             </div>
             <Footer className="footer" />
