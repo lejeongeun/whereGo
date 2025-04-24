@@ -1,13 +1,17 @@
 package org.project.wherego.map.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.project.wherego.common.domain.BaseEntity;
 import org.project.wherego.member.domain.Member;
 import org.project.wherego.schedule.domain.Schedule;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Place{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

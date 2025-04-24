@@ -32,5 +32,4 @@
 //        List<PlaceSearchResponse> results = googleMapsService.searchPlaces(query);
 //        return ResponseEntity.ok(results);
 //    }
-//
 //}
