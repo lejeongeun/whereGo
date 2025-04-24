@@ -1,105 +1,114 @@
 //
 import React, { useState, useEffect } from 'react';
+import { checklistApi } from '../../api/checklistApi';
 import { AiOutlinePlus } from 'react-icons/ai';
 import NewChecklistPage from './NewChecklistPage';
 import ChecklistListPage from './ChecklistListPage';
 import './ChecklistPage.css';
 
 const ChecklistPage = () => {
-  const [checklists, setChecklists] = useState([]);
+  const [checklistGroups, setChecklistGroups] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [initialized, setInitialized] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // localStorage에서 체크리스트 데이터 불러오기 (컴포넌트 마운트 시 1회만 실행)
+  // 체크리스트 그룹 불러오기
   useEffect(() => {
-    try {
-      const savedChecklists = localStorage.getItem('checklists');
-      if (savedChecklists) {
-        const parsedChecklists = JSON.parse(savedChecklists);
-        if (Array.isArray(parsedChecklists)) {
-          setChecklists(parsedChecklists);
-          console.log('Loaded checklists from localStorage:', parsedChecklists);
-        }
-      }
-    } catch (error) {
-      console.error('Error loading checklists from localStorage:', error);
-    }
-    setInitialized(true);
-  }, []);
- 
-  // 체크리스트 데이터가 변경될 때마다 localStorage에 저장
-  useEffect(() => {
-    // 초기화가 완료된 후에만 저장 실행
-    if (initialized) {
+    const fetchChecklistGroups = async () => {
       try {
-        console.log('Saving checklists to localStorage:', checklists);
-        localStorage.setItem('checklists', JSON.stringify(checklists));
-      } catch (error) {
-        console.error('Error saving checklists to localStorage:', error);
+        setLoading(true);
+        const groups = await checklistApi.getAllGroups();
+        setChecklistGroups(groups);
+      } catch (err) {
+        setError('체크리스트를 불러오는데 실패했습니다.');
+        console.error(err);
+      } finally {
+        setLoading(false);
       }
-    }
-  }, [checklists, initialized]);
-
-  const handleSaveChecklist = (checklist) => {
-    if (!checklist.title.trim() || checklist.items.length === 0) {
-      alert('제목과 최소 1개 이상의 항목이 필요합니다.');
-      return;
-    }
-
-    const newChecklist = {
-      id: checklists.length > 0 ? Math.max(...checklists.map(list => list.id)) + 1 : 1,
-      title: checklist.title,
-      items: checklist.items.map((item, index) => ({
-        id: index + 1,
-        text: item.text,
-        checked: item.checked
-      }))
     };
 
-    setChecklists([...checklists, newChecklist]);
-    setIsModalOpen(false);
+    fetchChecklistGroups();
+  }, []);
+
+  const handleSaveChecklist = async (checklist) => {
+    try {
+      setLoading(true);
+      // 그룹 생성
+      const groupData = {
+        title: checklist.title,
+        items: checklist.items.map(item => ({
+          item: item.text,
+          isChecked: false
+        }))
+      };
+      await checklistApi.createGroup(groupData);
+      
+      // 목록 새로고침
+      const updatedGroups = await checklistApi.getAllGroups();
+      setChecklistGroups(updatedGroups);
+      setIsModalOpen(false);
+    } catch (err) {
+      setError('체크리스트 저장에 실패했습니다.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleDeleteChecklist = (id) => {
-    setChecklists(checklists.filter(list => list.id !== id));
+  const handleDeleteGroup = async (groupId) => {
+    try {
+      setLoading(true);
+      await checklistApi.deleteGroup(groupId);
+      const updatedGroups = await checklistApi.getAllGroups();
+      setChecklistGroups(updatedGroups);
+    } catch (err) {
+      setError('체크리스트 삭제에 실패했습니다.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleToggleItem = (checklistId, itemId) => {
-    setChecklists(checklists.map(list => {
-      if (list.id === checklistId) {
-        return {
-          ...list,
-          items: list.items.map(item => 
-            item.id === itemId ? { ...item, checked: !item.checked } : item
-          )
-        };
-      }
-      return list;
-    }));
+  const handleToggleItem = async (groupId, itemId) => {
+    try {
+      setLoading(true);
+      await checklistApi.toggleItem(groupId, itemId);
+      const updatedGroups = await checklistApi.getAllGroups();
+      setChecklistGroups(updatedGroups);
+    } catch (err) {
+      setError('항목 상태 변경에 실패했습니다.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleAddItem = (checklistId, newItem) => {
-    setChecklists(checklists.map(list => {
-      if (list.id === checklistId) {
-        return {
-          ...list,
-          items: [...list.items, newItem]
-        };
-      }
-      return list;
-    }));
+  const handleAddItem = async (groupId, newItem) => {
+    try {
+      setLoading(true);
+      await checklistApi.addItem(groupId, { item: newItem.text, isChecked: false });
+      const updatedGroups = await checklistApi.getAllGroups();
+      setChecklistGroups(updatedGroups);
+    } catch (err) {
+      setError('항목 추가에 실패했습니다.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleDeleteItem = (checklistId, itemId) => {
-    setChecklists(checklists.map(list => {
-      if (list.id === checklistId) {
-        return {
-          ...list,
-          items: list.items.filter(item => item.id !== itemId)
-        };
-      }
-      return list;
-    }));
+  const handleDeleteItem = async (groupId, itemId) => {
+    try {
+      setLoading(true);
+      await checklistApi.deleteItem(groupId, itemId);
+      const updatedGroups = await checklistApi.getAllGroups();
+      setChecklistGroups(updatedGroups);
+    } catch (err) {
+      setError('항목 삭제에 실패했습니다.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const EmptyState = () => (
@@ -110,13 +119,21 @@ const ChecklistPage = () => {
     </div>
   );
 
+  if (loading) {
+    return <div className="loading">로딩 중...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
+
   return (
     <div className="checklist-container">
       <h1>체크리스트</h1>
-      {checklists.length > 0 ? (
+      {checklistGroups.length > 0 ? (
         <ChecklistListPage
-          checklists={checklists}
-          onDeleteChecklist={handleDeleteChecklist}
+          checklists={checklistGroups}
+          onDeleteChecklist={handleDeleteGroup}
           onToggleItem={handleToggleItem}
           onAddItem={handleAddItem}
           onDeleteItem={handleDeleteItem}
