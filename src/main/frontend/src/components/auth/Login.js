@@ -31,7 +31,7 @@ function Login() {
       if (response.data && response.data.email) {
 
         // 사용자 정보와 토큰을 로컬 스토리지에 저장
-        localStorage.setItem('token', 'jwt-token-here'); // 백엔드에서 토큰을 제공한다면 response.data.token 사용
+        localStorage.setItem('token', 'jwt-token-here');
         localStorage.setItem('user', JSON.stringify({ 
           email: response.data.email 
         }));

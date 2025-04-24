@@ -147,3 +147,54 @@
     margin-bottom: 20px;
     border: 1px solid #a5d6a7;
   }
+
+  .profile-section {
+    margin: 20px 0;
+  }
+  
+  .profile-image-container {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+  }
+  
+  .profile-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #eaeaea;
+  }
+  
+  /* BsPersonCircle 아이콘을 위한 스타일 */
+  .profile-icon {
+    width: 100px;
+    height: 100px;
+    display: block;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    border: 2px solid #eaeaea;
+  }
+  
+  .change-image-button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    padding: 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  
+  .change-image-button:hover {
+    background-color: #969696;
+  }
