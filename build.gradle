@@ -49,7 +49,7 @@ dependencies {
 
     // Mysql
     implementation 'mysql:mysql-connector-java:8.0.32'
-    implementation 'com.google.maps:google-maps-services:0.18.0'
+//    implementation 'com.google.maps:google-maps-services:0.18.0'
 
 
 }
