@@ -15,5 +15,6 @@ import java.util.List;
 public class MyPageResponse {
     private String email;
     private String nickname;
+    private String profileImage;
     private List<CommunityResponseDto> comunities;
 }
