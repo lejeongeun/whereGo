@@ -1,6 +1,7 @@
 package org.project.wherego.schedule.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.project.wherego.map.domain.Place;
 import org.project.wherego.member.config.CustomUserDetails;
 import org.project.wherego.schedule.domain.Schedule;
 import org.project.wherego.schedule.dto.ScheduleRequestDto;
@@ -17,23 +18,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScheduleController {
     private final ScheduleService scheduleService;
-
-    @PostMapping
-    public ResponseEntity<Schedule> createSchedule(@RequestBody ScheduleRequestDto requestDto){
-        Schedule schedule = scheduleService.createSchedule(requestDto);
+    // 일정 컴포넌트 생성
+    @PostMapping("/createSchedule")
+    public ResponseEntity<Schedule> createSchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                   @RequestBody ScheduleRequestDto requestDto){
+        String email = userDetails.getMember().getEmail();
+        Schedule schedule = scheduleService.createSchedule(email, requestDto);
         return ResponseEntity.ok(schedule);
     }
 
-    @GetMapping
+    // 일정에 등록된 장소 조회
+    @GetMapping("/{scheduleId}/getPlaces")
+    public ResponseEntity<List<Place>> getSchedulePlaces(@PathVariable Long scheduleId) {
+        return ResponseEntity.ok(scheduleService.getSchedulePlaces(scheduleId));
+    }
+
+    // 전체 일정 리스트 조회
+    @GetMapping("/allPlaces")
     public ResponseEntity<List<ScheduleResponseDto>> getSchedules(@AuthenticationPrincipal CustomUserDetails userDetails){
         String email = userDetails.getMember().getEmail();
         List<ScheduleResponseDto> schedule = scheduleService.getSchedules(email);
         return ResponseEntity.ok(schedule);
-
     }
-
-
-
-
 
 }

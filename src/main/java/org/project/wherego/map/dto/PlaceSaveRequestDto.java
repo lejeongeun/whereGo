@@ -12,6 +12,7 @@ public class PlaceSaveRequestDto {
     private String address;
     private double latitude;
     private double longitude;
+    private String description;
     private Long scheduleId;
     private String email;
 }
