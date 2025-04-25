@@ -31,7 +31,7 @@ function Login() {
       if (response.data && response.data.email) {
 
         // 사용자 정보와 토큰을 로컬 스토리지에 저장
-        localStorage.setItem('token', 'jwt-token-here');
+        localStorage.setItem('token', 'jwt-token-here'); // 백엔드에서 토큰을 제공한다면 response.data.token 사용
         localStorage.setItem('user', JSON.stringify({ 
           email: response.data.email 
         }));
@@ -46,15 +46,26 @@ function Login() {
         window.location.href = '/';
 
       }
-
-    } catch (err) {
-      // api.js의 인터셉터에서 처리된 에러 메시지 사용
-      setError(err);
+  
+    } catch (error) {
+      console.error('로그인 오류:', error);
+      
+      // HTTP 상태 코드로 오류 구분
+      if (error.response) {
+        if (error.response.status === 401) {
+          setError('이메일 또는 비밀번호가 잘못되었습니다.');
+        } else {
+          setError(error.response.data?.message || '로그인 중 오류가 발생했습니다.');
+        }
+      } else if (error.request) {
+        setError('서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.');
+      } else {
+        setError('로그인 요청 생성 중 오류가 발생했습니다.');
+      }
     } finally {
       setIsLoading(false);
     }
   };
-
   return (
     <div className="login-container">
       <div className="login-card">
@@ -88,7 +99,7 @@ function Login() {
           </div>
           
           <div className="forgot-password">
-            <Link to="/forgot-password">비밀번호를 잊으셨나요?</Link>
+            <Link to="/findPwd">비밀번호를 잊으셨나요?</Link>
           </div>
           
           <button 

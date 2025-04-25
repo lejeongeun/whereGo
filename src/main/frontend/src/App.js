@@ -8,6 +8,8 @@ import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
 import SignUp from './components/auth/SignUp';
 import Login from './components/auth/Login';
+import FindPwd from './components/auth/FindPwd';
+import Exchange from './pages/exchange/Exchange';
 import CommunityDetailPage from './pages/community/CommunityDetailPage';
 import CommunityWritePage from './pages/community/CommunityWritePage';
 import CommunityPage from './pages/community/CommunityPage';
@@ -29,7 +31,9 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/findPwd" element={<FindPwd />} />
                 <Route path="/map" element={<MapComponent />} />
+                <Route path="/exchange" element={<Exchange />} />
                 <Route path="/checklist" element={<ChecklistPage />} />
                 <Route path="/checklist/new" element={<NewChecklistPage />} />
                 <Route path="/checklist/edit" element={<EditChecklistPage />} />
