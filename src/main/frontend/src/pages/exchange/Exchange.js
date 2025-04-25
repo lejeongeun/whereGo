@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import api from '../../api.js';
-import './Exchange.css'; 
+import api from '../../api'; // 이전에 생성한 api.js 파일 import
+import './Exchange.css'; // 나중에 필요한 스타일을 위한 CSS 파일
 
-function Exchange () {
+const Exchange = () => {
   // 상태 관리
   const [baseRate, setBaseRate] = useState({
-    base: 'USD',
-    target: 'KRW',
+    base: 'KRW',
+    target: 'USD',
     rate: 0,
     timestamp: ''
   });
@@ -31,7 +31,15 @@ function Exchange () {
 
   // 컴포넌트 마운트 시 환율 정보 가져오기
   useEffect(() => {
-    fetchExchangeRate();
+    // 초기 로드 시 API 호출 에러 방지를 위한 지연 설정
+    // 또는 초기 로드 시에는 API 호출을 하지 않고 사용자가 직접 버튼을 클릭하도록 함
+    setBaseRate(prev => ({
+      ...prev,
+      rate: 0,
+      timestamp: ''
+    }));
+    // 필요한 경우 아래 주석을 해제하여 초기 API 호출 활성화
+    // fetchExchangeRate();
   }, []);
 
   // 환율 정보 API 호출
@@ -103,17 +111,8 @@ function Exchange () {
         <form onSubmit={handleRateSubmit}>
           <div className="form-group">
             <label>기준 통화:</label>
-            <select 
-              name="base" 
-              value={baseRate.base} 
-              onChange={handleRateChange}
-            >
-              {currencyOptions.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <div className="static-field">한국 원화 (KRW)</div>
+            <input type="hidden" name="base" value="KRW" />
           </div>
           
           <div className="form-group">
@@ -123,7 +122,7 @@ function Exchange () {
               value={baseRate.target} 
               onChange={handleRateChange}
             >
-              {currencyOptions.map(option => (
+              {currencyOptions.filter(option => option.value !== 'KRW').map(option => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -139,7 +138,7 @@ function Exchange () {
         {baseRate.rate > 0 && (
           <div className="result-box">
             <p>
-              <strong>1 {baseRate.base}</strong>는 <strong>{baseRate.rate.toFixed(2)} {baseRate.target}</strong> 입니다.
+              <strong>1 {baseRate.target}</strong> = <strong>{(1/baseRate.rate).toFixed(2)} 대한민국원</strong>
             </p>
             {baseRate.timestamp && (
               <p className="timestamp">기준 시간: {new Date(baseRate.timestamp * 1000).toLocaleString()}</p>

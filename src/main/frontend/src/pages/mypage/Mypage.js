@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api';
+import axios from 'axios'; // 직접 axios 추가
 import './Mypage.css';
 import { AiFillSetting } from "react-icons/ai";
 import { BsPersonCircle } from "react-icons/bs";
@@ -13,8 +14,11 @@ const MyPage = () => {
     comunities: []
   });
   const [selectedImage, setSelectedImage] = useState(null);
+  const [response, setSelectedFile] = useState(null); // 실제 파일 객체 저장
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null); // 성공 메시지 상태 추가
+  const [isUploading, setIsUploading] = useState(false); // 업로드 진행 상태
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
@@ -67,9 +71,50 @@ const MyPage = () => {
     const reader = new FileReader();
     reader.onload = (e) => {
       setSelectedImage(e.target.result);
+      setSelectedFile(file); // 파일 객체 저장
       setError(null);
+      
+      // 이미지 선택 후 자동 업로드
+      handleSaveProfileImage(file);
     };
     reader.readAsDataURL(file);
+  };
+
+  // 프로필 이미지 서버에 저장
+  const handleSaveProfileImage = async (file) => {
+    if (!file) {
+      setError('업로드할 이미지를 선택해주세요.');
+      return;
+    }
+
+    setIsUploading(true);
+    setError(null);
+    setSuccess(null);
+
+    // FormData 객체 생성 및 파일 추가
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      // 서버에 이미지 업로드 요청
+      const response = await axios.post('http://localhost:8080/api/mypage/upload', 
+        formData, 
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          withCredentials: true
+        }
+      );
+
+      setSuccess('프로필 이미지가 성공적으로 업로드되었습니다.');
+      console.log('이미지 업로드 성공:', response.data);
+    } catch (err) {
+      console.error('이미지 업로드 실패:', err);
+      setError('프로필 이미지 업로드에 실패했습니다.');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   // 이미지 업로드 버튼 클릭 핸들러
@@ -102,7 +147,7 @@ const MyPage = () => {
 
   // 로딩 중
   if (isLoading) {
-    return <div className="my-page-container">roading...</div>;
+    return <div className="my-page-container">loading...</div>;
   }
 
   return (
@@ -110,10 +155,13 @@ const MyPage = () => {
       <h1>마이페이지</h1>
       
       {error && <div className="error-message">{error}</div>}
+      {success && <div className="success-message">{success}</div>}
       
       <div className="profile-section">
         <div className="profile-image-container">
-          {selectedImage ? (
+          {isUploading ? (
+            <div className="loading-spinner">업로드 중...</div>
+          ) : selectedImage ? (
             <img 
               src={selectedImage} 
               alt="프로필 이미지" 
@@ -129,6 +177,7 @@ const MyPage = () => {
           <button 
             className="change-image-button" 
             onClick={handleUploadButtonClick}
+            disabled={isUploading}
           >
            <AiFillSetting size={24} />
           </button>
