@@ -19,7 +19,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 import org.project.wherego.member.service.MemberService;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,6 +70,7 @@ public class MemberController {
         memberService.logout();
         return ResponseEntity.ok(new LogoutResponse("로그아웃 성공"));
     }
+
     @GetMapping("/mypage")          // 로그인된 사용자 정보 받기
     public ResponseEntity<?> mypageInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
         MyPageResponse mypageresponse = memberService.mypageInfo(userDetails.getMember());
@@ -100,5 +103,18 @@ public class MemberController {
                     .body(new ErrorResponse("닉네임 또는 이메일이 일치하지 않습니다."));
         }
     }
+
+    @PostMapping("/mypage/upload")
+    public ResponseEntity<String> uploadProfileImage(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestPart("file") MultipartFile file) {
+        try {
+            memberService.uploadProfileImage(userDetails.getMember(), file);
+            return ResponseEntity.ok("프로필 이미지가 업로드 되었습니다.");
+        } catch (IOException e) {
+            return ResponseEntity.status(500).body("파일 업로드에 실패했습니다: " + e.getMessage());
+        }
+    }
+
 }
 
