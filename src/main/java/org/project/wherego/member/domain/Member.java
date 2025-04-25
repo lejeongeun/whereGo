@@ -28,6 +28,9 @@ public class Member {
     @Column(nullable = false)
     private String nickname; // 닉네임
 
+    @Column
+    private String profileImage;
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
