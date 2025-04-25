@@ -109,8 +109,11 @@ public class CheckListService {
     }
 
     @Transactional
-    public List<CheckListGroupDto> groupAllList(){
-        List<ChecklistGroup> checklistsGroup = groupRepository.findAll();
+    public List<CheckListGroupDto> groupAllList(String email){
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
+        
+        List<ChecklistGroup> checklistsGroup = groupRepository.findAllByMember(member);
 
         return checklistsGroup.stream().map(
                 group -> CheckListGroupDto.builder()

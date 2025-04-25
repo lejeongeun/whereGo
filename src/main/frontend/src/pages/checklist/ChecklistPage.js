@@ -1,5 +1,6 @@
 //
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { checklistApi } from '../../api/checklistApi';
 import { AiOutlinePlus } from 'react-icons/ai';
 import NewChecklistPage from './NewChecklistPage';
@@ -7,10 +8,20 @@ import ChecklistListPage from './ChecklistListPage';
 import './ChecklistPage.css';
 
 const ChecklistPage = () => {
+  const navigate = useNavigate();
   const [checklistGroups, setChecklistGroups] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // 로그인 상태 체크
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+  }, [navigate]);
 
   // 체크리스트 그룹 불러오기
   useEffect(() => {
@@ -20,6 +31,11 @@ const ChecklistPage = () => {
         const groups = await checklistApi.getAllGroups();
         setChecklistGroups(groups);
       } catch (err) {
+        if (err.response && err.response.status === 401) {
+          localStorage.removeItem('token');
+          navigate('/login');
+          return;
+        }
         setError('체크리스트를 불러오는데 실패했습니다.');
         console.error(err);
       } finally {
@@ -27,13 +43,21 @@ const ChecklistPage = () => {
       }
     };
 
-    fetchChecklistGroups();
-  }, []);
+    const token = localStorage.getItem('token');
+    if (token) {
+      fetchChecklistGroups();
+    }
+  }, [navigate]);
 
   const handleSaveChecklist = async (checklist) => {
     try {
       setLoading(true);
-      // 그룹 생성
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
       const groupData = {
         title: checklist.title,
         items: checklist.items.map(item => ({
@@ -43,11 +67,15 @@ const ChecklistPage = () => {
       };
       await checklistApi.createGroup(groupData);
       
-      // 목록 새로고침
       const updatedGroups = await checklistApi.getAllGroups();
       setChecklistGroups(updatedGroups);
       setIsModalOpen(false);
     } catch (err) {
+      if (err.response && err.response.status === 401) {
+        localStorage.removeItem('token');
+        navigate('/login');
+        return;
+      }
       setError('체크리스트 저장에 실패했습니다.');
       console.error(err);
     } finally {

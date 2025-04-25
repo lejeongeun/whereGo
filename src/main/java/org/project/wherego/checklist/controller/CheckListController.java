@@ -80,8 +80,9 @@ public class CheckListController {
 
     // 전체조회
     @GetMapping("/allList")
-    public ResponseEntity<List<CheckListGroupDto>> groupAllList(){
-        List<CheckListGroupDto> getAllList = checkListService.groupAllList();
+    public ResponseEntity<List<CheckListGroupDto>> groupAllList(@AuthenticationPrincipal CustomUserDetails userDetails){
+        String email = userDetails.getMember().getEmail();
+        List<CheckListGroupDto> getAllList = checkListService.groupAllList(email);
         return ResponseEntity.ok(getAllList);
     }
 }
