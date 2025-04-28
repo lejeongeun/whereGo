@@ -1,6 +1,5 @@
-// src/components/CommunityPostItem.js
 import './CommunityPostItem.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AiOutlineLike } from "react-icons/ai";
 import { LuEye } from "react-icons/lu";
 import { FaRegComment } from "react-icons/fa";
@@ -8,7 +7,11 @@ import { FaRegComment } from "react-icons/fa";
 function CommunityPostItem({ id, title, content, nickname, createdAt, likeCount, viewCount, commentCount }) {
   return (
     <div className="post-card">
-      <Link to={`/community/${id}`} className="post-link">
+      <Link 
+        to={`/community/${id}`} 
+        state={{ id, title, content, nickname, createdAt, likeCount, viewCount, commentCount }}
+        className="post-link"
+      >
         <div className="post-header">
           <span className="author-name">{nickname}</span>
           <strong className="post-title">{title}</strong>

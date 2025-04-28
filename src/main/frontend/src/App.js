@@ -14,6 +14,7 @@ import CommunityPage from './pages/community/CommunityPage';
 import TripSchedulePage from './pages/schedule/TripSchedulePage';
 import './App.css';
 import MapComponent from "./components/map/MapComponent";
+import CommunityEditPage from './pages/community/CommunityEditPage';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
                 <Route path="/community/:id" element={<CommunityDetailPage />} />
                 <Route path="/community/write" element={<CommunityWritePage />} />
                 <Route path="/schedule" element={<TripSchedulePage />} />
+                <Route path="/community/:id/edit" element={<CommunityEditPage />} />
               </Routes>
             </div>
             <Footer className="footer" />
