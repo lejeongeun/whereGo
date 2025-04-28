@@ -11,7 +11,9 @@ import lombok.*;
 public class CommunityRequestDto {
     @NotBlank(message = "제목을 입력해 주세요.")
     private String title;
+
     @NotBlank(message = "본문을 입력해 주세요.")
     private String content;
 
+    private String imageUrl;
 }
