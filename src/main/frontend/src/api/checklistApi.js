@@ -54,13 +54,11 @@ export const checklistApi = {
     if (!token) {
       throw new Error('로그인이 필요합니다.');
     }
-    console.log('checklistApi.addItem에 전달되는 itemData:', itemData);
     const response = await api.post(`${API_BASE_URL}/${groupId}/addItem`, itemData, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
-    console.log('checklistApi.addItem 응답:', response.data);
     return response.data;
   },
   
@@ -102,4 +100,4 @@ export const checklistApi = {
     });
     return response.data;
   }
-}; 
+};
