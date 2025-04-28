@@ -80,6 +80,9 @@ export const checklistApi = {
     if (!token) {
       throw new Error('로그인이 필요합니다.');
     }
+    if (!itemId) {
+      throw new Error('아이템 ID가 필요합니다.');
+    }
     const response = await api.put(`${API_BASE_URL}/${groupId}/item/${itemId}/toggle`, null, {
       headers: {
         Authorization: `Bearer ${token}`
@@ -92,6 +95,9 @@ export const checklistApi = {
     const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('로그인이 필요합니다.');
+    }
+    if (!itemId) {
+      throw new Error('아이템 ID가 필요합니다.');
     }
     const response = await api.delete(`${API_BASE_URL}/${groupId}/delete/${itemId}`, {
       headers: {

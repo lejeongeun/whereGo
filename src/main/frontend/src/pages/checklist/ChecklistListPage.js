@@ -45,6 +45,11 @@ const ChecklistListPage = ({ checklists, onDeleteChecklist, onToggleItem, onAddI
     setNewItemText('');
   };
 
+  // 항목 삭제 함수
+  const handleDeleteItem = (checklistId, itemId) => {
+    onDeleteItem(checklistId, itemId);
+  };
+
   return (
     <div className="checklist-list-container">
       <div className="checklists-grid">
@@ -61,12 +66,12 @@ const ChecklistListPage = ({ checklists, onDeleteChecklist, onToggleItem, onAddI
             </div>
             <div className="checklist-items">
               {checklist.items.map((item, index) => (
-                <div key={`${checklist.id}-${item.groupId || `item-${index}-${Date.now()}`}`} className="checklist-item">
+                <div key={`${checklist.id}-${item.id}`} className="checklist-item">
                   <label className="checkbox-label">
                     <input
                       type="checkbox"
                       checked={item.isChecked}
-                      onChange={() => onToggleItem(checklist.id, item.groupId)}
+                      onChange={() => onToggleItem(checklist.id, item.id)}
                     />
                     <span className={item.isChecked ? 'checked' : ''}>
                       {item.item}
@@ -74,7 +79,7 @@ const ChecklistListPage = ({ checklists, onDeleteChecklist, onToggleItem, onAddI
                   </label>
                   <button
                     className="delete-item-button"
-                    onClick={() => onDeleteItem(checklist.id, item.groupId)}
+                    onClick={() => handleDeleteItem(checklist.id, item.id)}
                   >
                     <AiOutlineMinus />
                   </button>
