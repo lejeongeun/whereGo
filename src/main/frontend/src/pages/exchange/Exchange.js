@@ -3,7 +3,6 @@ import api from '../../api';
 import './Exchange.css';
 
 const Exchange = () => {
-  // 상태 관리
   const [baseRate, setBaseRate] = useState({
     base: 'KRW',
     target: 'USD',
@@ -29,8 +28,7 @@ const Exchange = () => {
     { value: 'RUB', label: '러시아 (RUB)' },
     { value: 'MYR', label: '말레이시아 (MYR)' },
     { value: 'MXN', label: '멕시코 (MXN)' },
-    // 미국 통화 코드 수정 (USA -> USD)
-{ value: 'USD', label: '미국 (USD)' },
+    { value: 'USD', label: '미국 (USD)' },
     { value: 'VND', label: '베트남 (VND)' },
     { value: 'BRL', label: '브라질 (BRL)' },
     { value: 'SAR', label: '사우디아라비아 (SAR)' },
@@ -57,9 +55,6 @@ const Exchange = () => {
   const fetchSupportedCurrencies = async () => {
     setLoadingCurrencies(true);
     try {
-      // 이 부분은 서버에서 지원하는 통화 목록 API가 있다면 사용할 수 있습니다.
-      // 현재는 그런 API가 없으므로 확장된 통화 목록을, 기본 통화 목록으로 제한합니다.
-      // BackEnd에서는 확장된 통화들 중 유효하지 않은 것들을 필터링합니다.
       setCurrencies(currencyOptions);
     } catch (err) {
       console.error('통화 목록 조회 에러:', err);
@@ -85,8 +80,6 @@ const Exchange = () => {
       rate: 0,
       timestamp: ''
     }));
-    // 필요한 경우 아래 주석을 해제하여 초기 API 호출 활성화
-    // fetchExchangeRate();
   }, []);
 
   // 환율 정보 API 호출
