@@ -6,7 +6,6 @@ import './CommunityPage.css';
 function CommunityPage() {
   return (
     <div className="community-container">
-      <CommunitySearch />
       <div className="top-bar">
         <CommunitySortTabs />
       </div>

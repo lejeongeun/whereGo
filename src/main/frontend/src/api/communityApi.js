@@ -9,3 +9,6 @@ export const createPost = (data) => api.post('/community/create', data);
 
 // 글 상세 조회 (예시)
 export const getPostById = (id) => api.get(`/community/posts/${id}`);
+
+// 글 삭제
+export const deletePost = (id) => api.delete(`/community/${id}/delete`);

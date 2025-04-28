@@ -1,25 +1,43 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+import CommunitySearch from './CommunitySearch';
 import CommunityPostItem from './CommunityPostItem';
-import { getPosts } from '../../api/communityApi';
+import api from '../../api';
 
 function CommunityPostList() {
   const [posts, setPosts] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [searchKeyword, setSearchKeyword] = useState('');
 
   useEffect(() => {
-    getPosts()
-      .then((res) => {
-        console.log("📦 받아온 데이터:", res.data);
-        setPosts(res.data); // ✅ axios는 응답을 res.data에 담아줘!
+    api.get('/community/list')
+      .then(res => {
+        console.log('서버 응답:', res.data);
+        setPosts(res.data);
+        setFilteredPosts(res.data); // 처음엔 전체 게시글
       })
-      .catch((err) => {
-        console.error('게시글 불러오기 실패:', err);
-      });
+      .catch(err => console.error('서버 요청 실패: ', err));
   }, []);
+
+  useEffect(() => {
+    if (searchKeyword.trim() === '') {
+      setFilteredPosts(posts); // 검색어 없으면 전체
+    } else {
+      const filtered = posts.filter(post => 
+        post.title.includes(searchKeyword) || post.content.includes(searchKeyword)
+      );
+      setFilteredPosts(filtered);
+    }
+  }, [searchKeyword, posts]);
+
+  const handleSearch = (keyword) => {
+    setSearchKeyword(keyword);
+  };
 
   return (
     <div>
-      {posts.map((post, index) => (
-        <CommunityPostItem key={index} {...post} />
+      <CommunitySearch onSearch={handleSearch} />
+      {filteredPosts.map(post => (
+        <CommunityPostItem key={post.id} {...post} />
       ))}
     </div>
   );
