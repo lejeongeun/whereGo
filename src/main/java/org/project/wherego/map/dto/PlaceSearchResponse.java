@@ -10,6 +10,6 @@ public class PlaceSearchResponse {
     private String address;
     private double latitude;
     private double longitude;
-    private double rating; // 평점 추가
-    private String email;
+    private double rating;
+
 }

@@ -12,9 +12,12 @@ import CommunityDetailPage from './pages/community/CommunityDetailPage';
 import CommunityWritePage from './pages/community/CommunityWritePage';
 import CommunityPage from './pages/community/CommunityPage';
 import TripSchedulePage from './pages/schedule/TripSchedulePage';
+import MyPage from './pages/mypage/Mypage';
+import ChangePwd from './pages/mypage/ChangePwd';
 import './App.css';
 import MapComponent from "./components/map/MapComponent";
 import CommunityEditPage from './pages/community/CommunityEditPage';
+import MapContainer from './components/schedule/MapContainer';
 
 function App() {
   return (
@@ -28,7 +31,7 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/map" element={<MapComponent />} />
+                <Route path="/map" element={<MapContainer />} />
                 <Route path="/checklist" element={<ChecklistPage />} />
                 <Route path="/checklist/new" element={<NewChecklistPage />} />
                 <Route path="/checklist/edit" element={<EditChecklistPage />} />
@@ -37,6 +40,8 @@ function App() {
                 <Route path="/community/write" element={<CommunityWritePage />} />
                 <Route path="/schedule" element={<TripSchedulePage />} />
                 <Route path="/community/:id/edit" element={<CommunityEditPage />} />
+                <Route path="/mypage" element={<MyPage />} />
+                <Route path="/changePwd" element={<ChangePwd />} />
               </Routes>
             </div>
             <Footer className="footer" />
