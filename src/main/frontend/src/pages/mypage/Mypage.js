@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api';
-import axios from 'axios'; // 직접 axios 추가
+import axios from 'axios';
 import './Mypage.css';
 import { AiFillSetting } from "react-icons/ai";
 import { BsPersonCircle } from "react-icons/bs";
@@ -13,8 +13,12 @@ const MyPage = () => {
     createdAt: '',
     comunities: []
   });
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [response, setSelectedFile] = useState(null); // 실제 파일 객체 저장
+  // localStorage에서 이미지 데이터를 가져와 초기화
+  const [selectedImage, setSelectedImage] = useState(() => {
+    const savedImage = localStorage.getItem('profileImage');
+    return savedImage ? savedImage : null;
+  });
+  const [selectedFile, setSelectedFile] = useState(null); // 실제 파일 객체 저장
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null); // 성공 메시지 상태 추가
@@ -70,7 +74,11 @@ const MyPage = () => {
     // 로컬에서 이미지 미리보기
     const reader = new FileReader();
     reader.onload = (e) => {
-      setSelectedImage(e.target.result);
+      const imageDataUrl = e.target.result;
+      setSelectedImage(imageDataUrl);
+      // localStorage에 이미지 저장
+      localStorage.setItem('profileImage', imageDataUrl);
+      
       setSelectedFile(file); // 파일 객체 저장
       setError(null);
       
@@ -112,6 +120,7 @@ const MyPage = () => {
     } catch (err) {
       console.error('이미지 업로드 실패:', err);
       setError('프로필 이미지 업로드에 실패했습니다.');
+      // 업로드 실패 시에도 로컬에 저장된 이미지는 유지됨
     } finally {
       setIsUploading(false);
     }
@@ -137,6 +146,8 @@ const MyPage = () => {
           withCredentials: true
         });
         
+        // 계정 삭제 시 localStorage에서 프로필 이미지 제거
+        localStorage.removeItem('profileImage');
         navigate('/');
       } catch (err) {
         setError('계정 삭제에 실패했습니다.');

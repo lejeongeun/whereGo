@@ -178,18 +178,6 @@ function SignUp() {
         <div className="login-link">
           이미 계정이 있으신가요? <Link to="/login">로그인</Link>
         </div>
-        
-        <div className="social-SignUp">
-          <p>또는 소셜 계정으로 가입</p>
-          <div className="social-buttons">
-            <button className="social-button google">
-              Google로 가입
-            </button>
-            <button className="social-button kakao">
-              Kakao로 가입
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );
