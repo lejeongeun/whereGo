@@ -12,6 +12,8 @@ import CommunityDetailPage from './pages/community/CommunityDetailPage';
 import CommunityWritePage from './pages/community/CommunityWritePage';
 import CommunityPage from './pages/community/CommunityPage';
 import TripSchedulePage from './pages/schedule/TripSchedulePage';
+import MyPage from './pages/mypage/Mypage';
+import ChangePwd from './pages/mypage/ChangePwd';
 import './App.css';
 import MapContainer from './components/schedule/MapContainer';
 
@@ -35,6 +37,8 @@ function App() {
                 <Route path="/community/:id" element={<CommunityDetailPage />} />
                 <Route path="/community/write" element={<CommunityWritePage />} />
                 <Route path="/schedule" element={<TripSchedulePage />} />
+                <Route path="/mypage" element={<MyPage />} />
+                <Route path="/changePwd" element={<ChangePwd />} />
               </Routes>
             </div>
             <Footer className="footer" />

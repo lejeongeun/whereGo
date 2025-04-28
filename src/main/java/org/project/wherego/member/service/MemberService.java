@@ -1,9 +1,11 @@
 package org.project.wherego.member.service;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.project.wherego.community.domain.Community;
 import org.project.wherego.community.dto.CommunityResponseDto;
 import org.project.wherego.community.repository.CommunityRepository;
+import org.project.wherego.member.config.FileStorageProperties;
 import org.project.wherego.member.domain.Member;
 import org.project.wherego.member.dto.ChangePwdRequest;
 import org.project.wherego.member.dto.FindPwdRequest;
@@ -13,9 +15,15 @@ import org.project.wherego.member.repository.MemberRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,7 +32,16 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final CommunityRepository communityRepository;
     private final PasswordEncoder passwordEncoder;
+    private final FileStorageProperties fileStorageProperties;
+    private String absoluteUploadDir;
 
+    @PostConstruct
+    public void init() { // 절대경로 설정
+        String uploadDir = fileStorageProperties.getUploadDir();
+        System.out.println("uploadDir: " + uploadDir);
+        this.absoluteUploadDir = new File(System.getProperty("user.dir"), uploadDir).getAbsolutePath(); //user.dir"는 현재 작업 디렉토리
+        System.out.println("absoluteUploadDir: " + this.absoluteUploadDir); // 디버깅 로그
+    }
 
     // 회원가입
     public SignupRequest insert(SignupRequest signupRequest) {
@@ -66,7 +83,7 @@ public class MemberService {
                         .build())
                 .collect(Collectors.toList());
 
-        return new MyPageResponse(member.getEmail(), member.getNickname(), communityDtos);
+        return new MyPageResponse(member.getEmail(), member.getNickname(), member.getProfileImage(), communityDtos);
     }
 
     public ChangePwdRequest changwPwd(Member member, ChangePwdRequest pwdrequest) {
@@ -74,6 +91,14 @@ public class MemberService {
 
         if (OpUser.isPresent()) {
             Member m = OpUser.get();
+
+            if (!passwordEncoder.matches(pwdrequest.getOldPassword(), m.getPassword())) {
+                throw new IllegalArgumentException("기존 비밀번호가 일치하지 않습니다.");
+            }
+
+            if (!pwdrequest.getNewPassword().equals(pwdrequest.getConfirmPassword())) {
+                throw new IllegalArgumentException("새 비밀번호가 일치하지 않습니다.");
+            }
 
             String enPass = passwordEncoder.encode(pwdrequest.getNewPassword());
             m.setPassword(enPass);
@@ -84,7 +109,7 @@ public class MemberService {
                     .newPassword(m.getPassword())
                     .build();
         }
-        throw new IllegalArgumentException("사용자 정보를 찾을 수 없습니다.");
+        throw new IllegalArgumentException("등록되어 있지 않은 이메일입니다.");
     }
 
     public FindPwdRequest findPassword(FindPwdRequest pwdrequest) {
@@ -102,6 +127,39 @@ public class MemberService {
                     .build();
         }
         throw new IllegalArgumentException("사용자 정보를 찾을 수 없습니다.");
+    }
+
+
+    public void uploadProfileImage(Member member, MultipartFile file) throws IOException {
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("업로드할 파일이 없습니다.");
+        }
+
+        if (!file.getContentType().startsWith("image/")) {
+            throw new IllegalArgumentException("이미지 파일만 업로드 가능합니다.");
+        }
+
+        // 사용자별 디렉토리 생성 (예: /uploads/user@example.com/)
+        String userDir = absoluteUploadDir + File.separator + member.getEmail();
+        Files.createDirectories(Paths.get(userDir));
+
+        // 기존 DB랑 디렉토리에 path랑 이미지가 있으면 삭제
+        if (member.getProfileImage() != null) {
+            Files.deleteIfExists(Paths.get(member.getProfileImage()));
+        }
+
+        // 파일 이름 생성 (중복 방지를 위해 UUID 사용)
+        String originalFileName = file.getOriginalFilename(); // image1
+        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf(".")); // .jpg
+        String newFileName = UUID.randomUUID().toString() + fileExtension; // 1sd2fsf4fdfsdf.jpg
+        String filePath = userDir + File.separator + newFileName; // uploads/1sd2fsf4fdfsdf.jpg
+
+        // 파일 저장
+        file.transferTo(new File(filePath));
+
+        // Member 엔티티에 파일 경로 저장
+        member.setProfileImage(filePath);
+        memberRepository.save(member);
 
     }
 }

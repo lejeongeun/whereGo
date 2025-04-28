@@ -76,7 +76,7 @@ function Navbar() {
             <div className="auth-links">
               {isLoggedIn ? (
                 <>
-                  <Link to="/profile" className="auth-link" onClick={() => setMenuOpen(false)}>
+                  <Link to="/mypage" className="auth-link" onClick={() => setMenuOpen(false)}>
                     mypage
                   </Link>
                   <span className="auth-link" onClick={handleLogout}>

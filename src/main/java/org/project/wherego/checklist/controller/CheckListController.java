@@ -33,19 +33,16 @@ public class CheckListController {
                                           @Valid @RequestBody CheckListDto requestDto){
         checkListService.addItem(groupId, requestDto);
         return ResponseEntity.ok("item 추가");
-
     }
 
     // 그룹 수정
     @PutMapping("/{id}/edit")
-    public ResponseEntity<?> groupEdit(@PathVariable Long id, @Valid @RequestBody CheckListGroupDto requestDto,
+    public ResponseEntity<?> groupEdit(@PathVariable Long id, @Valid @RequestBody CheckListGroupDto checkListGroupDto,
                                        @AuthenticationPrincipal CustomUserDetails userDetails){
         String email = userDetails.getMember().getEmail();
-        checkListService.groupEdit(id, requestDto, email);
-
+        checkListService.groupEdit(id, checkListGroupDto, email);
         return ResponseEntity.ok("그룹 수정 완료");
     }
-
 
     // 항목 수정
     @PutMapping("/{id}/item/{itemId}/edit")
@@ -53,10 +50,17 @@ public class CheckListController {
                                       @Valid @RequestBody CheckListDto requestDto,
                                       @PathVariable("itemId") Long itemId,
                                       @AuthenticationPrincipal CustomUserDetails userDetails){
-
         String email = userDetails.getMember().getEmail();
         checkListService.editItem(groupId, itemId, requestDto, email);
         return ResponseEntity.ok("체크리스트 수정 완료");
+    }
+
+    // 체크 상태 토글
+    @PutMapping("/{id}/item/{itemId}/toggle")
+    public ResponseEntity<?> toggleItem(@PathVariable("id") Long groupId,
+                                      @PathVariable("itemId") Long itemId) {
+        checkListService.toggleItem(groupId, itemId);
+        return ResponseEntity.ok("체크 상태 변경 완료");
     }
 
     // 그룹 삭제
@@ -66,7 +70,7 @@ public class CheckListController {
         return ResponseEntity.ok(groupId+"그룹 삭제 완료");
     }
 
-    // 항목식제
+    // 항목삭제
     @DeleteMapping("/{groupId}/delete/{itemId}")
     public ResponseEntity<?> deleteItem(@PathVariable Long groupId,
                                         @PathVariable Long itemId){
@@ -76,9 +80,9 @@ public class CheckListController {
 
     // 전체조회
     @GetMapping("/allList")
-    public ResponseEntity<List<CheckListGroupDto>> groupAllList(){
-        List<CheckListGroupDto> getAllList = checkListService.groupAllList();
+    public ResponseEntity<List<CheckListGroupDto>> groupAllList(@AuthenticationPrincipal CustomUserDetails userDetails){
+        String email = userDetails.getMember().getEmail();
+        List<CheckListGroupDto> getAllList = checkListService.groupAllList(email);
         return ResponseEntity.ok(getAllList);
     }
-
 }

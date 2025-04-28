@@ -29,8 +29,9 @@ function Login() {
 
       // 로그인 성공 처리
       if (response.data && response.data.email) {
+
         // 사용자 정보와 토큰을 로컬 스토리지에 저장
-        localStorage.setItem('token', 'jwt-token-here'); // 백엔드에서 토큰을 제공한다면 response.data.token 사용
+        localStorage.setItem('token', 'jwt-token-here');
         localStorage.setItem('user', JSON.stringify({ 
           email: response.data.email 
         }));
@@ -43,7 +44,8 @@ function Login() {
         
         // 홈페이지로 리다이렉트
         window.location.href = '/';
-}
+
+      }
 
     } catch (err) {
       // api.js의 인터셉터에서 처리된 에러 메시지 사용

@@ -21,7 +21,6 @@ const ChecklistListPage = ({ checklists, onDeleteChecklist, onToggleItem, onAddI
     e.preventDefault();
     if (newItemText.trim()) {
       const newItem = {
-        id: Math.max(...checklists.find(list => list.id === checklistId).items.map(item => item.id), 0) + 1,
         text: newItemText.trim(),
         checked: false
       };
@@ -51,11 +50,11 @@ const ChecklistListPage = ({ checklists, onDeleteChecklist, onToggleItem, onAddI
                   <label className="checkbox-label">
                     <input
                       type="checkbox"
-                      checked={item.checked}
+                      checked={item.isChecked}
                       onChange={() => onToggleItem(checklist.id, item.id)}
                     />
-                    <span className={item.checked ? 'checked' : ''}>
-                      {item.text}
+                    <span className={item.isChecked ? 'checked' : ''}>
+                      {item.item}
                     </span>
                   </label>
                   <button
