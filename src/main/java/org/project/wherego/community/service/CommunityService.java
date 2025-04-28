@@ -1,38 +1,69 @@
 package org.project.wherego.community.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.project.wherego.community.domain.Community;
 import org.project.wherego.community.dto.CommunityRequestDto;
 import org.project.wherego.community.dto.CommunityResponseDto;
 import org.project.wherego.community.repository.CommunityRepository;
 import org.project.wherego.member.domain.Member;
 import org.project.wherego.member.repository.MemberRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CommunityService {
     private final CommunityRepository communityRepository;
     private final MemberRepository memberRepository;
 
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
     @Transactional
-    public void create(CommunityRequestDto requestDto, String email) {
+    public void create(CommunityRequestDto requestDto, String email, MultipartFile imageFile) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(()-> new IllegalArgumentException("회원이 존재하지 않습니다. 다시 로그인 해주세요."));
+
+        String imageUrl = null;
+        if (imageFile != null && !imageFile.isEmpty()){
+            imageUrl = saveImageFile(imageFile);
+        }
 
         Community community = Community.builder()
                 .title(requestDto.getTitle())
                 .content(requestDto.getContent())
                 .member(member)
+                .imageUrl(imageUrl)
                 .isDeleted(false)
                 .build();
         communityRepository.save(community);
 
     }
+    // 이미지 저장
+    private String saveImageFile(MultipartFile imageFile) {
+        String originalFilename = imageFile.getOriginalFilename();
+        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        String newFileName = UUID.randomUUID() + extension;
+        File file = new File(uploadDir, newFileName);
+
+        try{
+            imageFile.transferTo(file);
+        }catch (IOException e){
+            throw new RuntimeException("이미지 저장 실패", e);
+        }
+        return "/uploads/" + newFileName;
+    }
+    @Transactional(readOnly = true)
     // 모든 게시물 가져오기
     public List<CommunityResponseDto> getAllPosts(){
         List<Community> communities = communityRepository.findAll();
@@ -43,6 +74,7 @@ public class CommunityService {
                             .id(community.getId())
                             .title(community.getTitle())
                             .content(community.getContent())
+                            .imageUrl(community.getImageUrl())
                             .nickname(community.getMember().getNickname())
                             .createdAt(community.getCreatedAt())
                             .viewCount(community.getViewCount())
@@ -54,6 +86,7 @@ public class CommunityService {
     }
 
     // 한개의 게시물 가져오기
+    @Transactional(readOnly = true)
     public CommunityResponseDto getPosts(Long id, Member member) {
         Community community = communityRepository.findById(id)
                 .orElseThrow(()-> new IllegalArgumentException("게시물 존재하지 않습니다."));
@@ -71,6 +104,7 @@ public class CommunityService {
                 .viewCount(community.getViewCount())
                 .likeCount(community.getLikes().size()) // 좋아요 수
                 .commentCount(community.getComments().size()) // 댓글 수
+                .imageUrl(community.getImageUrl())
                 .build();
     }
 
@@ -93,7 +127,5 @@ public class CommunityService {
                 .orElseThrow(()-> new IllegalArgumentException("게시글이 존재하지 않습니다. "));
         communityRepository.delete(community);
     }
-
-
 
 }
