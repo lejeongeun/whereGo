@@ -2,7 +2,8 @@ server:
   port: 8080
   servlet:
     session:
-      timeout : 60m
+      timeout: 60m
+
       cookie:
         same-site: none
         secure: true
