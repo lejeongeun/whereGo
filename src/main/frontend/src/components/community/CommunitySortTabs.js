@@ -22,9 +22,7 @@ function CommunitySortTabs() {
           </span>
         ))}
       </div>
-      <Link to="/community/write">
-        <button className="write-button">✏️ 글쓰기</button>
-      </Link>
+      <Link to="/community/write" className="write-button">✏️ 글쓰기</Link>
     </div>
   );
 }

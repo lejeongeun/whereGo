@@ -1,21 +1,30 @@
-import { useState } from 'react';
-import { createPost } from '../../api/communityApi'; // 백엔드 API 함수 import
-import { useNavigate } from 'react-router-dom'; // 글 작성 후 페이지 이동용
+import { useRef, useState, useEffect } from 'react';
+import { createPost } from '../../api/communityApi';
+import { useNavigate } from 'react-router-dom'; 
+import './CommunityWritePage.css';
+import { Editor } from '@toast-ui/react-editor';
+import '@toast-ui/editor/dist/toastui-editor.css';
 
 function CommunityWritePage() {
   const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const editorRef = useRef();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.getInstance().setHTML('');
+    }
+  }, []);
+
   const handleSubmit = (e) => {
-    e.preventDefault(); // 폼 기본 제출 막기
-    console.log("🟢 글쓰기 요청:", { title, content });
+    e.preventDefault(); 
+    const content = editorRef.current.getInstance().getMarkdown();
 
     createPost({ title, content })
       .then((res) => {
         alert(res.data);
         console.log("✅ 글쓰기 성공");
-        navigate('/community'); // 글 작성 후 커뮤니티 리스트 페이지로 이동
+        navigate('/community'); 
       })
       .catch((err) => {
         console.error("❌ 글쓰기 실패:", err);
@@ -34,13 +43,19 @@ function CommunityWritePage() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
-        <textarea
+        <Editor
+          ref={editorRef}
+          initialValue=""
           placeholder="내용을 입력하세요"
-          className="content-textarea"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        ></textarea>
-        <button type="submit" className="submit-button">작성 완료</button>
+          previewStyle="vertical"  
+          height="400px"
+          initialEditType="wysiwyg"  
+          useCommandShortcut={true}
+          hideModeSwitch={true}  
+        />
+        <div className="button-group">
+          <button type="submit" className="submit-button">작성 완료</button>
+        </div>
       </form>
     </div>
   );

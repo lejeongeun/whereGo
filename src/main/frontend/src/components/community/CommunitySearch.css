@@ -1,37 +1,33 @@
 .community-search-form {
+  all: unset; /* ← 이거 추가! */
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 10px;
   margin: 1.5rem 0;
   width: 100%;
 }
 
 .community-search-input {
   flex: 1;
-  max-width: 600px;
-  padding: 0.8rem 1.2rem;
+  max-width: 400px;
+  padding: 0.8rem 1rem;
   font-size: 1rem;
   border: 1px solid #ccc;
-  border-radius: 6px 0 0 6px;
-  outline: none;
-  background-color: #fff;
-}
-
-.community-search-input::placeholder {
-  color: #aaa;
+  border-radius: 4px;
 }
 
 .community-search-button {
-  padding: 0.8rem 1.5rem;
+  padding: 0.8rem 1.2rem;
   font-size: 1rem;
   border: none;
-  border-radius: 0 6px 6px 0;
-  background-color: #00c73c; /* 네이버 초록 */
+  border-radius: 4px;
+  background-color: #3498db;
   color: white;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.2s;
 }
 
 .community-search-button:hover {
-  background-color: #00b130;
+  background-color: #2980b9;
 }
