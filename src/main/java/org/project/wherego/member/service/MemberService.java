@@ -49,6 +49,12 @@ public class MemberService {
         if (memberRepository.existsByEmail(signupRequest.getEmail())){
             throw new IllegalArgumentException("이미 존재하는 이메일 입니다.");
         }
+
+        // String security : 닉네임 중복 체크
+        if (memberRepository.existsByNickname(signupRequest.getNickname())){
+            throw new IllegalArgumentException("이미 존재하는 닉네임 입니다.");
+        }
+
         String enPass = passwordEncoder.encode(signupRequest.getPassword());
 
         Member member = Member.builder()
