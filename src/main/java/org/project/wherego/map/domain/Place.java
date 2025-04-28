@@ -1,5 +1,7 @@
 package org.project.wherego.map.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.project.wherego.common.domain.BaseEntity;
@@ -23,10 +25,12 @@ public class Place{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
+    @JsonIgnore
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_id", nullable = false)
+    @JsonIgnore
     private Schedule schedule;
 
 }

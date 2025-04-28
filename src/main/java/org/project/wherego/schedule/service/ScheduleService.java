@@ -1,6 +1,7 @@
 package org.project.wherego.schedule.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.project.wherego.member.domain.Member;
 import org.project.wherego.member.repository.MemberRepository;
 import org.project.wherego.schedule.domain.Schedule;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ScheduleService {
@@ -61,5 +63,20 @@ public class ScheduleService {
                         .endDate(schedule.getEndDate())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+
+    public void deleteSchedule(Long scheduleId, String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(()-> new IllegalArgumentException("사용자 없음, 다시 로그인 해주세요"));
+
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(()-> new IllegalArgumentException("일정이 존재하지 않습니다. 다시 확인하여 주시오"));
+
+        log.info("Schedule ID {} 삭제 시작. 연관된 Places 개수 = {}", schedule.getId(), schedule.getPlaces().size());
+        scheduleRepository.delete(schedule);
+        log.info("Schedule ID {} 삭제 완료", scheduleId);
+
+
     }
 }

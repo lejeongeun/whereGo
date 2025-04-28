@@ -17,7 +17,9 @@ import java.util.List;
 @RequestMapping("/api/schedule")
 @RequiredArgsConstructor
 public class ScheduleController {
+
     private final ScheduleService scheduleService;
+
     // 일정 컴포넌트 생성
     @PostMapping("/createSchedule")
     public ResponseEntity<Schedule> createSchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
@@ -39,6 +41,15 @@ public class ScheduleController {
         String email = userDetails.getMember().getEmail();
         List<ScheduleResponseDto> schedule = scheduleService.getSchedules(email);
         return ResponseEntity.ok(schedule);
+    }
+
+    // 일정 리스트 삭제
+    @DeleteMapping("/{scheduleId}/delete")
+    public ResponseEntity<?> deleteSchedule(@PathVariable Long scheduleId,
+                                            @AuthenticationPrincipal CustomUserDetails userDetails){
+        String email = userDetails.getMember().getEmail();
+        scheduleService.deleteSchedule(scheduleId, email);
+        return ResponseEntity.ok("일정이 삭제되었습니다.");
     }
 
 }

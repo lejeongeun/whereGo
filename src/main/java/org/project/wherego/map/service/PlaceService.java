@@ -72,7 +72,7 @@ public class PlaceService {
         return placeRepository.save(place);
     }
 
-    // 장소 정보 조회(PlacesApi 사용)
+    // 장소 정보 조회(PlacesApi 사용)  Google Place ID
     public PlaceDetails getPlaceDetails(String placeId) throws Exception {
         return PlacesApi.placeDetails(context, placeId).await();
     }
