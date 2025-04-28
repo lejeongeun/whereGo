@@ -35,3 +35,6 @@ file:
 exchangerate:
   api:
     key: 79f5de0b194c5a0f615fd99134ae8f62
+google:
+  map:
+    api_key: AIzaSyB63gpLTMYZ1RuMjpUq7S5AgnTL_B-DEXs
