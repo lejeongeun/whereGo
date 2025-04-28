@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface CheckListGroupRepository extends JpaRepository<ChecklistGroup, Long> {
     List<ChecklistGroup> findAllByMember(Member member);
+
+    void deleteByMember(Member member);
 }

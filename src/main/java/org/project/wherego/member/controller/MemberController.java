@@ -116,5 +116,28 @@ public class MemberController {
         }
     }
 
+    @DeleteMapping("/mypage/deletion") // 마이페이지 회원탈퇴
+    public ResponseEntity<String> deleteMember(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Member member = userDetails.getMember();
+        return memberService.deleteMember(member);
+    }
+
+    @PostMapping("/mypage/changeNick")
+    public ResponseEntity<?> changePwd(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                       @RequestBody ChangeNickRequest nickNameRequest) {
+        try {
+            Member member = userDetails.getMember();
+            memberService.changeNickName(member, nickNameRequest);
+            return ResponseEntity.ok(new ChangeNickResponse("닉네임 변경 성공", member.getNickname()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(new ErrorResponse(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ErrorResponse("서버 오류가 발생했습니다."));
+        }
+
+    }
+
 }
 
