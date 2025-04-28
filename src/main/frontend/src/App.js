@@ -15,7 +15,6 @@ import TripSchedulePage from './pages/schedule/TripSchedulePage';
 import MyPage from './pages/mypage/Mypage';
 import ChangePwd from './pages/mypage/ChangePwd';
 import './App.css';
-import MapComponent from "./components/map/MapComponent";
 import CommunityEditPage from './pages/community/CommunityEditPage';
 import MapContainer from './components/schedule/MapContainer';
 

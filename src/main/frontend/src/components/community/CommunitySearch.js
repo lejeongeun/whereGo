@@ -16,14 +16,15 @@ function CommunitySearch({ onSearch }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="community-search-form">
       <input 
         type="text" 
         placeholder="검색어를 입력하세요" 
         value={keyword} 
         onChange={handleChange} 
+        className="community-search-input"
       />
-      <button type="submit">검색</button>
+      <button type="submit" className="community-search-button">검색</button>
     </form>
   );
 }
