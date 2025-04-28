@@ -29,6 +29,8 @@ const ChecklistPage = () => {
       try {
         setLoading(true);
         const groups = await checklistApi.getAllGroups();
+        console.log('체크리스트 그룹 데이터:', groups);
+        // groups[0].items, groups[1].items ... 배열에 값이 있는지 확인
         setChecklistGroups(groups);
       } catch (err) {
         if (err.response && err.response.status === 401) {
@@ -51,7 +53,6 @@ const ChecklistPage = () => {
 
   const handleSaveChecklist = async (checklist) => {
     try {
-      setLoading(true);
       const token = localStorage.getItem('token');
       if (!token) {
         navigate('/login');
@@ -62,9 +63,10 @@ const ChecklistPage = () => {
         title: checklist.title,
         items: checklist.items.map(item => ({
           item: item.text,
-          isChecked: false
+          isChecked: item.checked ?? false
         }))
       };
+      console.log('저장되는 groupData:', groupData);
       await checklistApi.createGroup(groupData);
       
       const updatedGroups = await checklistApi.getAllGroups();
@@ -78,64 +80,50 @@ const ChecklistPage = () => {
       }
       setError('체크리스트 저장에 실패했습니다.');
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleDeleteGroup = async (groupId) => {
     try {
-      setLoading(true);
       await checklistApi.deleteGroup(groupId);
       const updatedGroups = await checklistApi.getAllGroups();
       setChecklistGroups(updatedGroups);
     } catch (err) {
       setError('체크리스트 삭제에 실패했습니다.');
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleToggleItem = async (groupId, itemId) => {
     try {
-      setLoading(true);
       await checklistApi.toggleItem(groupId, itemId);
       const updatedGroups = await checklistApi.getAllGroups();
       setChecklistGroups(updatedGroups);
     } catch (err) {
       setError('항목 상태 변경에 실패했습니다.');
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleAddItem = async (groupId, newItem) => {
     try {
-      setLoading(true);
       await checklistApi.addItem(groupId, { item: newItem.text, isChecked: false });
       const updatedGroups = await checklistApi.getAllGroups();
       setChecklistGroups(updatedGroups);
     } catch (err) {
       setError('항목 추가에 실패했습니다.');
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleDeleteItem = async (groupId, itemId) => {
     try {
-      setLoading(true);
       await checklistApi.deleteItem(groupId, itemId);
       const updatedGroups = await checklistApi.getAllGroups();
       setChecklistGroups(updatedGroups);
     } catch (err) {
       setError('항목 삭제에 실패했습니다.');
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -148,11 +136,24 @@ const ChecklistPage = () => {
   );
 
   if (loading) {
-    return <div className="loading">로딩 중...</div>;
+    return (
+      <div className="checklist-container">
+        <h1>체크리스트</h1>
+        <div className="loading-checklist">
+          <div className="loading-spinner"></div>
+          <p>체크리스트를 불러오는 중...</p>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="error">{error}</div>;
+    return (
+      <div className="checklist-container">
+        <h1>체크리스트</h1>
+        <div className="error-message">{error}</div>
+      </div>
+    );
   }
 
   return (
