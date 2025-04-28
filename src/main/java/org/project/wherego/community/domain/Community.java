@@ -27,6 +27,9 @@ public class Community extends BaseEntity {
     @Column(nullable = false)
     private String content; // 게시글 내용
 
+    @Column
+    private String imageUrl; // img
+
     @ManyToOne(fetch = FetchType.LAZY) // Member와 연관관계
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
