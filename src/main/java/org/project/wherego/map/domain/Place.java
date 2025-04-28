@@ -1,13 +1,19 @@
 package org.project.wherego.map.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.project.wherego.common.domain.BaseEntity;
 import org.project.wherego.member.domain.Member;
 import org.project.wherego.schedule.domain.Schedule;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Place{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,10 +25,12 @@ public class Place{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
+    @JsonIgnore
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_id", nullable = false)
+    @JsonIgnore
     private Schedule schedule;
 
 }

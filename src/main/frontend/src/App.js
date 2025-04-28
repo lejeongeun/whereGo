@@ -17,7 +17,7 @@ import TripSchedulePage from './pages/schedule/TripSchedulePage';
 import MyPage from './pages/mypage/Mypage';
 import ChangePwd from './pages/mypage/ChangePwd';
 import './App.css';
-import MapComponent from "./components/map/MapComponent";
+import MapContainer from './components/schedule/MapContainer';
 
 function App() {
   return (
@@ -34,6 +34,7 @@ function App() {
                 <Route path="/findPwd" element={<FindPwd />} />
                 <Route path="/map" element={<MapComponent />} />
                 <Route path="/exchange" element={<Exchange />} />
+                <Route path="/map" element={<MapContainer />} />
                 <Route path="/checklist" element={<ChecklistPage />} />
                 <Route path="/checklist/new" element={<NewChecklistPage />} />
                 <Route path="/checklist/edit" element={<EditChecklistPage />} />
