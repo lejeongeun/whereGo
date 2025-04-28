@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import api from '../../api'; // 이전에 생성한 api.js 파일 import
-import './Exchange.css'; // 나중에 필요한 스타일을 위한 CSS 파일
+import api from '../../api'; 
+import './Exchange.css';
 
 const Exchange = () => {
   // 상태 관리
@@ -19,20 +19,67 @@ const Exchange = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [currencies, setCurrencies] = useState([]);
+  const [loadingCurrencies, setLoadingCurrencies] = useState(false);
   
-  // 지원되는 통화 옵션
+  // 모든 통화 옵션 (대한민국을 맨 앞에 두고 나머지는 한글 초성 순서로 정렬)
   const currencyOptions = [
-    { value: 'USD', label: '미국 달러 (USD)' },
-    { value: 'KRW', label: '한국 원화 (KRW)' },
-    { value: 'EUR', label: '유로 (EUR)' },
-    { value: 'JPY', label: '일본 엔화 (JPY)' },
-    { value: 'VND', label: '베트남 동 (VND)' }
+    { value: 'KRW', label: '대한민국 (KRW)' },
+    { value: 'TWD', label: '대만 (TWD)' },
+    { value: 'RUB', label: '러시아 (RUB)' },
+    { value: 'MYR', label: '말레이시아 (MYR)' },
+    { value: 'MXN', label: '멕시코 (MXN)' },
+    // 미국 통화 코드 수정 (USA -> USD)
+{ value: 'USD', label: '미국 (USD)' },
+    { value: 'VND', label: '베트남 (VND)' },
+    { value: 'BRL', label: '브라질 (BRL)' },
+    { value: 'SAR', label: '사우디아라비아 (SAR)' },
+    { value: 'CHF', label: '스위스 (CHF)' },
+    { value: 'SGD', label: '싱가포르 (SGD)' },
+    { value: 'AED', label: '아랍에미리트 (AED)' },
+    { value: 'GBP', label: '영국 (GBP)' },
+    { value: 'EUR', label: '유럽 (EUR)' },
+    { value: 'INR', label: '인도 (INR)' },
+    { value: 'IDR', label: '인도네시아 (IDR)' },
+    { value: 'JPY', label: '일본 (JPY)' },
+    { value: 'CNY', label: '중국 (CNY)' },
+    { value: 'CAD', label: '캐나다 (CAD)' },
+    { value: 'THB', label: '태국 (THB)' },
+    { value: 'TRY', label: '터키 (TRY)' },
+    { value: 'NZD', label: '뉴질랜드 (NZD)' },
+    { value: 'PHP', label: '필리핀 (PHP)' },
+    { value: 'AUD', label: '호주 (AUD)' },
+    { value: 'HKD', label: '홍콩 (HKD)' },
+    { value: 'ZAR', label: '남아프리카공화국 (ZAR)' }
   ];
 
-  // 컴포넌트 마운트 시 환율 정보 가져오기
+  // 서버에서 지원하는 통화 목록 가져오기
+  const fetchSupportedCurrencies = async () => {
+    setLoadingCurrencies(true);
+    try {
+      // 이 부분은 서버에서 지원하는 통화 목록 API가 있다면 사용할 수 있습니다.
+      // 현재는 그런 API가 없으므로 확장된 통화 목록을, 기본 통화 목록으로 제한합니다.
+      // BackEnd에서는 확장된 통화들 중 유효하지 않은 것들을 필터링합니다.
+      setCurrencies(currencyOptions);
+    } catch (err) {
+      console.error('통화 목록 조회 에러:', err);
+      // 기본 통화 옵션으로 대체
+      setCurrencies([
+        { value: 'KRW', label: '대한민국 (KRW)' },
+        { value: 'USD', label: '미국 (USD)' },
+        { value: 'EUR', label: '유럽 (EUR)' },
+        { value: 'JPY', label: '일본 (JPY)' },
+        { value: 'VND', label: '베트남 (VND)' }
+      ]);
+    } finally {
+      setLoadingCurrencies(false);
+    }
+  };
+
+  // 컴포넌트 마운트 시 통화 목록과 환율 정보 가져오기
   useEffect(() => {
-    // 초기 로드 시 API 호출 에러 방지를 위한 지연 설정
-    // 또는 초기 로드 시에는 API 호출을 하지 않고 사용자가 직접 버튼을 클릭하도록 함
+    fetchSupportedCurrencies();
+    
     setBaseRate(prev => ({
       ...prev,
       rate: 0,
@@ -50,7 +97,20 @@ const Exchange = () => {
       const response = await api.get(`/exchange/rate?base=${baseRate.base}&target=${baseRate.target}`);
       setBaseRate(response.data);
     } catch (err) {
-      setError('환율 정보를 불러오는데 실패했습니다: ' + err);
+      let errorMessage = '환율 정보를 불러오는데 실패했습니다';
+      
+      // 오류 메시지에 통화 코드 문제가 있는지 확인
+      if (err.response && err.response.data && err.response.data.message) {
+        if (err.response.data.message.includes('Invalid currency code')) {
+          errorMessage = '지원하지 않는 통화 코드입니다. 기본 통화 중 하나를 선택해주세요.';
+        } else {
+          errorMessage += ': ' + err.response.data.message;
+        }
+      } else {
+        errorMessage += ': ' + err.message;
+      }
+      
+      setError(errorMessage);
       console.error('환율 정보 조회 에러:', err);
     } finally {
       setLoading(false);
@@ -67,7 +127,20 @@ const Exchange = () => {
       );
       setConversionData(response.data);
     } catch (err) {
-      setError('통화 변환에 실패했습니다: ' + err);
+      let errorMessage = '통화 변환에 실패했습니다';
+      
+      // 오류 메시지에 통화 코드 문제가 있는지 확인
+      if (err.response && err.response.data && err.response.data.message) {
+        if (err.response.data.message.includes('Invalid currency code')) {
+          errorMessage = '지원하지 않는 통화 코드입니다. 기본 통화 중 하나를 선택해주세요.';
+        } else {
+          errorMessage += ': ' + err.response.data.message;
+        }
+      } else {
+        errorMessage += ': ' + err.message;
+      }
+      
+      setError(errorMessage);
       console.error('통화 변환 에러:', err);
     } finally {
       setLoading(false);
@@ -121,8 +194,9 @@ const Exchange = () => {
               name="target" 
               value={baseRate.target} 
               onChange={handleRateChange}
+              disabled={loadingCurrencies}
             >
-              {currencyOptions.filter(option => option.value !== 'KRW').map(option => (
+              {currencies.filter(option => option.value !== 'KRW').map(option => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -130,7 +204,7 @@ const Exchange = () => {
             </select>
           </div>
           
-          <button type="submit" disabled={loading}>
+          <button className="exchange-button" type="submit" disabled={loading || loadingCurrencies}>
             {loading ? '로딩 중...' : '환율 조회'}
           </button>
         </form>
@@ -169,8 +243,9 @@ const Exchange = () => {
               name="from" 
               value={conversionData.from} 
               onChange={handleConversionChange}
+              disabled={loadingCurrencies}
             >
-              {currencyOptions.map(option => (
+              {currencies.map(option => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -184,8 +259,9 @@ const Exchange = () => {
               name="to" 
               value={conversionData.to} 
               onChange={handleConversionChange}
+              disabled={loadingCurrencies}
             >
-              {currencyOptions.map(option => (
+              {currencies.map(option => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -193,7 +269,7 @@ const Exchange = () => {
             </select>
           </div>
           
-          <button type="submit" disabled={loading}>
+          <button className="exchange-button" type="submit" disabled={loading || loadingCurrencies}>
             {loading ? '변환 중...' : '금액 변환'}
           </button>
         </form>
