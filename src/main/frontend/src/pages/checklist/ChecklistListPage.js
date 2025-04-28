@@ -18,7 +18,6 @@ const ChecklistListPage = ({ checklists, onDeleteChecklist, onToggleItem, onAddI
   };
 
   const handleNewItemSubmit = (checklistId, e) => {
-    alert("submit");
     e.preventDefault();
     if (newItemText.trim()) {
       const newItem = {
@@ -48,7 +47,7 @@ const ChecklistListPage = ({ checklists, onDeleteChecklist, onToggleItem, onAddI
             </div>
             <div className="checklist-items">
               {checklist.items.map((item, index) => (
-                <div key={`${checklist.id}-${item.groupId || index}`} className="checklist-item">
+                <div key={`${checklist.id}-${item.groupId || `item-${index}-${Date.now()}`}`} className="checklist-item">
                   <label className="checkbox-label">
                     <input
                       type="checkbox"
