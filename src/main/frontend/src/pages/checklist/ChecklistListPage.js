@@ -47,13 +47,19 @@ const ChecklistListPage = ({ checklists, onDeleteChecklist, onToggleItem, onAddI
               </button>
             </div>
             <div className="checklist-items">
-              {checklist.items.map(item => (
-                <div key={item.id} className="checklist-item">
+              {checklist.items.map((item, index) => (
+                <div key={`${checklist.id}-${item.groupId || index}`} className="checklist-item">
                   <label className="checkbox-label">
                     <input
                       type="checkbox"
                       checked={item.isChecked}
-                      onChange={() => onToggleItem(checklist.id, item.id)}
+                      onChange={() => {
+                        if (!item.groupId) {
+                          console.error('Item groupId가 없습니다:', item);
+                          return;
+                        }
+                        onToggleItem(checklist.id, item.groupId);
+                      }}
                     />
                     <span className={item.isChecked ? 'checked' : ''}>
                       {item.item}
@@ -61,7 +67,7 @@ const ChecklistListPage = ({ checklists, onDeleteChecklist, onToggleItem, onAddI
                   </label>
                   <button
                     className="delete-item-button"
-                    onClick={() => onDeleteItem(checklist.id, item.id)}
+                    onClick={() => onDeleteItem(checklist.id, item.groupId)}
                   >
                     <AiOutlineMinus />
                   </button>
