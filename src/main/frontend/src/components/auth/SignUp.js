@@ -88,7 +88,7 @@ function SignUp() {
     } catch (err) {
       // 에러 처리
       setErrors({ 
-        submit: err?.response?.data?.message || '회원가입에 실패했습니다. 다시 시도해주세요.' 
+        submit: err?.response?.data?.message || '이메일이 중복되어 회원가입에 실패했습니다. 다시 시도해주세요.' 
       });
     } finally {
       setIsLoading(false);

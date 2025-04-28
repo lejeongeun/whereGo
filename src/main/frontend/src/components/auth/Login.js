@@ -112,19 +112,7 @@ function Login() {
         </form>
         
         <div className="register-link">
-          계정이 없으신가요? <Link to="/register">회원가입</Link>
-        </div>
-        
-        <div className="social-login">
-          <p>또는 소셜 계정으로 로그인</p>
-          <div className="social-buttons">
-            <button className="social-button google">
-              Google로 로그인
-            </button>
-            <button className="social-button kakao">
-              Kakao로 로그인
-            </button>
-          </div>
+          계정이 없으신가요? <Link to="/signUp">회원가입</Link>
         </div>
       </div>
     </div>

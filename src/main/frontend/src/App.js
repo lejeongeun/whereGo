@@ -32,7 +32,6 @@ function App() {
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/findPwd" element={<FindPwd />} />
-                <Route path="/map" element={<MapComponent />} />
                 <Route path="/exchange" element={<Exchange />} />
                 <Route path="/map" element={<MapContainer />} />
                 <Route path="/checklist" element={<ChecklistPage />} />

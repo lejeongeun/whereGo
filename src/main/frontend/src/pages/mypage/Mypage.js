@@ -13,11 +13,7 @@ const MyPage = () => {
     createdAt: '',
     comunities: []
   });
-  // localStorage에서 이미지 데이터를 가져와 초기화
-  const [selectedImage, setSelectedImage] = useState(() => {
-    const savedImage = localStorage.getItem('profileImage');
-    return savedImage ? savedImage : null;
-  });
+  const [selectedImage, setSelectedImage] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null); // 실제 파일 객체 저장
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -35,11 +31,22 @@ const MyPage = () => {
         });
         
         setUserData(response.data);
+        
+        // 사용자 이메일을 키로 사용하여 프로필 이미지 가져오기
+        if (response.data.email) {
+          const userProfileImageKey = `profileImage_${response.data.email}`;
+          const savedImage = localStorage.getItem(userProfileImageKey);
+          if (savedImage) {
+            setSelectedImage(savedImage);
+          }
+        }
+        
         setIsLoading(false);
       } catch (err) {
         // 더미 데이터
+        const dummyEmail = 'test@example.com';
         setUserData({
-          email: 'test@example.com',
+          email: dummyEmail,
           nickname: '테스트사용자',
           createdAt: '2023-04-24T10:00:00',
           comunities: [
@@ -47,6 +54,14 @@ const MyPage = () => {
             { id: 2, title: '서울 맛집 추천', content: '강남역 근처 맛집 리스트입니다...', createdAt: '2023-04-15T09:45:00' }
           ]
         });
+        
+        // 더미 이메일을 키로 사용하여 프로필 이미지 가져오기
+        const userProfileImageKey = `profileImage_${dummyEmail}`;
+        const savedImage = localStorage.getItem(userProfileImageKey);
+        if (savedImage) {
+          setSelectedImage(savedImage);
+        }
+        
         setIsLoading(false);
       }
     };
@@ -76,8 +91,12 @@ const MyPage = () => {
     reader.onload = (e) => {
       const imageDataUrl = e.target.result;
       setSelectedImage(imageDataUrl);
-      // localStorage에 이미지 저장
-      localStorage.setItem('profileImage', imageDataUrl);
+      
+      // 사용자 이메일을 키로 사용하여 localStorage에 이미지 저장
+      if (userData.email) {
+        const userProfileImageKey = `profileImage_${userData.email}`;
+        localStorage.setItem(userProfileImageKey, imageDataUrl);
+      }
       
       setSelectedFile(file); // 파일 객체 저장
       setError(null);
@@ -146,8 +165,12 @@ const MyPage = () => {
           withCredentials: true
         });
         
-        // 계정 삭제 시 localStorage에서 프로필 이미지 제거
-        localStorage.removeItem('profileImage');
+        // 계정 삭제 시 해당 사용자의 프로필 이미지 제거
+        if (userData.email) {
+          const userProfileImageKey = `profileImage_${userData.email}`;
+          localStorage.removeItem(userProfileImageKey);
+        }
+        
         navigate('/');
       } catch (err) {
         setError('계정 삭제에 실패했습니다.');
