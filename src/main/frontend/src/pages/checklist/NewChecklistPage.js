@@ -59,7 +59,7 @@ const NewChecklistPage = ({ onClose, onSave }) => {
               onChange={(e) => setNewItem(e.target.value)}
               placeholder="항목 추가"
               className="item-input"
-              onKeyPress={(e) => e.key === 'Enter' && handleAddItem(e)}
+              onKeyDown={(e) => e.key === 'Enter' && handleAddItem(e)}
             />
             <button onClick={handleAddItem} className="add-item-button">
               <AiOutlinePlus size={20} />

@@ -18,12 +18,14 @@ const ChecklistListPage = ({ checklists, onDeleteChecklist, onToggleItem, onAddI
   };
 
   const handleNewItemSubmit = (checklistId, e) => {
+    alert("submit");
     e.preventDefault();
     if (newItemText.trim()) {
       const newItem = {
         text: newItemText.trim(),
         checked: false
       };
+      console.log('ChecklistListPage에서 전달되는 newItem:', newItem);
       onAddItem(checklistId, newItem);
     }
     setEditingChecklistId(null);
@@ -78,6 +80,9 @@ const ChecklistListPage = ({ checklists, onDeleteChecklist, onToggleItem, onAddI
                     autoFocus
                     className="new-item-input"
                   />
+                  <button type="submit" className="save-button">
+                    저장
+                    </button>
                 </form>
               ) : (
                 <button

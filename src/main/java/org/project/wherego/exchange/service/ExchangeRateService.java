@@ -1,9 +1,11 @@
 package org.project.wherego.exchange.service;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 
 import org.project.wherego.exchange.dto.ConversionResponse;
 import org.project.wherego.exchange.dto.ExchangeRateResponse;
+import org.project.wherego.exchange.dto.ListResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,10 +23,47 @@ import java.util.Set;
     public class ExchangeRateService {
         private final WebClient webClient;
         private final Logger logger = LoggerFactory.getLogger(ExchangeRateService.class);
-        private static final Set<String> VALID_CURRENCIES = Set.of("USD", "KRW", "EUR", "JPY", "VND");
+        private Set<String> validCurrencies = Set.of("USD", "EUR", "KRW", "JPY", "VND");
 
         @Value("${exchangerate.api.key}")
         private String apiKey;
+
+        @PostConstruct
+        public void init() {
+            getSupportedCurrencies()
+                    .blockOptional()
+                    .filter(currencies -> !currencies.isEmpty())
+                    .ifPresentOrElse(
+                            currencies -> {
+                                validCurrencies = (Set<String>) currencies;
+                                logger.info("Currencies: {}", currencies);
+                            },
+                            () -> logger.warn("Using default currencies: {}", validCurrencies)
+                    );
+        }
+
+        private Mono<Set<?>> getSupportedCurrencies() {
+            return webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/list")
+                            .queryParam("access_key", apiKey)
+                            .build())
+                    .retrieve()
+                    .bodyToMono(ListResponse.class) // API 응답 JSON -> ListResponse 객체 변환 -> Mono<ListResponse>
+                    .map(response -> {
+                        if (!response.isSuccess()) {
+                            throw new RuntimeException("API error");
+                        }
+                        return response.getCurrencies() != null
+                                ? Set.copyOf(response.getCurrencies().keySet())
+                                : Set.of();
+                    })
+                    .onErrorResume(e -> {
+                        logger.error("Fetch currencies failed: {}", e.getMessage());
+                        return Mono.just(Set.<String>of());
+                    });
+        }
+
 
         public Mono<ExchangeRateResponse> getExchangeRate(String base, String target) {
             logger.info("Fetching exchange rate for base: {}, target: {}", base, target);
@@ -112,7 +153,7 @@ import java.util.Set;
         }
 
         private void validateCurrency(String base, String target) {
-            if (!VALID_CURRENCIES.contains(base) || !VALID_CURRENCIES.contains(target)) {
+            if (!validCurrencies.contains(base) || !validCurrencies.contains(target)) {
                 throw new IllegalArgumentException("Invalid currency code: " + base + " or " + target);
             }
         }

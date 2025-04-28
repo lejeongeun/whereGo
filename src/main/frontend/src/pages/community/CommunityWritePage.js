@@ -12,7 +12,8 @@ function CommunityWritePage() {
     console.log("🟢 글쓰기 요청:", { title, content });
 
     createPost({ title, content })
-      .then(() => {
+      .then((res) => {
+        alert(res.data);
         console.log("✅ 글쓰기 성공");
         navigate('/community'); // 글 작성 후 커뮤니티 리스트 페이지로 이동
       })

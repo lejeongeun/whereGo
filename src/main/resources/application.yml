@@ -2,6 +2,8 @@ server:
   port: 8080
   servlet:
     session:
+      timeout: 60m
+
       cookie:
         same-site: none
         secure: true
@@ -33,7 +35,7 @@ file:
 
 exchangerate:
   api:
-    key: 79f5de0b194c5a0f615fd99134ae8f62
+    key: d220ecd90955e48da00bf0ce1be98552
 google:
   map:
     api_key: AIzaSyB63gpLTMYZ1RuMjpUq7S5AgnTL_B-DEXs

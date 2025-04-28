@@ -29,7 +29,7 @@ api.interceptors.response.use(
       // React Router의 navigate를 직접 사용할 수 없으므로 window.location 사용
       window.location.href = '/login';
       // 사용자에게 알림 (선택 사항)
-      alert('세션이 만료되었습니다. 다시 로그인해 주세요.');
+      alert('세션 만료 혹은 로그인 정보가 일치하지 않습니다');
     }
     // 에러 메시지를 호출한 컴포넌트로 전달
     return Promise.reject(

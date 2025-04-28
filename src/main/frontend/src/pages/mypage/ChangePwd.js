@@ -4,7 +4,7 @@ import api from '../../api';
 import './Mypage.css'; 
 
 const ChangePwd = () => {
-  const [currentPassword, setCurrentPassword] = useState('');
+  const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
@@ -21,11 +21,11 @@ const ChangePwd = () => {
     }
 
     try {
-      // 컨트롤러의 changePwd 엔드포인트로 요청
-      // 현재 로그인한 사용자의 비밀번호를 변경하므로 이메일 필드는 제외
-      await api.post('/changePwd', {
-        password: currentPassword,
-        newPassword: newPassword
+      // 백엔드 API와 필드명 일치시킴
+      const response = await api.post('/changePwd', {
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+        confirmPassword: confirmPassword
       });
       
       setSuccess('비밀번호가 성공적으로 변경되었습니다.');
@@ -34,7 +34,7 @@ const ChangePwd = () => {
         navigate('/mypage');
       }, 3000);
     } catch (err) {
-      setError(err.message || '비밀번호 변경에 실패했습니다.');
+      setError(err || '비밀번호 변경에 실패했습니다.');
     }
   };
 
@@ -50,8 +50,8 @@ const ChangePwd = () => {
           <label>현재 비밀번호</label>
           <input
             type="password"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
             required
           />
         </div>

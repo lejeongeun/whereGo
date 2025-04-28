@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api';
+import axios from 'axios';
 import './Mypage.css';
 import { AiFillSetting } from "react-icons/ai";
 import { BsPersonCircle } from "react-icons/bs";
@@ -13,8 +14,11 @@ const MyPage = () => {
     comunities: []
   });
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null); // 실제 파일 객체 저장
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null); // 성공 메시지 상태 추가
+  const [isUploading, setIsUploading] = useState(false); // 업로드 진행 상태
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
@@ -27,11 +31,22 @@ const MyPage = () => {
         });
         
         setUserData(response.data);
+        
+        // 사용자 이메일을 키로 사용하여 프로필 이미지 가져오기
+        if (response.data.email) {
+          const userProfileImageKey = `profileImage_${response.data.email}`;
+          const savedImage = localStorage.getItem(userProfileImageKey);
+          if (savedImage) {
+            setSelectedImage(savedImage);
+          }
+        }
+        
         setIsLoading(false);
       } catch (err) {
         // 더미 데이터
+        const dummyEmail = 'test@example.com';
         setUserData({
-          email: 'test@example.com',
+          email: dummyEmail,
           nickname: '테스트사용자',
           createdAt: '2023-04-24T10:00:00',
           comunities: [
@@ -39,6 +54,14 @@ const MyPage = () => {
             { id: 2, title: '서울 맛집 추천', content: '강남역 근처 맛집 리스트입니다...', createdAt: '2023-04-15T09:45:00' }
           ]
         });
+        
+        // 더미 이메일을 키로 사용하여 프로필 이미지 가져오기
+        const userProfileImageKey = `profileImage_${dummyEmail}`;
+        const savedImage = localStorage.getItem(userProfileImageKey);
+        if (savedImage) {
+          setSelectedImage(savedImage);
+        }
+        
         setIsLoading(false);
       }
     };
@@ -66,10 +89,60 @@ const MyPage = () => {
     // 로컬에서 이미지 미리보기
     const reader = new FileReader();
     reader.onload = (e) => {
-      setSelectedImage(e.target.result);
+      const imageDataUrl = e.target.result;
+      setSelectedImage(imageDataUrl);
+      
+      // 사용자 이메일을 키로 사용하여 localStorage에 이미지 저장
+      if (userData.email) {
+        const userProfileImageKey = `profileImage_${userData.email}`;
+        localStorage.setItem(userProfileImageKey, imageDataUrl);
+      }
+      
+      setSelectedFile(file); // 파일 객체 저장
       setError(null);
+      
+      // 이미지 선택 후 자동 업로드
+      handleSaveProfileImage(file);
     };
     reader.readAsDataURL(file);
+  };
+
+  // 프로필 이미지 서버에 저장
+  const handleSaveProfileImage = async (file) => {
+    if (!file) {
+      setError('업로드할 이미지를 선택해주세요.');
+      return;
+    }
+
+    setIsUploading(true);
+    setError(null);
+    setSuccess(null);
+
+    // FormData 객체 생성 및 파일 추가
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      // 서버에 이미지 업로드 요청
+      const response = await axios.post('http://localhost:8080/api/mypage/upload', 
+        formData, 
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          withCredentials: true
+        }
+      );
+
+      setSuccess('프로필 이미지가 성공적으로 업로드되었습니다.');
+      console.log('이미지 업로드 성공:', response.data);
+    } catch (err) {
+      console.error('이미지 업로드 실패:', err);
+      setError('프로필 이미지 업로드에 실패했습니다.');
+      // 업로드 실패 시에도 로컬에 저장된 이미지는 유지됨
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   // 이미지 업로드 버튼 클릭 핸들러
@@ -92,6 +165,12 @@ const MyPage = () => {
           withCredentials: true
         });
         
+        // 계정 삭제 시 해당 사용자의 프로필 이미지 제거
+        if (userData.email) {
+          const userProfileImageKey = `profileImage_${userData.email}`;
+          localStorage.removeItem(userProfileImageKey);
+        }
+        
         navigate('/');
       } catch (err) {
         setError('계정 삭제에 실패했습니다.');
@@ -102,7 +181,7 @@ const MyPage = () => {
 
   // 로딩 중
   if (isLoading) {
-    return <div className="my-page-container">roading...</div>;
+    return <div className="my-page-container">loading...</div>;
   }
 
   return (
@@ -110,10 +189,13 @@ const MyPage = () => {
       <h1>마이페이지</h1>
       
       {error && <div className="error-message">{error}</div>}
+      {success && <div className="success-message">{success}</div>}
       
       <div className="profile-section">
         <div className="profile-image-container">
-          {selectedImage ? (
+          {isUploading ? (
+            <div className="loading-spinner">업로드 중...</div>
+          ) : selectedImage ? (
             <img 
               src={selectedImage} 
               alt="프로필 이미지" 
@@ -129,6 +211,7 @@ const MyPage = () => {
           <button 
             className="change-image-button" 
             onClick={handleUploadButtonClick}
+            disabled={isUploading}
           >
            <AiFillSetting size={24} />
           </button>
