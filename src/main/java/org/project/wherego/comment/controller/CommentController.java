@@ -5,11 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.project.wherego.comment.dto.CommentRequestDto;
 import org.project.wherego.comment.service.CommentService;
 import org.project.wherego.member.config.CustomUserDetails;
-import org.project.wherego.member.domain.Member;
-import org.project.wherego.member.service.CustomUserDetailsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

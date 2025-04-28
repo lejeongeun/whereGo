@@ -19,4 +19,6 @@ public class CommunityResponseDto {
     private Long viewCount;
     private int likeCount;
     private int commentCount;
+
+    private String imageUrl;
 }

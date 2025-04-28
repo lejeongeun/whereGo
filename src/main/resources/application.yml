@@ -3,6 +3,7 @@ server:
   servlet:
     session:
       timeout: 60m
+
       cookie:
         same-site: none
         secure: true
@@ -11,7 +12,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/wherego
     username: root
-    password: 12345678
+    password: 1234
 
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
@@ -30,11 +31,11 @@ spring:
       static-locations: file:./uploads/,classpath:/static/ #디렉토리를 정적 리소스로 제공.
 
 file:
-  upload-dir: uploads # 파일 저장 디렉토리
+  upload-dir: /Users/ijeong-eun/MyProject/whereGo/uploads # 파일 저장 디렉토리
 
 exchangerate:
   api:
-    key: 79f5de0b194c5a0f615fd99134ae8f62
+    key: d220ecd90955e48da00bf0ce1be98552
 google:
   map:
     api_key: AIzaSyB63gpLTMYZ1RuMjpUq7S5AgnTL_B-DEXs

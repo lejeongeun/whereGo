@@ -1,20 +1,21 @@
 package org.project.wherego.member.service;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.project.wherego.checklist.repository.CheckListGroupRepository;
 import org.project.wherego.community.domain.Community;
 import org.project.wherego.community.dto.CommunityResponseDto;
 import org.project.wherego.community.repository.CommunityRepository;
 import org.project.wherego.member.config.FileStorageProperties;
 import org.project.wherego.member.domain.Member;
-import org.project.wherego.member.dto.ChangePwdRequest;
-import org.project.wherego.member.dto.FindPwdRequest;
-import org.project.wherego.member.dto.MyPageResponse;
-import org.project.wherego.member.dto.SignupRequest;
+import org.project.wherego.member.dto.*;
 import org.project.wherego.member.repository.MemberRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -30,9 +31,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final CheckListGroupRepository checklistGroupRepository;
     private final CommunityRepository communityRepository;
     private final PasswordEncoder passwordEncoder;
     private final FileStorageProperties fileStorageProperties;
+    private final HttpServletRequest request; // HttpServletRequest를 사용하여 세션 정보에 접근
     private String absoluteUploadDir;
 
     @PostConstruct
@@ -73,7 +76,8 @@ public class MemberService {
     }
 
     public void logout() {
-        SecurityContextHolder.clearContext(); // 세션 삭제
+        request.getSession().invalidate(); //  세션 무효화
+        SecurityContextHolder.clearContext(); // 인증 정보 삭제
     }
 
     public MyPageResponse mypageInfo(Member member) {
@@ -167,5 +171,42 @@ public class MemberService {
         member.setProfileImage(filePath);
         memberRepository.save(member);
 
+    }
+
+    @Transactional //  데이터베이스 작업을 하나의 트랜잭션으로 묶어 처리하고, 오류 발생 시 전체 작업을 롤백
+    public ResponseEntity<String> deleteMember(Member member) {
+            checklistGroupRepository.deleteByMember(member); // 외래키 데이터 삭제
+            communityRepository.deleteByMember(member); // 외래키 데이터 삭제
+
+            memberRepository.delete(member); // 삭제
+            request.getSession().invalidate();
+            SecurityContextHolder.clearContext();
+            return ResponseEntity.ok("계정이 정상적으로 삭제되었습니다.");
+    }
+
+
+    public ChangeNickRequest changeNickName(Member member, ChangeNickRequest nickNameRequest) {
+        Optional<Member> OpUser = memberRepository.findByEmail(member.getEmail());
+
+        if (!memberRepository.existsByNickname(nickNameRequest.getOldNickname())) {
+            throw new IllegalArgumentException("기존 닉네임이 일치하지 않습니다.");
+        }
+
+        if (memberRepository.existsByNickname(nickNameRequest.getNewNickname())){
+            throw new IllegalArgumentException("이미 존재하는 닉네임 입니다.");
+        }
+
+        if (OpUser.isPresent()) {
+            Member m = OpUser.get();
+
+            m.setNickname(nickNameRequest.getNewNickname());
+
+            memberRepository.save(m);
+
+            return nickNameRequest.builder()
+                    .newNickname(m.getNickname())
+                    .build();
+        }
+        throw new IllegalArgumentException("등록되어 있지 않은 닉네임입니다.");
     }
 }

@@ -88,7 +88,7 @@ function SignUp() {
     } catch (err) {
       // 에러 처리
       setErrors({ 
-        submit: err?.response?.data?.message || '회원가입에 실패했습니다. 다시 시도해주세요.' 
+        submit: err?.response?.data?.message || '이메일이 중복되어 회원가입에 실패했습니다. 다시 시도해주세요.' 
       });
     } finally {
       setIsLoading(false);
@@ -177,18 +177,6 @@ function SignUp() {
         
         <div className="login-link">
           이미 계정이 있으신가요? <Link to="/login">로그인</Link>
-        </div>
-        
-        <div className="social-SignUp">
-          <p>또는 소셜 계정으로 가입</p>
-          <div className="social-buttons">
-            <button className="social-button google">
-              Google로 가입
-            </button>
-            <button className="social-button kakao">
-              Kakao로 가입
-            </button>
-          </div>
         </div>
       </div>
     </div>
