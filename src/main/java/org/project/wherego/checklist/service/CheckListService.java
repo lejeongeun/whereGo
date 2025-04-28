@@ -109,13 +109,38 @@ public class CheckListService {
     }
 
     @Transactional
-    public List<CheckListGroupDto> groupAllList(){
-        List<ChecklistGroup> checklistsGroup = groupRepository.findAll();
+    public List<CheckListGroupDto> groupAllList(String email){
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
+        
+        List<ChecklistGroup> checklistsGroup = groupRepository.findAllByMember(member);
 
         return checklistsGroup.stream().map(
                 group -> CheckListGroupDto.builder()
+                        .id(group.getId())
                         .title(group.getTitle())
+                        .items(group.getItems().stream()
+                                .map(item -> CheckListDto.builder()
+                                        .groupId(item.getGroup().getId())
+                                        .item(item.getItem())
+                                        .isChecked(item.getIsChecked())
+                                        .build())
+                                .collect(Collectors.toList()))
                         .build()
         ).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void toggleItem(Long groupId, Long itemId) {
+        Checklist checklist = itemRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("항목이 존재하지 않습니다."));
+        
+        // 그룹 ID 검증
+        if (!checklist.getGroup().getId().equals(groupId)) {
+            throw new IllegalArgumentException("잘못된 그룹 ID입니다.");
+        }
+        
+        // 체크 상태 토글
+        checklist.setIsChecked(!checklist.getIsChecked());
     }
 }

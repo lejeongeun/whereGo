@@ -2,6 +2,7 @@ server:
   port: 8080
   servlet:
     session:
+      timeout: 60m
       cookie:
         same-site: none
         secure: true
@@ -20,8 +21,20 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  servlet:
+    multipart: # 파일 업로드 크기 제한 설정.
+      max-file-size: 10MB # 파일 최대 크기
+      max-request-size: 10MB # 요청 최대 크기
+  web:
+    resources:
+      static-locations: file:./uploads/,classpath:/static/ #디렉토리를 정적 리소스로 제공.
+
+file:
+  upload-dir: uploads # 파일 저장 디렉토리
 
 exchangerate:
   api:
     key: 79f5de0b194c5a0f615fd99134ae8f62
-
+google:
+  map:
+    api_key: AIzaSyB63gpLTMYZ1RuMjpUq7S5AgnTL_B-DEXs
