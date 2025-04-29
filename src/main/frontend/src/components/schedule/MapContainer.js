@@ -112,7 +112,7 @@ const MapContainer = () => {
         </GoogleMap>
 
         <MapPlaceInfoCard place={selectedPlace} onAdd={handleAddToSchedule} />
-        <ScheduleList places={schedulePlaces} onDelete={handleDeleteFromSchedule} />
+        {/* <ScheduleList places={schedulePlaces} onDelete={handleDeleteFromSchedule} /> */}
       </div>
   ) : (
       <div>지도를 불러오는 중...</div>

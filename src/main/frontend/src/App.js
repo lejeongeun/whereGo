@@ -14,6 +14,7 @@ import CommunityDetailPage from './pages/community/CommunityDetailPage';
 import CommunityWritePage from './pages/community/CommunityWritePage';
 import CommunityPage from './pages/community/CommunityPage';
 import TripSchedulePage from './pages/schedule/TripSchedulePage';
+import WeatherWorld from './pages/weatherWorld/WeatherWorld';
 import MyPage from './pages/mypage/Mypage';
 import ChangePwd from './pages/mypage/ChangePwd';
 import './App.css';
@@ -47,6 +48,7 @@ function App() {
                 <Route path="/mypage" element={<MyPage />} />
                 <Route path="/changePwd" element={<ChangePwd />} />
                 <Route path='/notification' element={<NotificationPage />} />
+                <Route path="/weather" element={<WeatherWorld />} /> 
               </Routes>
             </div>
             <Footer className="footer" />
