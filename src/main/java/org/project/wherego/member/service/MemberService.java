@@ -209,14 +209,6 @@ public class MemberService {
         // Member 엔티티에 파일 경로 저장
         member.setProfileImage(filePath);
         memberRepository.save(member);
-
-        //세션 갱신: 새로운 사용자 정보로 Authentication 다시 설정
-        CustomUserDetails updatedUserDetails = new CustomUserDetails(member);
-        UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(
-                        updatedUserDetails, null, updatedUserDetails.getAuthorities()); // 세션 정보 갱신 : 비밀번호 재인증 불필요
-        SecurityContextHolder.getContext().setAuthentication(token);
-
     }
 
     @Transactional //  데이터베이스 작업을 하나의 트랜잭션으로 묶어 처리하고, 오류 발생 시 전체 작업을 롤백
