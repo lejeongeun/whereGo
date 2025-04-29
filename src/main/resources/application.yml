@@ -31,11 +31,12 @@ spring:
       static-locations: file:./uploads/,classpath:/static/ #디렉토리를 정적 리소스로 제공.
 
 file:
-  upload-dir: /Users/ijeong-eun/MyProject/whereGo/uploads # 파일 저장 디렉토리
+  upload-dir: uploads # 파일 저장 디렉토리
 
 exchangerate:
   api:
     key: d220ecd90955e48da00bf0ce1be98552
+
 google:
   map:
     api_key: AIzaSyB63gpLTMYZ1RuMjpUq7S5AgnTL_B-DEXs

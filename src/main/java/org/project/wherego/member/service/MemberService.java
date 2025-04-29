@@ -11,6 +11,7 @@ import org.project.wherego.member.config.FileStorageProperties;
 import org.project.wherego.member.domain.Member;
 import org.project.wherego.member.dto.*;
 import org.project.wherego.member.repository.MemberRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,7 +42,7 @@ public class MemberService {
     @PostConstruct
     public void init() { // 절대경로 설정
         String uploadDir = fileStorageProperties.getUploadDir();
-        System.out.println("uploadDir: " + uploadDir);
+        System.out.println("uploadDir: " + uploadDir); // 디버깅 로그
         this.absoluteUploadDir = new File(System.getProperty("user.dir"), uploadDir).getAbsolutePath(); //user.dir"는 현재 작업 디렉토리
         System.out.println("absoluteUploadDir: " + this.absoluteUploadDir); // 디버깅 로그
     }
