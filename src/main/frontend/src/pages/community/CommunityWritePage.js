@@ -1,26 +1,58 @@
-import { useState } from 'react';
-import { createPost } from '../../api/communityApi'; // 백엔드 API 함수 import
-import { useNavigate } from 'react-router-dom'; // 글 작성 후 페이지 이동용
+import { useRef, useState, useEffect } from 'react';
+import { createPost } from '../../api/communityApi'; // 이 부분은 이미 존재
+import api from '../../api'; // 추가: api import
+import { useNavigate } from 'react-router-dom'; 
+import './CommunityWritePage.css';
+import { Editor } from '@toast-ui/react-editor';
+import '@toast-ui/editor/dist/toastui-editor.css';
 
 function CommunityWritePage() {
   const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const editorRef = useRef();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.getInstance().setHTML('');
+    }
+  }, []);
+
   const handleSubmit = (e) => {
-    e.preventDefault(); // 폼 기본 제출 막기
-    console.log("🟢 글쓰기 요청:", { title, content });
+    e.preventDefault(); 
+    const content = editorRef.current.getInstance().getMarkdown();
 
     createPost({ title, content })
       .then((res) => {
         alert(res.data);
         console.log("✅ 글쓰기 성공");
-        navigate('/community'); // 글 작성 후 커뮤니티 리스트 페이지로 이동
+        navigate('/community'); 
       })
       .catch((err) => {
         console.error("❌ 글쓰기 실패:", err);
         alert('글 작성 중 오류가 발생했어요!');
       });
+  };
+
+  // Editor에서 이미지 업로드 처리
+  const uploadImageCallback = (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    return new Promise((resolve, reject) => {
+      // 이미지 업로드 API 호출
+      api.post('/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((response) => {
+        const imageUrl = response.data.imageUrl; // 서버에서 반환된 이미지 URL
+        resolve(imageUrl); // 이미지 URL을 resolve
+      })
+      .catch((error) => {
+        reject(error);
+      });
+    });
   };
 
   return (
@@ -34,13 +66,25 @@ function CommunityWritePage() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
-        <textarea
+        
+        {/* Toast UI Editor */}
+        <Editor
+          ref={editorRef}
+          initialValue=""
           placeholder="내용을 입력하세요"
-          className="content-textarea"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        ></textarea>
-        <button type="submit" className="submit-button">작성 완료</button>
+          previewStyle="vertical"  
+          height="400px"
+          initialEditType="wysiwyg"  
+          useCommandShortcut={true}
+          hideModeSwitch={true}
+          // 이미지 업로드 콜백 함수 추가
+          hooks={{
+            addImageBlobHook: uploadImageCallback,
+          }}
+        />
+        <div className="button-group">
+          <button type="submit" className="submit-button">작성 완료</button>
+        </div>
       </form>
     </div>
   );

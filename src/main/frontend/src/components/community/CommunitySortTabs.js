@@ -1,12 +1,18 @@
+// CommunitySortTabs.js
 import './CommunitySortTabs.css';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom'; 
 
-function CommunitySortTabs() {
-  const [activeTab, setActiveTab] = useState('최신순');
+function CommunitySortTabs({ onSort }) {
+  const [activeTab, setActiveTab] = useState('최신순');  // 현재 활성화된 탭 상태
 
-  const tabs = ['최신순', '정확도순', '답변많은순', '좋아요순'];
+  const tabs = ['최신순', '답변많은순', '좋아요순'];
+
+  // 탭 클릭 시, 부모 컴포넌트로 정렬 기준을 전달하는 함수
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);  // 클릭한 탭을 활성화
+    onSort(tab);  // 부모 컴포넌트에 정렬 기준 전달
+  };
 
   return (
     <div className="sort-tabs-container">
@@ -15,16 +21,14 @@ function CommunitySortTabs() {
           <span
             key={tab}
             className={`tab-item ${activeTab === tab ? 'active' : ''}`}
-            onClick={() => setActiveTab(tab)}
+            onClick={() => handleTabClick(tab)}  // 탭 클릭 시 정렬 기준 전달
           >
             {tab}
             {index < tabs.length - 1 && <span className="dot">·</span>}
           </span>
         ))}
       </div>
-      <Link to="/community/write">
-        <button className="write-button">✏️ 글쓰기</button>
-      </Link>
+      <Link to="/community/write" className="write-button">✏️ 글쓰기</Link>
     </div>
   );
 }
