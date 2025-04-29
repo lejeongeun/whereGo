@@ -6,19 +6,27 @@ import NewChecklistPage from './pages/checklist/NewChecklistPage';
 import EditChecklistPage from './pages/checklist/EditChecklistPage';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
-import Sidebar from './components/common/Sidebar';
 import SignUp from './components/auth/SignUp';
 import Login from './components/auth/Login';
+import FindPwd from './components/auth/FindPwd';
+import Exchange from './pages/exchange/Exchange';
 import CommunityDetailPage from './pages/community/CommunityDetailPage';
 import CommunityWritePage from './pages/community/CommunityWritePage';
 import CommunityPage from './pages/community/CommunityPage';
+import TripSchedulePage from './pages/schedule/TripSchedulePage';
+import WeatherWorld from './pages/weatherWorld/WeatherWorld';
+import MyPage from './pages/mypage/Mypage';
+import ChangePwd from './pages/mypage/ChangePwd';
 import './App.css';
+import CommunityEditPage from './pages/community/CommunityEditPage';
+import MapContainer from './components/schedule/MapContainer';
+import NotificationPage from './notification/NotificationPage';
 
 function App() {
   return (
       <BrowserRouter>
         <div className="app-layout">
-          <Sidebar />
+          
           <div className="main-container">
             <Navbar className="navbar" />
             <div className="content">
@@ -26,12 +34,21 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/findPwd" element={<FindPwd />} />
+                <Route path="/exchange" element={<Exchange />} />
+                <Route path="/map" element={<MapContainer />} />
                 <Route path="/checklist" element={<ChecklistPage />} />
                 <Route path="/checklist/new" element={<NewChecklistPage />} />
                 <Route path="/checklist/edit" element={<EditChecklistPage />} />
                 <Route path="/community" element={<CommunityPage />} />
                 <Route path="/community/:id" element={<CommunityDetailPage />} />
                 <Route path="/community/write" element={<CommunityWritePage />} />
+                <Route path="/schedule" element={<TripSchedulePage />} />
+                <Route path="/community/:id/edit" element={<CommunityEditPage />} />
+                <Route path="/mypage" element={<MyPage />} />
+                <Route path="/changePwd" element={<ChangePwd />} />
+                <Route path='/notification' element={<NotificationPage />} />
+                <Route path="/weather" element={<WeatherWorld />} /> 
               </Routes>
             </div>
             <Footer className="footer" />

@@ -1,20 +1,35 @@
-// CommunitySearch.js
+import { useState } from 'react';
 import './CommunitySearch.css';
-import { AiOutlineSearch } from 'react-icons/ai';
 
-function CommunitySearch() {
+function CommunitySearch({ onSearch }) {
+  const [keyword, setKeyword] = useState('');
+
+  const handleChange = (e) => {
+    const newKeyword = e.target.value;
+    setKeyword(newKeyword);
+    if (onSearch) {
+      onSearch(newKeyword); // 실시간 검색
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (onSearch) {
+      onSearch(keyword); // 버튼 누를 때 검색
+    }
+  };
+
   return (
-    <div className="search-container">
-      <div className="search-box">
-        <AiOutlineSearch className="search-icon" />
-        <input
-          type="text"
-          placeholder="궁금한 질문을 검색해보세요!"
-          className="search-input"
-        />
-      </div>
-      <button className="search-button">검색</button>
-    </div>
+    <form className="community-search-form" onSubmit={handleSubmit}>
+      <input
+        type="text"
+        className="community-search-input"
+        placeholder="검색어를 입력하세요"
+        value={keyword}
+        onChange={handleChange}
+      />
+      <button type="submit" className="community-search-button">검색</button>
+    </form>
   );
 }
 

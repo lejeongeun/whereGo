@@ -4,12 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.project.wherego.member.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -34,7 +35,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/login", "/api/signup", "/api/logout").permitAll()
+                        .requestMatchers("/ws/**", "/api/login", "/api/signup", "/api/logout", "/api/exchange/**", "/api/findPwd").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
@@ -54,14 +55,10 @@ public class SecurityConfig {
                         })
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
-                );
+                )
+                .userDetailsService(customUserDetailsService); // 유저 조회 인터페이스 설정
 
         return http.build();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return customUserDetailsService;
     }
 
     @Bean
@@ -69,10 +66,14 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
+    @Bean //AuthenticationManager : 실제 유저 인증 처리, AuthenticationConfiguration : 상위 객체
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+        return authenticationConfiguration.getAuthenticationManager(); // AuthenticationManager 꺼내서 사용 ->  DaoAuthenticationProvider 자동 사용
     }
+
+    // Spring Security는 로그인 시 AuthenticationManager를 통해 인증을 시도
+    // 실제 유저 정보를 조회하고 비밀번호를 비교하는 작업은 DaoAuthenticationProvider
+    // DaoAuthenticationProvider는 우리가 만든 CustomUserDetailsService로 유저를 찾고, BCryptPasswordEncoder로 비밀번호를 비교
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

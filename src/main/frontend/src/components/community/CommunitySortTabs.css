@@ -1,8 +1,11 @@
 .sort-tabs-container {
-    display: flex;
-    justify-content: space-between;
+    display: flex; 
     align-items: center;
+    justify-content: space-between;
     margin-bottom: 1.2rem;
+    margin-left: 110px;
+    margin-top: 16px; 
+    white-space: nowrap;
   }
   
   .sort-tabs {
@@ -29,18 +32,22 @@
     color: #bbb;
   }
   
-  .write-post-button {
-    background-color: #333;
-    color: white;
+  .sort-tabs-container .write-button {
+    background-color: white;
+    border: 1px solid #333;
+    color: #333;
     padding: 8px 18px;
     font-size: 0.95rem;
-    border: none;
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    margin-left: 470px;
+    white-space: nowrap;
   }
   
-  .write-post-button:hover {
-    background-color: #222;
+  .sort-tabs-container .write-button:hover {
+    background-color: #e9e9e9;
+    transform: scale(1.05); /* ← 1.05배 확대 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* 살짝 떠오르는 그림자 */
   }
   

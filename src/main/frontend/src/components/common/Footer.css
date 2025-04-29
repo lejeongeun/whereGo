@@ -1,6 +1,6 @@
 .footer {
   width: 100%; /* 메인 컨테이너 내부에 위치하므로 전체 너비 사용 */
-  background-color: #000;
+  background-color: #424e68;;
   color: #fff;
   box-sizing: border-box;
   padding-left:150px;
@@ -25,7 +25,7 @@
 .footer-bottom {
   width: 100%;
   text-align: center;
-  padding: 15px 0;
+  padding: 10px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 

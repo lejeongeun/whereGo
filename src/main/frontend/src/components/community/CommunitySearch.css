@@ -1,46 +1,33 @@
-.search-container {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  
-  .search-box {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    max-width: 800px;
-    padding: 12px 16px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: white;
-  }
-  
-  .search-icon {
-    font-size: 1.2rem;
-    color: #888;
-    margin-right: 8px;
-  }
-  
-  .search-input {
-    border: none;
-    outline: none;
-    width: 100%;
-    font-size: 1rem;
-    color: #333;
-  }
-  
-  .search-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 12px 24px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-  
-  .search-button:hover {
-    background-color: #45a049;
-  }
-  
+.community-search-form {
+  all: unset; /* ← 이거 추가! */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 1.5rem 0;
+  width: 100%;
+}
+
+.community-search-input {
+  flex: 1;
+  max-width: 400px;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.community-search-button {
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #3498db;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.community-search-button:hover {
+  background-color: #2980b9;
+}

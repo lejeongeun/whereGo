@@ -1,0 +1,194 @@
+.exchange-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Noto Sans KR', sans-serif;
+  color: #333;
+}
+
+h1 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  font-weight: 700;
+}
+
+.exchange-card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+h2 {
+  color: #3498db;
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+  font-weight: 600;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #555;
+}
+
+select, input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+select:focus, input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.static-field {
+  background-color: #f0f7ff;
+  padding: 10px;
+  border-radius: 5px;
+  font-weight: 500;
+  border: 1px solid #d0e3f7;
+}
+
+.exchange-button {
+  padding: 12px;
+  background-color: #5186d5;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+.exchange-button:hover {
+  background-color: #537aaa;
+}
+
+.exchange-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* 입력 필드와 버튼 컨테이너 */
+.input-with-button {
+  display: flex;
+  gap: 10px;
+}
+
+.input-with-button input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.result-card {
+  background-color: #f5f9ff;
+  border-left: 4px solid #4a6fa5;
+  padding: 15px;
+  margin-top: 20px;
+  border-radius: 4px;
+}
+
+.result-title {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.result-text {
+  font-size: 24px;
+  color: #4a6fa5;
+  margin-bottom: 5px;
+}
+
+.result-detail {
+  font-size: 14px;
+  color: #777;
+}
+
+.result-box {
+  background-color: #f5f9ff;
+  border-left: 4px solid #4a6fa5;
+  padding: 15px;
+  margin-top: 20px;
+  border-radius: 4px;
+}
+
+.result-box p {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+}
+
+.result-box strong {
+  color: #4a6fa5;
+  font-weight: 600;
+}
+
+.result-box .timestamp {
+  font-size: 14px;
+  color: #777;
+  font-style: italic;
+  margin-top: 5px;
+}
+
+.error-message {
+  color: #e74c3c;
+  background-color: rgba(231, 76, 60, 0.1);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+
+.loading-spinner::after {
+  content: '';
+  width: 30px;
+  height: 30px;
+  border: 4px solid #ddd;
+  border-top: 4px solid #4a6fa5;
+  border-radius: 50%;
+  animation: exchange-spin 1s linear infinite;
+}
+
+@keyframes exchange-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 576px) {
+  .input-with-button {
+    flex-direction: column;
+  }
+  
+  .exchange-button {
+    width: 100%;
+  }
+}

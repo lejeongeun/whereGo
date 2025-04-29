@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './SignUp.css';
+import api from '../../api';
 
 function SignUp() {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
-    name: '',
+    nickname: '', 
     email: '',
     password: '',
     confirmPassword: ''
   });
-  const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  
-  const navigate = useNavigate();
-
-  const { name, email, password, confirmPassword } = formData;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,34 +22,34 @@ function SignUp() {
     }));
   };
 
+  const validationRules = {
+    nickname: {
+      validate: value => !!value.trim(),
+      errorMessage: '닉네임을 입력해주세요'
+    },
+    email: {
+      validate: value => value && /\S+@\S+\.\S+/.test(value),
+      errorMessage: value => !value ? '이메일을 입력해주세요' : '유효한 이메일 주소를 입력해주세요'
+    },
+    password: {
+      validate: value => value && value.length >= 4,
+      errorMessage: value => !value ? '비밀번호를 입력해주세요' : '비밀번호는 최소 4자 이상이어야 합니다'
+    },
+    confirmPassword: {
+      validate: value => value && value === formData.password,
+      errorMessage: value => !value ? '비밀번호 확인을 입력해주세요' : '비밀번호가 일치하지 않습니다'
+    }
+  };
+
   const validate = () => {
     const newErrors = {};
     
-    // 이름 검증
-    if (!name.trim()) {
-      newErrors.name = '이름을 입력해주세요';
-    }
-    
-    // 이메일 검증
-    if (!email) {
-      newErrors.email = '이메일을 입력해주세요';
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = '유효한 이메일 주소를 입력해주세요';
-    }
-    
-    // 비밀번호 검증
-    if (!password) {
-      newErrors.password = '비밀번호를 입력해주세요';
-    } else if (password.length < 6) {
-      newErrors.password = '비밀번호는 최소 6자 이상이어야 합니다';
-    }
-    
-    // 비밀번호 확인 검증
-    if (!confirmPassword) {
-      newErrors.confirmPassword = '비밀번호 확인을 입력해주세요';
-    } else if (password !== confirmPassword) {
-      newErrors.confirmPassword = '비밀번호가 일치하지 않습니다';
-    }
+    Object.entries(validationRules).forEach(([field, { validate, errorMessage }]) => {
+      const value = formData[field];
+      if (!validate(value)) {
+        newErrors[field] = typeof errorMessage === 'function' ? errorMessage(value) : errorMessage;
+      }
+    });
     
     return newErrors;
   };
@@ -59,7 +57,6 @@ function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // 폼 유효성 검사
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -70,29 +67,38 @@ function SignUp() {
     setErrors({});
     
     try {
-      // 실제 구현에서는 여기서 API 호출
-      // ex: const response = await SignUpUser(formData);
+      const { nickname, email, password } = formData;
+      const response = await api.post('/signup', { nickname, email, password });
       
-      // 회원가입 성공 처리 (임시 구현)
-      setTimeout(() => {
-        // 성공적으로 가입 후 자동 로그인을 위한 토큰 저장 (실제 API 응답에서 받을 것)
-        localStorage.setItem('token', 'dummy-SignUp-token');
-        localStorage.setItem('user', JSON.stringify({ 
-          name: formData.name,
-          email: formData.email
-        }));
-        
-        // 홈페이지로 리다이렉트 또는 로그인 페이지로 이동
-        navigate('/');
-        setIsLoading(false);
-      }, 1000);
-      
+      if (response.data) {
+        navigate('/login');
+        alert('회원가입이 완료되었습니다. 로그인해주세요.');
+      }
     } catch (err) {
-      // 에러 처리
-      setErrors({ submit: '회원가입에 실패했습니다. 다시 시도해주세요.' });
+      setErrors({ 
+        submit: err?.response?.data?.message || '이메일이 중복되어 회원가입에 실패했습니다. 다시 시도해주세요.' 
+      });
+    } finally {
       setIsLoading(false);
     }
   };
+
+  // 입력 필드 컴포넌트 생성 함수
+  const renderField = (name, label, type = 'text') => (
+    <div className="form-group">
+      <label htmlFor={name}>{label}</label>
+      <input
+        type={type}
+        id={name}
+        name={name}
+        value={formData[name]}
+        onChange={handleChange}
+        placeholder={`${label}을(를) 입력하세요`}
+        disabled={isLoading}
+      />
+      {errors[name] && <div className="input-error">{errors[name]}</div>}
+    </div>
+  );
 
   return (
     <div className="SignUp-container">
@@ -102,61 +108,10 @@ function SignUp() {
         {errors.submit && <div className="error-message">{errors.submit}</div>}
         
         <form onSubmit={handleSubmit} className="SignUp-form">
-          <div className="form-group">
-            <label htmlFor="name">이름</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={name}
-              onChange={handleChange}
-              placeholder="이름을 입력하세요"
-              disabled={isLoading}
-            />
-            {errors.name && <div className="input-error">{errors.name}</div>}
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="email">이메일</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={email}
-              onChange={handleChange}
-              placeholder="이메일 주소를 입력하세요"
-              disabled={isLoading}
-            />
-            {errors.email && <div className="input-error">{errors.email}</div>}
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="password">비밀번호</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={password}
-              onChange={handleChange}
-              placeholder="비밀번호를 입력하세요"
-              disabled={isLoading}
-            />
-            {errors.password && <div className="input-error">{errors.password}</div>}
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="confirmPassword">비밀번호 확인</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={confirmPassword}
-              onChange={handleChange}
-              placeholder="비밀번호를 다시 입력하세요"
-              disabled={isLoading}
-            />
-            {errors.confirmPassword && <div className="input-error">{errors.confirmPassword}</div>}
-          </div>
+          {renderField('nickname', '닉네임')}
+          {renderField('email', '이메일', 'email')}
+          {renderField('password', '비밀번호', 'password')}
+          {renderField('confirmPassword', '비밀번호 확인', 'password')}
           
           <div className="terms-agreement">
             <label className="checkbox-label">
@@ -176,18 +131,6 @@ function SignUp() {
         
         <div className="login-link">
           이미 계정이 있으신가요? <Link to="/login">로그인</Link>
-        </div>
-        
-        <div className="social-SignUp">
-          <p>또는 소셜 계정으로 가입</p>
-          <div className="social-buttons">
-            <button className="social-button google">
-              Google로 가입
-            </button>
-            <button className="social-button kakao">
-              Kakao로 가입
-            </button>
-          </div>
         </div>
       </div>
     </div>
