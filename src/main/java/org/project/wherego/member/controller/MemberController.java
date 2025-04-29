@@ -128,7 +128,7 @@ public class MemberController {
         try {
             Member member = userDetails.getMember();
             memberService.changeNickName(member, nickNameRequest);
-            return ResponseEntity.ok(new ChangeNickResponse("닉네임 변경 성공", member.getNickname()));
+            return ResponseEntity.ok(new ChangeNickResponse("닉네임 변경 성공", nickNameRequest.getNewNickname()));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest()
                     .body(new ErrorResponse(e.getMessage()));
