@@ -1,6 +1,4 @@
-// src/api/communityApi.js
-import api from '../api'; // 너가 방금 보여준 axios 인스턴스
-
+import api from '../api';
 // 글 목록 불러오기
 export const getPosts = () => api.get('/community/list');
 
