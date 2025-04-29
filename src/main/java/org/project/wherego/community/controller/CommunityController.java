@@ -53,7 +53,8 @@ public class CommunityController {
 
     // 게시글 수정
     @PutMapping("/{id}/edit")
-    public ResponseEntity<String> edit (@PathVariable Long id, @Valid @RequestBody CommunityRequestDto requestDto){
+    public ResponseEntity<String> edit (@PathVariable Long id,
+                                        @Valid @RequestBody CommunityRequestDto requestDto){
         communityService.edit(id,requestDto);
         return ResponseEntity.ok("글 수정 완료");
     }
