@@ -134,6 +134,7 @@ public class CheckListService {
                         .title(group.getTitle())
                         .items(group.getItems().stream()
                                 .map(item -> CheckListDto.builder()
+                                        .id(item.getId())
                                         .groupId(item.getGroup().getId())
                                         .item(item.getItem())
                                         .isChecked(item.getIsChecked())
