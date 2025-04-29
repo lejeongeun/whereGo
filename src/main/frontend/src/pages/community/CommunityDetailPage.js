@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import './CommunityDetailPage.css';
 import { deletePost } from '../../api/communityApi';
 import api from '../../api';
+import CommentSection from '../../components/community/CommentSection';
 
 import { AiOutlineLike } from "react-icons/ai";
 import { LuEye } from "react-icons/lu";
@@ -16,6 +17,14 @@ function CommunityDetailPage() {
   const [post, setPost] = useState(location.state || null);
 
   useEffect(() => {
+    api.post(`/community/${id}/view`)
+    .then(() => {
+      console.log('조회수 증가 성공');
+    })
+    .catch(err => {
+      console.error('조회수 증가 실패:', err);
+    });
+    
     if (!post) {
       api.get(`/community/${id}`)
         .then(res => {
@@ -54,40 +63,45 @@ function CommunityDetailPage() {
 
   const handleLike = () => {
     api.post(`/community/${id}/like`)
-      .then(() => {
-        return api.get(`/community/${id}/like/count`);
-      })
+      .then(() => api.get(`/community/${id}/like/count`))
       .then((res) => {
-        setPost(prev => ({
-          ...prev,
-          likeCount: res.data,
-        }));
+        setPost(prev => ({...prev, likeCount: res.data }));
       })
       .catch(err => {
         console.error('좋아요 실패: ', err);
         alert('좋아요 처리 중 오류 발생!');
       });
   };
-
+  
   return (
     <div className="detail-container">
       <h2 className="detail-title">{title}</h2>
       <div className="detail-meta">
         <span className="author">{nickname}</span>
-        <span className="time">{new Date(createdAt).toLocaleString()}</span>
+        <div className="time-and-views">
+          <span className="time">{new Date(createdAt).toLocaleString()}</span>
+          <span className="views"><LuEye /> {viewCount}</span>
+        </div>
       </div>
-      <div className="detail-content">
-        <p>{content}</p>
+
+      <div className="detail-body">
+        <div className="detail-like">
+          <button onClick={handleLike} className="like-icon-button">
+            <AiOutlineLike /> {likeCount}
+          </button>
+          <span><FaRegComment /> {commentCount}</span>
+        </div>
+        <div className="detail-content">
+          <p>{content}</p>
+        </div>
       </div>
-      <div className="detail-stats">
-        <button onClick={handleLike} className="like-button">
-          <AiOutlineLike />{likeCount}
-        </button>
-        <span><LuEye /> {viewCount}</span>
-        <span><FaRegComment /> {commentCount}</span>
+
+      <div className="button-group">
+        <button className="edit-button" onClick={handleEdit}>수정</button>
+        <button className="delete-button" onClick={handleDelete}>삭제</button>
       </div>
-      <button className="delete-button" onClick={handleDelete}>삭제</button>
-      <button className="edit-button" onClick={handleEdit}>수정</button>
+
+      <CommentSection postId={id} />
     </div>
   );
 }
