@@ -1,23 +1,48 @@
 .write-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-  
-  .title-input, .content-textarea {
-    width: 100%;
-    margin-bottom: 1rem;
-    padding: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-  }
-  
-  .submit-button {
-    padding: 0.75rem 2rem;
-    background-color: #10b981;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-  
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+h2 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.title-input {
+  padding: 12px;
+  font-size: 18px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.toastui-editor-default {
+  margin-bottom: 20px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.write-container .submit-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.write-container .submit-button:hover {
+  background-color: #3d9ad7;
+}

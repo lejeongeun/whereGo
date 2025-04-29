@@ -34,6 +34,19 @@ public class CheckListService {
                 .member(member)
                 .build();
         groupRepository.save(group);
+
+        if (requestDto.getItems() != null && !requestDto.getItems().isEmpty()) {
+            List<Checklist> items = requestDto.getItems().stream()
+                    .map(itemDto -> Checklist.builder()
+                            .item(itemDto.getItem())
+                            .isChecked(false)
+                            .group(group)
+                            .build())
+                    .collect(Collectors.toList());
+
+            itemRepository.saveAll(items);
+        }
+
     }
 
     // 그룹별 항목 추가
@@ -121,6 +134,7 @@ public class CheckListService {
                         .title(group.getTitle())
                         .items(group.getItems().stream()
                                 .map(item -> CheckListDto.builder()
+                                        .id(item.getId())
                                         .groupId(item.getGroup().getId())
                                         .item(item.getItem())
                                         .isChecked(item.getIsChecked())
