@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import api from '../../api'; 
-import './'
+import api from '../../api';
 
 function CommentSection({ postId }) {
   const [comments, setComments] = useState([]);
