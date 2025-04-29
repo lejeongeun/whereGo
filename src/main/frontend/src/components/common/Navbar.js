@@ -8,15 +8,54 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // 로컬 스토리지에서 사용자 정보 및 토큰 확인
+  // 로그인 상태를 확인하는 함수
+  const checkLoginStatus = () => {
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
     
     if (token && userData) {
-      setIsLoggedIn(true);
-      setUser(JSON.parse(userData));
+      try {
+        const parsedUser = JSON.parse(userData);
+        setIsLoggedIn(true);
+        setUser(parsedUser);
+        console.log("로그인 상태: 로그인됨", parsedUser);
+      } catch (error) {
+        console.error("사용자 데이터 파싱 오류:", error);
+        setIsLoggedIn(false);
+        setUser(null);
+      }
+    } else {
+      setIsLoggedIn(false);
+      setUser(null);
+      console.log("로그인 상태: 로그아웃됨");
     }
+  };
+
+  // 컴포넌트 마운트 시 로그인 상태 확인
+  useEffect(() => {
+    checkLoginStatus();
+    
+    // localStorage 변경 이벤트를 감지하는 리스너 추가
+    window.addEventListener('storage', checkLoginStatus);
+    
+    // 컴포넌트 언마운트 시 리스너 제거
+    return () => {
+      window.removeEventListener('storage', checkLoginStatus);
+    };
+  }, []);
+
+  // 사용자 정의 이벤트를 통해 로그인 상태 변경 감지
+  useEffect(() => {
+    // 로그인 상태 변경 이벤트 리스너 등록
+    const handleLoginChange = () => {
+      checkLoginStatus();
+    };
+    
+    window.addEventListener('loginStateChanged', handleLoginChange);
+    
+    return () => {
+      window.removeEventListener('loginStateChanged', handleLoginChange);
+    };
   }, []);
 
   const handleLogout = () => {
@@ -25,12 +64,18 @@ function Navbar() {
     localStorage.removeItem('user');
     setIsLoggedIn(false);
     setUser(null);
+    
+    // 로그인 상태 변경 이벤트 발생
+    window.dispatchEvent(new Event('loginStateChanged'));
+    
     navigate('/');
   };
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
+
+  console.log("렌더링 시 로그인 상태:", isLoggedIn);
 
   return (
     <nav className="navbar">
