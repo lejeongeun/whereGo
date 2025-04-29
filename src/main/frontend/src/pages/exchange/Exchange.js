@@ -80,6 +80,7 @@ const Exchange = () => {
       rate: 0,
       timestamp: ''
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 환율 정보 API 호출
