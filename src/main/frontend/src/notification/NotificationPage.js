@@ -1,43 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Client } from '@stomp/stompjs';
-import SockJS from 'sockjs-client';
+import React from 'react';
 
-const NotificationPage = () => {
-    const [messages, setMessages] = useState([]);
+import './NotificationPage.css'; // 스타일은 유지
 
-    useEffect(() => {
-        const socket = new SockJS('http://localhost:8080/ws'); // SockJS 사용
-        const client = new Client({
-            webSocketFactory: () => socket, // ✅ 변경: SockJS로 연결
-            reconnectDelay: 5000,
-            onConnect: () => {
-                console.log('✅ WebSocket 서버 연결 성공');
-                client.subscribe('/topic/notifications', (message) => {
-                    console.log('✅ 알림 수신:', message.body);
-                    setMessages(prevMessages => [...prevMessages, message.body]);
-                });
-            },
-            debug: (str) => {
-                console.log(str);
-            },
-        });
-
-        client.activate();
-
-        return () => {
-            client.deactivate();
-        };
-    }, []);
-
+const NotificationPage = ({ messages }) => {
     return (
-        <div style={{ padding: '20px' }}>
-            <h2>🔔 실시간 알림</h2>
+        <div className="notification-page">
+            <h2 className="notification-title">🔔 실시간 알림</h2>
             {messages.length === 0 ? (
-                <p>아직 알림이 없습니다.</p>
+                <p className="notification-empty">아직 알림이 없습니다.</p>
             ) : (
-                <ul>
+                <ul className="notification-list">
                     {messages.map((msg, index) => (
-                        <li key={index}>📢 {msg}</li>
+                        <li key={index} className="notification-item">
+                            <span className="notification-text"> {msg}</span>
+                            {index !== messages.length - 1 && <hr className="notification-divider" />}
+                        </li>
                     ))}
                 </ul>
             )}
