@@ -10,6 +10,24 @@ function CommunityEditPage() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
+  useEffect(() => {
+    if (location.state) {
+      setTitle(location.state.title);
+      setContent(location.state.content);
+    } else {
+      api.get(`/community/${id}`)
+        .then(res => {
+          setTitle(res.data.title);
+          setContent(res.data.content);
+        })
+        .catch(err => {
+          console.error('게시글 불러오기 실패:', err);
+          alert('게시글을 불러오지 못했습니다.');
+          navigate('/community');
+        });
+    }
+  }, [id, location.state, navigate]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 

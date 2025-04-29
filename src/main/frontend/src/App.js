@@ -47,8 +47,8 @@ function App() {
                 <Route path="/community/:id/edit" element={<CommunityEditPage />} />
                 <Route path="/mypage" element={<MyPage />} />
                 <Route path="/changePwd" element={<ChangePwd />} />
-                <Route path="/weather" element={<WeatherWorld />} /> 
                 <Route path='/notification' element={<NotificationPage />} />
+                <Route path="/weather" element={<WeatherWorld />} /> 
               </Routes>
             </div>
             <Footer className="footer" />
