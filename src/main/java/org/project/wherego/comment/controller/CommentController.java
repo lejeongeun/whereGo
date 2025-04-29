@@ -3,6 +3,7 @@ package org.project.wherego.comment.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.wherego.comment.dto.CommentRequestDto;
+import org.project.wherego.comment.dto.CommentResponseDto;
 import org.project.wherego.comment.service.CommentService;
 import org.project.wherego.member.config.CustomUserDetails;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,8 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/create")
-    public ResponseEntity<String> commentCreate(@PathVariable Long communityId, @Valid @RequestBody CommentRequestDto requestDto,
+    public ResponseEntity<String> commentCreate(@PathVariable Long communityId,
+                                                @Valid @RequestBody CommentRequestDto requestDto,
                                                 @AuthenticationPrincipal CustomUserDetails userDetails){
         String email = userDetails.getMember().getEmail();
         commentService.commentCreate(communityId, requestDto, email);
@@ -28,8 +30,8 @@ public class CommentController {
     }
 
     @GetMapping("/allList")
-    public ResponseEntity<List<CommentRequestDto>> allCommentList(@PathVariable Long communityId){
-        List<CommentRequestDto> commentList = commentService.allCommentList(communityId);
+    public ResponseEntity<List<CommentResponseDto>> getComment(@PathVariable Long communityId){
+        List<CommentResponseDto> commentList = commentService.getComment(communityId);
         return ResponseEntity.ok(commentList);
     }
 

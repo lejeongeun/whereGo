@@ -49,12 +49,26 @@ public class CommunityService {
         communityRepository.save(community);
 
     }
+
+    // uploads 폴더를 절대경로로 잡아주는 메서드
+    private String getAbsoluteUploadDir() {
+        File uploadFolder = new File(uploadDir);
+        if (!uploadFolder.isAbsolute()) {
+            uploadFolder = new File(System.getProperty("user.dir"), uploadDir);
+        }
+        if (!uploadFolder.exists()) {
+            uploadFolder.mkdirs();
+        }
+        return uploadFolder.getAbsolutePath();
+    }
     // 이미지 저장
     private String saveImageFile(MultipartFile imageFile) {
         String originalFilename = imageFile.getOriginalFilename();
         String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
         String newFileName = UUID.randomUUID() + extension;
-        File file = new File(uploadDir, newFileName);
+
+        String absoluteUploadPath = getAbsoluteUploadDir(); // 절대경로 얻기
+        File file = new File(absoluteUploadPath, newFileName);
 
         try{
             imageFile.transferTo(file);

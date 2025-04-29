@@ -20,6 +20,7 @@ import ChangePwd from './pages/mypage/ChangePwd';
 import './App.css';
 import CommunityEditPage from './pages/community/CommunityEditPage';
 import MapContainer from './components/schedule/MapContainer';
+import NotificationPage from './notification/NotificationPage';
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
                 <Route path="/mypage" element={<MyPage />} />
                 <Route path="/changePwd" element={<ChangePwd />} />
                 <Route path="/weather" element={<WeatherWorld />} /> 
+                <Route path='/notification' element={<NotificationPage />} />
               </Routes>
             </div>
             <Footer className="footer" />
