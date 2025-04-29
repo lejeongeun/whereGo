@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from '@react-google-maps/api';
 import MapPlaceInfoCard from './MapPlaceInfoCard';
-import ScheduleList from '../schedule/ScheduleList';
+// import ScheduleList from '../schedule/ScheduleList';
 import api from '../../api';
 
 const containerStyle = {
@@ -110,9 +110,8 @@ const MapContainer = () => {
         >
           {marker && <Marker position={marker} />}
         </GoogleMap>
-
         <MapPlaceInfoCard place={selectedPlace} onAdd={handleAddToSchedule} />
-        <ScheduleList places={schedulePlaces} onDelete={handleDeleteFromSchedule} />
+        {/* <ScheduleList places={schedulePlaces} onDelete={handleDeleteFromSchedule} /> */}
       </div>
   ) : (
       <div>지도를 불러오는 중...</div>
