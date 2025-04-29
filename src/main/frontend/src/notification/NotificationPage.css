@@ -1,0 +1,40 @@
+.notification-page {
+    padding: 20px;
+}
+
+.notification-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.notification-empty {
+    color: #888;
+    text-align: center;
+    margin-top: 40px;
+    font-size: 18px;
+}
+
+.notification-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.notification-item {
+    padding: 12px 8px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    position: relative;
+}
+
+.notification-text {
+    font-size: 16px;
+}
+
+.notification-divider {
+    border: 0;
+    height: 1px;
+    background: #ddd;
+    margin-top: 12px;
+}
