@@ -3,6 +3,7 @@ package org.project.wherego.comment.service;
 import lombok.RequiredArgsConstructor;
 import org.project.wherego.comment.domain.Comment;
 import org.project.wherego.comment.dto.CommentRequestDto;
+import org.project.wherego.comment.dto.CommentResponseDto;
 import org.project.wherego.comment.repository.CommentRepository;
 import org.project.wherego.community.domain.Community;
 import org.project.wherego.community.repository.CommunityRepository;
@@ -46,12 +47,18 @@ public class CommentService {
 
     // 댓글 조회
     @Transactional
-    public List<CommentRequestDto> allCommentList(Long communityId){
+    public List<CommentResponseDto> getComment(Long communityId){
+
+        // ghkjrdfls
+
+
         List<Comment> commentList = commentRepository.findAllByCommunityId(communityId);
 
-        return commentList.stream().map(comment -> CommentRequestDto.builder()
-                .boardId(comment.getCommunity().getId())
-                .content(comment.getContent())
+        return commentList.stream()
+                .map(comment -> CommentResponseDto.builder()
+                        .commentId(comment.getId())
+                        .nickname(comment.getMember().getNickname())
+                        .content(comment.getContent())
                 .build()
         ).collect(Collectors.toList());
     }
