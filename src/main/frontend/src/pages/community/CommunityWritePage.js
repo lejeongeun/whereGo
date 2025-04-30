@@ -1,64 +1,52 @@
-import { useRef, useState, useEffect } from 'react';
-import { createPost } from '../../api/communityApi'; // 이 부분은 이미 존재
-import api from '../../api'; // 추가: api import
-import { useNavigate } from 'react-router-dom'; 
+import { useState } from 'react';
+import { createPost } from '../../api/communityApi'; 
+import { useNavigate } from 'react-router-dom';
 import './CommunityWritePage.css';
-import { Editor } from '@toast-ui/react-editor';
-import '@toast-ui/editor/dist/toastui-editor.css';
+import api from '../../api'; // ✨ 추가: 직접 API 호출할 거라 필요
 
 function CommunityWritePage() {
   const [title, setTitle] = useState('');
-  const editorRef = useRef();
+  const [content, setContent] = useState('');
+  const [image, setImage] = useState(null); // ✨ 이미지 파일 상태 추가
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (editorRef.current) {
-      editorRef.current.getInstance().setHTML('');
-    }
-  }, []);
-
   const handleSubmit = (e) => {
-    e.preventDefault(); 
-    const content = editorRef.current.getInstance().getMarkdown();
+    e.preventDefault();
 
-    createPost({ title, content })
-      .then((res) => {
-        alert(res.data);
-        console.log("✅ 글쓰기 성공");
-        navigate('/community'); 
-      })
-      .catch((err) => {
-        console.error("❌ 글쓰기 실패:", err);
-        alert('글 작성 중 오류가 발생했어요!');
-      });
+    // ✨ FormData 객체를 생성
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('content', content);
+    if (image) {
+      formData.append('image', image); // 이미지 파일 추가
+    }
+
+    // ✨ API 호출 (createPost 대신 직접 api.post 사용)
+    api.post('/community/write', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then((res) => {
+      alert('글 작성 완료!');
+      console.log('✅ 글쓰기 성공', res.data);
+      navigate('/community');
+    })
+    .catch((err) => {
+      console.error('❌ 글쓰기 실패:', err);
+      alert('글 작성 중 오류가 발생했어요!');
+    });
   };
 
-  // Editor에서 이미지 업로드 처리
-  const uploadImageCallback = (file) => {
-    const formData = new FormData();
-    formData.append('image', file);
-
-    return new Promise((resolve, reject) => {
-      // 이미지 업로드 API 호출
-      api.post('/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-      .then((response) => {
-        const imageUrl = response.data.imageUrl; // 서버에서 반환된 이미지 URL
-        resolve(imageUrl); // 이미지 URL을 resolve
-      })
-      .catch((error) => {
-        reject(error);
-      });
-    });
+  // ✨ 이미지 파일 선택 핸들러
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
   };
 
   return (
     <div className="write-container">
       <h2>글 작성하기</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
         <input
           type="text"
           placeholder="제목을 입력하세요"
@@ -67,21 +55,23 @@ function CommunityWritePage() {
           onChange={(e) => setTitle(e.target.value)}
         />
         
-        {/* Toast UI Editor */}
-        <Editor
-          ref={editorRef}
-          initialValue=""
+        <textarea
           placeholder="내용을 입력하세요"
-          previewStyle="vertical"  
-          height="400px"
-          initialEditType="wysiwyg"  
-          useCommandShortcut={true}
-          hideModeSwitch={true}
-          // 이미지 업로드 콜백 함수 추가
-          hooks={{
-            addImageBlobHook: uploadImageCallback,
-          }}
+          className="content-textarea"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          style={{ width: '100%', height: '400px', resize: 'vertical', marginTop: '10px' }}
         />
+
+        {/* ✨ 이미지 업로드 input 추가 */}
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="image-input"
+          style={{ marginTop: '10px' }}
+        />
+
         <div className="button-group">
           <button type="submit" className="submit-button">작성 완료</button>
         </div>

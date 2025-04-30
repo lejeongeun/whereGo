@@ -5,6 +5,7 @@ import SearchResultCard from '../../components/schedule/SearchResultCard';
 import ScheduleList from '../../components/schedule/ScheduleList';
 import MapPlaceInfoCard from '../../components/schedule/MapPlaceInfoCard';
 import Login from '../../components/auth/Login';
+import ScheduleSurveyPanel from '../../components/schedule/ScheduleSurveyPanel';
 import './TripSchedulePage.css';
 
 function TripSchedulePage() {
@@ -13,6 +14,8 @@ function TripSchedulePage() {
   const [schedule, setSchedule] = useState([]);
   const [isLoginFormOpen, setIsLoginFormOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
+  const [surveyStep, setSurveyStep] = useState(1);
+  const [surveyAnswers, setSurveyAnswers] = useState({});
 
   useEffect(() => {
     // 로그인 상태가 바뀔 때마다 체크
@@ -50,7 +53,23 @@ function TripSchedulePage() {
 
       <div className="right-panel">
         {isLoggedIn ? (
-          <ScheduleList places={schedule} onDelete={handleDeleteFromSchedule} />
+          surveyStep === 1 || surveyStep === 2 ? (
+            <ScheduleSurveyPanel
+              step={surveyStep}
+              totalSteps={5}
+              answer={surveyAnswers.city}
+              onSelect={(city) => setSurveyAnswers((prev) => ({ ...prev, city }))}
+              onNext={() => setSurveyStep(surveyStep + 1)}
+              dateRange={{
+                startDate: surveyAnswers.startDate,
+                endDate: surveyAnswers.endDate
+              }}
+              onDateChange={({ startDate, endDate }) => setSurveyAnswers((prev) => ({ ...prev, startDate, endDate }))}
+              onDateReset={() => setSurveyAnswers((prev) => ({ ...prev, startDate: null, endDate: null }))}
+            />
+          ) : (
+            <ScheduleList places={schedule} onDelete={handleDeleteFromSchedule} />
+          )
         ) : (
           isLoginFormOpen ? (
             <Login onLoginSuccess={() => {
