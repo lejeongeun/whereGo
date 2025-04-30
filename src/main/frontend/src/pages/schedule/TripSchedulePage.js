@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-//import ScheduleSearchBar from '../../components/schedule/ScheduleSearchBar';
 import MapContainer from '../../components/schedule/MapContainer';
-import SearchResultCard from '../../components/schedule/SearchResultCard';
 import ScheduleList from '../../components/schedule/ScheduleList';
-import MapPlaceInfoCard from '../../components/schedule/MapPlaceInfoCard';
 import './TripSchedulePage.css';
 
 function TripSchedulePage() {
@@ -39,11 +36,10 @@ function TripSchedulePage() {
   return (
     <div className="trip-schedule-container">
       <div className="left-panel">
-        {/* <ScheduleSearchBar onSearch={handleSearch} /> */}
         <MapContainer setSelectedPlace={setSelectedPlace} />
       </div>
-      <div className="right-panel">
-        <ScheduleList places={schedule} onDelete={handleDeleteFromSchedule} />
+      <div div className="right-panel">
+        <ScheduleList places={schedule} onDelete={handleDeleteFromSchedule}/>
       </div>
     </div>
   );
