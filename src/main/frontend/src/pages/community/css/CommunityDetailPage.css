@@ -1,7 +1,7 @@
 /* 전체 컨테이너 왼쪽 정렬 */
 .detail-container {
   max-width: 800px;
-  margin: 2rem 0 2rem 150px;
+  margin: 0 auto;
   padding: 2rem;
   background-color: #ffffff;
   border-radius: 12px;
@@ -71,17 +71,17 @@
   border-radius: 6px;
   cursor: pointer;
   font-size: 1rem;
-  color: white;
+  color: rgb(71, 71, 71);
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 /* 버튼별 색깔 */
 .edit-button {
-  background-color: #3498db;
+  background-color: rgb(224, 224, 224);
 }
 
 .delete-button {
-  background-color: #f44336;
+  background-color: rgb(224, 224, 224);
 }
 
 .like-icon-button {
@@ -99,6 +99,10 @@
 }
 
 /* 버튼 호버 효과 */
-button:hover {
-  opacity: 0.85;
+.edit-button:hover {
+  background-color: rgb(210, 210, 210);
+}
+
+.delete-button:hover {
+  background-color: rgb(210, 210, 210);
 }

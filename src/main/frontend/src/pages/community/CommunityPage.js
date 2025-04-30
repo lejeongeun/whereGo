@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import CommunitySearch from '../../components/community/CommunitySearch';
 import CommunitySortTabs from '../../components/community/CommunitySortTabs';
 import CommunityPostList from '../../components/community/CommunityPostList';
-import './CommunityPage.css';
+import './css/CommunityPage.css';
 import api from '../../api';
 
 function CommunityPage() {
