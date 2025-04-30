@@ -26,6 +26,7 @@ public class CommunityController {
                                          @RequestPart("title") String title,
                                          @RequestPart("content") String content,
                                          @RequestPart(value = "image", required = false) MultipartFile imageFile){
+
         String email = userDetails.getMember().getEmail();
         CommunityRequestDto requestDto = CommunityRequestDto.builder()
                 .title(title)
