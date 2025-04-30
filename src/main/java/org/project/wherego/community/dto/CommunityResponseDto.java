@@ -3,6 +3,7 @@ package org.project.wherego.community.dto;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Getter
@@ -20,5 +21,6 @@ public class CommunityResponseDto {
     private int likeCount;
     private int commentCount;
 
-    private String imageUrl;
+    private List<String> imageUrls; // 다중 이미지 지원
+    private String profileImage;
 }
