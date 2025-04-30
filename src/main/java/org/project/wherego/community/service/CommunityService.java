@@ -86,6 +86,13 @@ public class CommunityService {
             }
         }
     }
+    @Transactional
+    public void increaseViewCount(Long communityId) {
+        Community community = communityRepository.findById(communityId)
+                .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
+
+        community.setViewCount(community.getViewCount() + 1);
+    }
 
     @Transactional(readOnly = true)
     public List<CommunityResponseDto> getAllPosts() {
@@ -115,7 +122,6 @@ public class CommunityService {
         Member members = memberRepository.findByEmail(member.getEmail())
                 .orElseThrow(()-> new IllegalArgumentException("사용자가 존재하지 않습니다."));
 
-        community.setViewCount(community.getViewCount() + 1);
         communityRepository.save(community);
 
         return CommunityResponseDto.builder()
@@ -167,5 +173,7 @@ public class CommunityService {
         }
         return uploadFolder.getAbsolutePath();
     }
+
+
 
 }

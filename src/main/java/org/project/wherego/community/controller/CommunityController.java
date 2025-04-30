@@ -51,7 +51,6 @@ public class CommunityController {
         communityService.edit(id, requestDto, newImages, deleteImageIds);
         return ResponseEntity.ok("글 수정 완료");
     }
-
     // 게시글 전체 확인
     @GetMapping("/list")
     public ResponseEntity<List<CommunityResponseDto>> getAllPosts(){;
@@ -62,6 +61,7 @@ public class CommunityController {
     @GetMapping("/{id}")
     public ResponseEntity<CommunityResponseDto> getPost(@PathVariable Long id,
                                                         @AuthenticationPrincipal CustomUserDetails userDetails){
+        communityService.increaseViewCount(id);
         CommunityResponseDto post = communityService.getPosts(id, userDetails.getMember());
         return ResponseEntity.ok(post);
 
