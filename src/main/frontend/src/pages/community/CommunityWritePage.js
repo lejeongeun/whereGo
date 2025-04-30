@@ -19,8 +19,10 @@ function CommunityWritePage() {
     if (image) {
       formData.append('image', image); 
     }
+
     api.post('/community/create', formData, {
       headers: {'Content-Type': 'multipart/form-data'}
+
     })
     .then(() => {
       alert('게시글이 수정되었습니다.');
