@@ -21,8 +21,14 @@ function getRelativeTime(createdAt) {
   return createdDate.toISOString().slice(0, 10);
 }
 
-function CommunityPostItem({ id, title, content, nickname, createdAt, likeCount, viewCount, commentCount, profile_Image, imageUrl  }) {
+function CommunityPostItem({ id, title, content, nickname, createdAt, likeCount, viewCount, commentCount, profileImage, imageUrl  }) {
+  console.log("🧩 post 데이터:", {
+    id, title, content, nickname, createdAt,
+    likeCount, viewCount, commentCount,
+    profileImage, imageUrl
+  });
   const relativeTime = getRelativeTime(createdAt);
+  
   
   return (
     <div className="post-card">
@@ -34,7 +40,7 @@ function CommunityPostItem({ id, title, content, nickname, createdAt, likeCount,
         <div className="post-left">
           <div className="post-header">
             <img
-              src={profile_Image || '/default-profile.png'}
+              src={profileImage || '/default-profile.png'}
               alt="프로필"
               className="profile-image"
             />

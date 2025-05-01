@@ -15,6 +15,8 @@ function CommunityPage() {
   useEffect(() => {
     api.get('/community/list')
       .then(res => {
+        console.log("📸 게시글 목록 데이터:", res.data);
+        console.log("🧪 첫 번째 게시글:", res.data[0].profileImage);
         setPosts(res.data);
         setFilteredPosts(res.data);
 
