@@ -102,7 +102,7 @@ function HomePage() {
             </div>
             <div className="destination-card">
               <img src="/resources/img/로마.jpg" alt="로마" />
-              <h3>이탈리아의 역사적인 도시</h3>
+              <h3>로마</h3>
               <p>이탈리아의 역사적인 도시</p>
             </div>
           </div>

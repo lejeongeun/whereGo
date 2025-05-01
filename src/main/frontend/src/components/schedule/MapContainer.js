@@ -39,10 +39,6 @@ const MapContainer = () => {
     setMap(mapInstance);
     if (mapInstance) {
       searchNearbyPlaces({
-        bl_latitude: (center.lat - 0.01).toString(),
-        tr_latitude: (center.lat + 0.01).toString(),
-        bl_longitude: (center.lng - 0.01).toString(),
-        tr_longitude: (center.lng + 0.01).toString()
       });
     }
   }, []);
@@ -152,32 +148,6 @@ const MapContainer = () => {
     setSelectedPlace(place);
   };
 
-  // 일정에 장소 추가
-  const handleAddToSchedule = async (place) => {
-    try {
-      const newPlace = {
-        id: Date.now().toString(),
-        name: place.name,
-        address: place.address,
-        latitude: place.latitude,
-        longitude: place.longitude,
-        description: place.description,
-        photo: place.photo,
-        rating: place.rating,
-        type: placeType
-      };
-      
-      setSchedulePlaces((prev) => [...prev, newPlace]);
-    } catch (error) {
-      console.error('일정 추가 오류:', error);
-    }
-  };
-
-  // 일정에서 장소 삭제
-  const handleDeleteFromSchedule = (id) => {
-    setSchedulePlaces((prev) => prev.filter((p) => p.id !== id));
-  };
-
   return isLoaded ? (
     <div className="map-container-wrapper">
       <div className="search-controls">
@@ -233,15 +203,11 @@ const MapContainer = () => {
         {selectedPlace && (
           <MapPlaceInfoCard 
             place={selectedPlace} 
-            onAdd={handleAddToSchedule} 
+            // onAdd={handleAddToSchedule} 
           />
         )}
       </div>
       
-      <div className="schedule-wrapper">
-        <h3>내 여행 일정</h3>
-        <ScheduleList places={schedulePlaces} onDelete={handleDeleteFromSchedule} />
-      </div>
     </div>
   ) : (
     <div className="loading-map">지도를 불러오는 중...</div>

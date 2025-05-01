@@ -17,16 +17,6 @@ function MapPlaceInfoCard({ place, onAdd }) {
   // 리뷰 수
   const reviewCount = place.num_reviews || place.reviews_count || '10';
   
-  // 랭킹 정보
-  const ranking = place.ranking || '#8 of 1,882 Restaurants in Seongnam';
-  
-  // 태그 (종류)
-  const tags = ['Asian', 'Korean'];
-  if (place.cuisine && Array.isArray(place.cuisine)) {
-    tags.length = 0;
-    place.cuisine.forEach(item => tags.push(item.name));
-  }
-  
   // 전화번호
   const phone = hasDetails && place.details.formattedPhoneNumber 
     ? place.details.formattedPhoneNumber 
@@ -36,6 +26,10 @@ function MapPlaceInfoCard({ place, onAdd }) {
   const website = hasDetails && place.details.website 
     ? place.details.website 
     : (place.website || '#');
+
+  const tripAdvisorUrl = hasDetails && place.details.web_url
+    ? place.details.web_url
+    : (place.web_url || "https://www.tripadvisor.com");
   
   return (
     <div className="map-place-info-card">
@@ -67,29 +61,8 @@ function MapPlaceInfoCard({ place, onAdd }) {
             </div>
           )}
 
-          {/* 가격 정보 */}
-          <div className="info-section">
-            <p className="info-title">Price</p>
-            <p className="info-content">
-              {place.price_level ? '₩'.repeat(place.price_level) : ''}
-            </p>
-          </div>
-          
-          {/* 랭킹 정보 */}
-          <div className="info-section">
-            <p className="info-title">Ranking</p>
-            <p className="ranking">{ranking}</p>
-          </div>
-          
-          {/* 태그 (종류) */}
-          <div className="tags-container">
-            {tags.map((tag, index) => (
-              <span key={index} className="tag">{tag}</span>
-            ))}
-          </div>
         </div>
       </div>
-      
       {/* 상세 정보 */}
       <div className="details-info">
         {/* 주소 */}
@@ -99,7 +72,6 @@ function MapPlaceInfoCard({ place, onAdd }) {
             {place.address || '22 Pangyoyeok-ro 192beon-gil, Seongnam, Gyeonggi-do South Korea'}
           </p>
         </div>
-        
         {/* 전화번호 */}
         <div className="phone-container">
           <span className="phone-icon">📞</span>
@@ -108,14 +80,16 @@ function MapPlaceInfoCard({ place, onAdd }) {
       </div>
       
       {/* 링크 버튼 */}
+      {place.type === 'restaurants' && (
       <div className="links-container">
-        <a href="https://www.tripadvisor.com" target="_blank" rel="noopener noreferrer" className="link-button">
+        <a href={tripAdvisorUrl} target="_blank" rel="noopener noreferrer" className="link-button">
           TRIP ADVISOR
         </a>
         <a href={website} target="_blank" rel="noopener noreferrer" className="link-button">
           WEBSITE
         </a>
       </div>
+      )}
       
       {/* 일정에 추가 버튼 */}
       <div className="button-container">
