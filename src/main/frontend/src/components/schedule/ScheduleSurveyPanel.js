@@ -1,24 +1,12 @@
 import React from 'react';
-import ScheduleDatePanel from './ScheduleDatePanel';
 
-const cities = [
-  '미국', '영국', '프랑스', '베트남', '중국', '스페인'
-];
+// 여행 가능한 나라 목록
+const cities = [ '미국', '영국', '프랑스', '베트남', '중국', '스페인' ];
 
-function ScheduleSurveyPanel({ step, totalSteps, answer, onSelect, onNext, dateRange, onDateChange, onDateReset }) {
-  if (step === 2) {
-    return (
-      <ScheduleDatePanel
-        step={step}
-        totalSteps={totalSteps}
-        startDate={dateRange?.startDate}
-        endDate={dateRange?.endDate}
-        onDateChange={onDateChange}
-        onNext={onNext}
-        onReset={onDateReset}
-      />
-    );
-  }
+/**
+ * 여행 설문의 첫 번째 단계 - 나라 선택을 담당하는 컴포넌트
+ */
+function ScheduleSurveyPanel({ step, totalSteps, answer, onSelect, onNext }) {
   return (
     <div style={{
       background: '#fff',
@@ -26,7 +14,7 @@ function ScheduleSurveyPanel({ step, totalSteps, answer, onSelect, onNext, dateR
       boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
       padding: '32px 32px 24px 32px',
       maxWidth: 400,
-      margin: '32px auto',
+      margin: '-5px auto',
       minHeight: 420,
       display: 'flex',
       flexDirection: 'column',
@@ -40,16 +28,16 @@ function ScheduleSurveyPanel({ step, totalSteps, answer, onSelect, onNext, dateR
       </div>
       {/* 아이콘/로고 */}
       <div style={{marginBottom: '16px', fontSize: '2.5rem'}}>
-        <span role="img" aria-label="flag">🏴</span>
+        <span role="img" aria-label="flag">🚩</span>
       </div>
       {/* 질문 */}
       <div style={{fontWeight:700, fontSize:'1.3rem', marginBottom:'8px', textAlign:'center'}}>
-        떠나고 싶은 도시는?
+        떠나고 싶은 나라는?
       </div>
       <div style={{fontSize:'1rem', color:'#888', marginBottom:'32px', textAlign:'center'}}>
-        도시 1곳을 선택해주세요.
+        나라 1곳을 선택해주세요.
       </div>
-      {/* 도시 선택 버튼 */}
+      {/* 나라 선택 버튼 */}
       <div style={{display:'flex',flexWrap:'wrap',gap:'16px',justifyContent:'center',marginBottom:'40px',width:'100%'}}>
         {cities.map((city) => (
           <button

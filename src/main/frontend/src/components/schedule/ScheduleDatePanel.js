@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-// import './ScheduleDatePanel.css'; // 추후 커스텀 스타일 적용
+import './ScheduleDatePanel.css';
 
 function isSameDay(a, b) {
   return a && b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
@@ -11,7 +11,7 @@ function isBetween(date, start, end) {
   return start && end && date > start && date < end;
 }
 
-function ScheduleDatePanel({ step, totalSteps, startDate, endDate, onDateChange, onNext, onReset }) {
+function ScheduleDatePanel({ step, totalSteps, startDate, endDate, onDateChange, onNext, onReset, onGoBack }) {
   const [hoverDate, setHoverDate] = useState(null);
   const today = new Date();
 
@@ -61,12 +61,56 @@ function ScheduleDatePanel({ step, totalSteps, startDate, endDate, onDateChange,
   const canNext = !!(startDate && endDate);
 
   return (
-    <div className="schedule-date-panel">
+    <div style={{
+      background: '#fff',
+      borderRadius: '16px',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
+      padding: '32px 32px 24px 32px',
+      maxWidth: 400,
+      margin: '-5px auto',
+      minHeight: 420,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      position: 'relative'
+    }}>
+      {/* 뒤로가기 버튼 */}
+      <button
+        onClick={onGoBack}
+        style={{
+          position: 'absolute',
+          top: 20,
+          left: 32,
+          background: 'none',
+          border: 'none',
+          fontSize: '1.5rem',
+          color: '#888',
+          cursor: 'pointer',
+          padding: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        ←
+      </button>
       {/* 진행 표시 */}
-      <div className="schedule-date-step">{step}/{totalSteps}</div>
-      {/* 아이콘/질문 */}
-      <div className="schedule-date-icon">📅</div>
-      <div className="schedule-date-title">여행 기간은?</div>
+      <div style={{position:'absolute',top:20,right:32,fontSize:'1rem',color:'#888'}}>
+        {step}/{totalSteps}
+      </div>
+      {/* 아이콘 */}
+      <div style={{marginBottom: '16px', fontSize: '2.5rem'}}>
+        <span role="img" aria-label="calendar">📅</span>
+      </div>
+      {/* 질문 */}
+      <div style={{fontWeight:700, fontSize:'1.3rem', marginBottom:'8px', textAlign:'center'}}>
+        여행 기간은?
+      </div>
+      <div style={{fontSize:'1rem', color:'#888', marginBottom:'32px', textAlign:'center'}}>
+        날짜를 선택해주세요.
+      </div>
+      {/* 달력 */}
       <div className="schedule-date-calendar-wrapper">
         <Calendar
           locale="ko-KR"
@@ -82,8 +126,10 @@ function ScheduleDatePanel({ step, totalSteps, startDate, endDate, onDateChange,
           onMouseOver={({ activeStartDate, date, view }) => setHoverDate(date)}
           prev2Label={null}
           next2Label={null}
+          minDate={new Date()}
         />
       </div>
+      {/* 버튼 영역 */}
       <div className="schedule-date-btns">
         <button className="calendar-reset-btn" onClick={onReset}>선택 해제</button>
         <button className="calendar-next-btn" onClick={onNext} disabled={!canNext}>다음</button>

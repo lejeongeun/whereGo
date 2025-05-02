@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../../api';
 import axios from 'axios';
 import './Mypage.css';
@@ -80,8 +80,8 @@ const MyPage = () => {
       return;
     }
 
-    // 파일 크기 제한 (예: 5MB)
-    if (file.size > 5 * 1024 * 1024) {
+    // 파일 크기 제한 (10MB)
+    if (file.size > 10 * 1024 * 1024) {
       setError('파일 크기는 5MB 이하여야 합니다.');
       return;
     }
@@ -179,6 +179,11 @@ const MyPage = () => {
     }
   };
 
+  // 게시글 상세 페이지로 이동
+  const navigateToCommunityDetail = (postId) => {
+    navigate(`/community/${postId}`);
+  };
+
   // 로딩 중
   if (isLoading) {
     return <div className="my-page-container">loading...</div>;
@@ -237,19 +242,24 @@ const MyPage = () => {
           </div>
         </div>
       </div>
-      
       {/* 커뮤니티 섹션 */}
       <div className="community-section">
         <h2>내가 작성한 글</h2>
         {userData.comunities && userData.comunities.length > 0 ? (
           <div className="community-list">
-            {userData.comunities.map((post) => (
+            {userData.comunities.map((post, index) => (
               <div key={post.id} className="community-item">
-                <h3>{post.title}</h3>
+                <h3 
+                  className="post-title clickable" 
+                  onClick={() => navigateToCommunityDetail(post.id)}
+                >
+                  {post.title}
+                </h3>
                 <p className="post-content">{post.content}</p>
                 <div className="post-info">
                   <span className="post-date">작성일: {new Date(post.createdAt).toLocaleDateString()}</span>
                 </div>
+                {index < userData.comunities.length - 1 && <div className="post-divider"></div>}
               </div>
             ))}
           </div>
