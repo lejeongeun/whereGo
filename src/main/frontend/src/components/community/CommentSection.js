@@ -110,11 +110,8 @@ function CommentSection({ postId }) {
                   />
                   <div className="comment-actions">
                   <button onClick={() => handleEditSubmit(comment.commentId)}>저장</button>
-                  <button
-                    onClick={() =>
-                      setEditingStates(prev => ({ ...prev, [comment.commentId]: false }))
-                    }>취소</button>
-                    </div>
+                  <button onClick={() => setEditingStates(prev => ({ ...prev, [comment.commentId]: false }))}>취소</button>
+                  </div>
                 </>
               ) : (
                 <>

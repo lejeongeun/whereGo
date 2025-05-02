@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { createPost } from '../../api/communityApi'; 
 import { useNavigate } from 'react-router-dom';
 import './css/CommunityWritePage.css';
 import api from '../../api'; 
@@ -25,12 +24,12 @@ function CommunityWritePage() {
 
     })
     .then(() => {
-      alert('게시글이 수정되었습니다.');
+      alert('게시글이 생성되었습니다.');
       navigate('/community/');
     })
     .catch((err) => {
-      console.error('게시글 수정 실패:', err);
-      alert('수정 중 오류가 발생했습니다.');
+      console.error('게시글 생성 실패:', err);
+      alert('생성 중 오류가 발생했습니다.');
     });
 };
 
@@ -55,7 +54,6 @@ function CommunityWritePage() {
           className="content-textarea"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          style={{ width: '100%', height: '400px', resize: 'vertical', marginTop: '10px' }}
         />
 
         {/* 이미지 업로드 input 추가 */}
@@ -64,8 +62,9 @@ function CommunityWritePage() {
           accept="image/*"
           onChange={handleImageChange}
           className="image-input"
-          style={{ marginTop: '10px' }}
         />
+
+        {image && <p className="image-name">선택된 파일: {image.name}</p>}
 
         <div className="button-group">
           <button type="submit" className="submit-button">작성 완료</button>

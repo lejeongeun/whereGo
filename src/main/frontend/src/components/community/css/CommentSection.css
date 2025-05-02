@@ -67,11 +67,7 @@
   cursor: pointer;
 }
 
-.comment-actions .edit {
-  background-color: white;
-  color: rgb(132, 132, 132);
-}
-
+.comment-actions .edit,
 .comment-actions .delete {
   background-color: white;
   color: rgb(132, 132, 132);

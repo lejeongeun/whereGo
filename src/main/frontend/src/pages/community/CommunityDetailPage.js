@@ -11,6 +11,7 @@ import { FaRegComment } from "react-icons/fa";
 
 
 function CommunityDetailPage() {
+
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,13 +21,6 @@ function CommunityDetailPage() {
     const token = localStorage.getItem('token');
   
     if (token) {
-      api.post(`/community/${id}/view`)
-        .then(() => {
-          console.log("조회수 증가 성공");
-        })
-        .catch((err) => {
-          console.error("조회수 증가 실패:", err);
-        });
     } else {
       console.warn("비로그인 상태, 조회수 증가 요청 안 보냄");
     }
@@ -46,7 +40,10 @@ function CommunityDetailPage() {
 
   if (!post) return <div>로딩중...</div>
 
-  const { title, content, nickname, createdAt, likeCount, viewCount, commentCount } = post;
+  const { title, content, nickname, createdAt, likeCount, viewCount, commentCount, imageUrls, profileImage } = post;
+
+
+  console.log("📷 첨부 이미지 리스트:", imageUrls);
 
   const handleEdit = () => {
     navigate(`/community/${id}/edit`, { state: { title, content } });
@@ -83,7 +80,16 @@ function CommunityDetailPage() {
     <div className="detail-container">
       <h2 className="detail-title">{title}</h2>
       <div className="detail-meta">
+
+      <div className="detail-author">
+        <img 
+          src={profileImage || '/default-profile.png'} 
+          alt="프로필 이미지" 
+          className="detail-profile-image"
+        />
         <span className="author">{nickname}</span>
+      </div>
+
         <div className="time-and-views">
           <span className="time">{new Date(createdAt).toLocaleString()}</span>
           <span className="views"><LuEye /> {viewCount}</span>
@@ -101,6 +107,19 @@ function CommunityDetailPage() {
           <p>{content}</p>
         </div>
       </div>
+
+      {imageUrls && imageUrls.length > 0 && (
+        <div className="detail-images">
+          {imageUrls.map((url, i) => (
+            <img
+              key={i}
+              src={`http://localhost:8080${url}`}
+              alt={`첨부 이미지 ${i + 1}`}
+              className="detail-image"
+            />
+          ))}
+        </div>
+      )}
 
       <div className="button-group">
         <button className="edit-button" onClick={handleEdit}>수정</button>

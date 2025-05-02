@@ -1,6 +1,3 @@
-a {
-  text-decoration: none;
-}
 .post-card {
   border-bottom: 1px solid #e5e5e5;
   padding: 20px 0;
@@ -8,12 +5,12 @@ a {
 }
 
 .post-link-horizontal {
+  text-decoration: none;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 16px;
   width: 100%;
-  text-decoration: none;
   color: inherit;
 }
 
@@ -21,7 +18,7 @@ a {
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-width: 0; /* 줄바꿈 허용 */
+  min-width: 0; 
 }
 
 .post-header {
@@ -66,7 +63,7 @@ a {
   margin-left: 10px;
 }
 
-.post-card .profile-image {
+.post-profile-image {
   width: 32px;
   height: 32px;
   border-radius: 50%;

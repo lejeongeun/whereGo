@@ -1,11 +1,11 @@
 .community-search-form {
-  all: unset; /* ← 이거 추가! */
+  all: unset; 
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
   margin: 1.5rem 0;
-  width: 100%;
+  width:100%;
 }
 
 .community-search-input {
@@ -29,5 +29,5 @@
 }
 
 .community-search-button:hover {
-  background-color: #2980b9;
+  background-color: #4c9dd3;
 }

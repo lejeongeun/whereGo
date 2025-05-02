@@ -21,15 +21,17 @@ function getRelativeTime(createdAt) {
   return createdDate.toISOString().slice(0, 10);
 }
 
-function CommunityPostItem({ id, title, content, nickname, createdAt, likeCount, viewCount, commentCount, profileImage, imageUrl  }) {
-  console.log("🧩 post 데이터:", {
-    id, title, content, nickname, createdAt,
-    likeCount, viewCount, commentCount,
-    profileImage, imageUrl
-  });
+function CommunityPostItem({ id, title, content, nickname, createdAt, likeCount, viewCount, commentCount, profileImage, imageUrls  }) {
+
+  console.log("🖼 imageUrls:", imageUrls);
+
   const relativeTime = getRelativeTime(createdAt);
   
-  
+  const maxLength = 100;
+  const previewContent = content.length > maxLength
+    ? content.slice(0, maxLength) + '...'
+    : content;
+
   return (
     <div className="post-card">
       <Link
@@ -41,13 +43,13 @@ function CommunityPostItem({ id, title, content, nickname, createdAt, likeCount,
           <div className="post-header">
             <img
               src={profileImage || '/default-profile.png'}
-              alt="프로필"
-              className="profile-image"
+              alt={`${nickname}님의 프로필`}
+              className="post-profile-image"
             />
             <span className="author-name">{nickname}</span>
           </div>
           <strong className="post-title">{title}</strong>
-          <p className="post-content">{content}</p>
+          <p className="post-content">{previewContent}</p>
           <div className="post-footer">
             <span className="post-meta">{relativeTime}</span>
             <div className="post-stats">
@@ -58,13 +60,9 @@ function CommunityPostItem({ id, title, content, nickname, createdAt, likeCount,
           </div>
         </div>
 
-        {imageUrl && (
+        {imageUrls && imageUrls.length > 0 && (
           <div className="post-thumbnail">
-            <img
-              src={imageUrl}
-              alt="썸네일"
-              className="thumbnail-image"
-            />
+            <img src={`http://localhost:8080${imageUrls[0]}`} alt="썸네일" className="thumbnail-image" />
           </div>
         )}
       </Link>

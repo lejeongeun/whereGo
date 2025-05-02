@@ -106,3 +106,29 @@
 .delete-button:hover {
   background-color: rgb(210, 210, 210);
 }
+
+.detail-images {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.detail-image {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+.detail-author {
+  display: flex;
+  align-items: center;
+}
+
+.detail-profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #f0f0f0;
+  margin-right: 8px;
+}
