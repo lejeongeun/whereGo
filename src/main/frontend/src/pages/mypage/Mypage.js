@@ -286,7 +286,6 @@ const MyPage = () => {
           </div>
         </div>
       </div>
-      
       {/* 커뮤니티 섹션 */}
       <div className="community-section">
       <h2>내가 작성한 글</h2>
