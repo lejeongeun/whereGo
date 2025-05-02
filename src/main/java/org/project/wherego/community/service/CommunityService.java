@@ -61,6 +61,7 @@ public class CommunityService {
         communityRepository.save(community);
 
     }
+
     @Transactional
     public void edit(Long id, CommunityRequestDto requestDto, List<MultipartFile> newImages, List<Long> deleteImageIds) {
         Community community = communityRepository.findById(id)
