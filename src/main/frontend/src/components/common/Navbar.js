@@ -12,7 +12,7 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showNotificationModal, setShowNotificationModal] = useState(false);
   const [hasNewNotification, setHasNewNotification] = useState(false);
-  const [messages, setMessages] = useState([]); // ✅ 알림 메시지 저장
+  const [messages, setMessages] = useState([]); // 알림 메시지 저장
   const navigate = useNavigate();
 
   const checkLoginStatus = () => {
@@ -70,27 +70,29 @@ function Navbar() {
     setHasNewNotification(false); // 모달 열면 새 알림 표시 없앰
   };
 
-  // ✅ WebSocket 연결: 알림 수신 및 저장
+  // WebSocket 연결: 알림 수신 및 저장
   useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user || !user.email) return; // 이메일 없으면 중단
+
     const socket = new SockJS('http://localhost:8080/ws');
     const client = new Client({
       webSocketFactory: () => socket,
       reconnectDelay: 5000,
       onConnect: () => {
-        console.log('웹소켓 연결 완료!');
-        client.subscribe('/topic/notifications', (message) => {
-          console.log('🔔 알림 도착:', message.body);
-          setMessages(prev => [...prev, message.body]); // 기존 메시지에 추가
+        console.log('웹소켓 연결 완료');
+        // 사용자 개인 구독 채널
+        client.subscribe(`/topic/notifications/${user.email}`, (message) => {
+          console.log('📩 알림 도착:', message.body);
+          setMessages(prev => [...prev, message.body]);
           setHasNewNotification(true); // 새 알림 표시
         });
       },
-      debug: (str) => console.log(str),
+      debug: (str) => console.log('[WebSocket Debug]', str),
     });
 
     client.activate();
-    return () => {
-      client.deactivate();
-    };
+    return () => client.deactivate();
   }, []);
 
   return (
@@ -138,7 +140,7 @@ function Navbar() {
         </div>
       </nav>
 
-      {/* ✅ 알림 모달: Navbar에서 messages를 넘겨줌 */}
+      {/* 알림 모달: Navbar에서 messages를 넘겨줌 */}
       {showNotificationModal && (
         <div className="notification-modal">
           <div className="notification-modal-content">

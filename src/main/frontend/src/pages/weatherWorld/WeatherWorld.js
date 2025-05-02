@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
 import './WeatherWorld.css';
-
-// React Icons import
 import { IoIosSunny, IoIosPartlySunny, IoIosCloudy, IoIosRainy, IoIosThunderstorm, IoIosSnow } from 'react-icons/io';
 import { BsCloudFog } from 'react-icons/bs';
 import { IoCalendarOutline, IoChevronDownOutline, IoChevronUpOutline } from 'react-icons/io5';
 
-// Constants
 const API_KEY = process.env.REACT_APP_OPEN_WEATHER_API_KEY || '';
 const CURRENT_WEATHER_API = 'https://api.openweathermap.org/data/2.5/weather';
 const FORECAST_API = 'https://api.openweathermap.org/data/2.5/forecast';
 
-// Weather data mapping
 const WEATHER_ICONS = {
   200: { component: IoIosThunderstorm, color: "#6B7280" }, // 뇌우
   300: { component: IoIosRainy, color: "#6B7280" },        // 이슬비
@@ -35,7 +31,6 @@ const WEATHER_DESCRIPTIONS = {
   '50d': '안개', '50n': '안개'
 };
 
-// Countries data
 const COUNTRIES = [
   { code: 'kr', name: '대한민국', capital: 'Seoul', flag: '🇰🇷' },
   { code: 'us', name: '미국', capital: 'Washington D.C.', flag: '🇺🇸' },
@@ -49,7 +44,6 @@ const COUNTRIES = [
   { code: 'ca', name: '캐나다', capital: 'Ottawa', flag: '🇨🇦' }
 ];
 
-// Weather and forecast utility functions
 const utils = {
   // 날씨 아이콘 매핑 함수
   getWeatherIcon: (weatherCode, iconSize = 70) => {
@@ -113,7 +107,6 @@ const utils = {
   }
 };
 
-// Components
 const ForecastSection = ({ forecastData }) => (
   <div className="forecast-section">
     <div className="forecast-title">
@@ -189,7 +182,6 @@ const WeatherWorld = () => {
   const [expandedCards, setExpandedCards] = useState({});
   const [error, setError] = useState(null);
 
-  // Event handlers
   const handleCountryChange = (e) => setSelectedCountry(e.target.value);
 
   const toggleCardExpansion = (id) => {

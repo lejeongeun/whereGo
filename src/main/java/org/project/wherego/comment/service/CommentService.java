@@ -42,7 +42,15 @@ public class CommentService {
 
         commentRepository.save(newComment);
 
-        notificationService.sendNotification(community.getTitle() + " 게시물에 새로운 댓글이 등록되었습니다!");
+
+        // 게시글 작성자
+        Member postOwner = community.getMember();
+
+        // 자기 자신이 댓글을 단 경우는 알림 X
+        if (!member.getId().equals(postOwner.getId())) {
+            String message = "📢 \"" + community.getTitle() + "\" 게시물에 댓글이 등록되었습니다!";
+            notificationService.sendNotificationToUser(postOwner.getEmail(), message);
+        }
     }
 
     // 댓글 조회

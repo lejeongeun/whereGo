@@ -6,6 +6,7 @@ import org.project.wherego.common.domain.BaseEntity;
 import org.project.wherego.like.domain.Like;
 import org.project.wherego.member.domain.Member;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,11 +25,8 @@ public class Community extends BaseEntity {
     private String title; // 게시글 제목
 
     @Lob
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content; // 게시글 내용
-
-    @Column
-    private String imageUrl; // img
 
     @ManyToOne(fetch = FetchType.LAZY) // Member와 연관관계
     @JoinColumn(name = "member_id", nullable = false)
@@ -46,6 +44,10 @@ public class Community extends BaseEntity {
 
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommunityImage> images = new ArrayList<>();
 
 
 }

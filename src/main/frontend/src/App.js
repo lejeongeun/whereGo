@@ -48,6 +48,7 @@ function App() {
                 <Route path="/mypage" element={<MyPage />} />
                 <Route path="/changePwd" element={<ChangePwd />} />
                 <Route path='/notification' element={<NotificationPage />} />
+                <Route path="/weather" element={<WeatherWorld />} /> 
               </Routes>
             </div>
             <Footer className="footer" />
