@@ -20,16 +20,12 @@ function getRelativeTime(createdAt) {
   
   return createdDate.toISOString().slice(0, 10);
 }
+
 function CommunityPostItem({
     id, title, content, nickname, createdAt,
     likeCount, viewCount, commentCount,
     profileImage, imageUrls
   }) {
-    console.log("🧩 post 데이터:", {
-      id, title, content, nickname, createdAt,
-      likeCount, viewCount, commentCount,
-      profileImage, imageUrls
-    });
   
     const relativeTime = getRelativeTime(createdAt);
 
@@ -40,52 +36,51 @@ function CommunityPostItem({
     ? content.slice(0, maxLength) + '...'
     : content;
 
-  return (
-    <div className="post-card">
-      <Link
-        to={`/community/${id}`}
-        state={{
+    return (
+      <div className="post-card">
+        <Link
+          to={`/community/${id}`}
+          state={{
             id, title, content, nickname, createdAt,
             likeCount, viewCount, commentCount,
             imageUrls, profileImage
           }}
-        className="post-link-horizontal"
-      >
-        <div className="post-left">
-          <div className="post-header">
+          className="post-link-horizontal"
+        >
+          <div className="post-left">
+            <div className="post-header">
             <img
-              src={profileImage || '/default-profile.png'}
+              src={
+                typeof profileImage === 'string' && profileImage.trim() !== ''
+                  ? `http://localhost:8080${profileImage.slice(profileImage.indexOf('/uploads/'))}`
+                  : '/default-profile.png'
+              }
               alt={`${nickname}님의 프로필`}
               className="post-profile-image"
             />
-            <span className="author-name">{nickname}</span>
-          </div>
-          <strong className="post-title">{title}</strong>
-          <p className="post-content">{previewContent}</p>
-          <div className="post-footer">
-            <span className="post-meta">{relativeTime}</span>
-            <div className="post-stats">
-              <span><AiOutlineLike /> {likeCount}</span>
-              <span><LuEye /> {viewCount}</span>
-              <span><FaRegComment /> {commentCount}</span>
+              <span className="author-name">{nickname}</span>
             </div>
+            <strong className="post-title">{title}</strong>
+            <p className="post-content">{previewContent}</p>
+            <span className="post-meta">{relativeTime}</span>
           </div>
-        </div>
-
-        {thumbnail && (
-          <div className="post-thumbnail">
-            <img
-              src={`http://localhost:8080${thumbnail}`}
-              alt="썸네일"
-              className="thumbnail-image"
-            />
-
-          </div>
-        )}
-      </Link>
-    </div>
-
-  );
-}
-
+    
+          {thumbnail && (
+            <div className="post-right">
+              <img
+                src={`http://localhost:8080${thumbnail}`}
+                alt="썸네일"
+                className="post-thumbnail"
+              />
+              <div className="post-stats">
+                <span><AiOutlineLike /> {likeCount}</span>
+                <span><LuEye /> {viewCount}</span>
+                <span><FaRegComment /> {commentCount}</span>
+              </div>
+            </div>
+          )}
+        </Link>
+      </div>
+    );
+  }
 export default CommunityPostItem;

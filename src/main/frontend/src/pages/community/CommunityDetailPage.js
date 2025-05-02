@@ -1,5 +1,5 @@
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './css/CommunityDetailPage.css';
 import { deletePost } from '../../api/communityApi';
 import api from '../../api';
@@ -16,35 +16,26 @@ function CommunityDetailPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [post, setPost] = useState(location.state || null);
+  const hasFetched = useRef(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-  
-    if (token) {
-    } else {
-      console.warn("비로그인 상태, 조회수 증가 요청 안 보냄");
-    }
-  
-    if (!post) {
-      api.get(`/community/${id}`)
-        .then(res => {
-          setPost(res.data);
-        })
-        .catch(err => {
-          console.error('게시글 불러오기 실패:', err);
-          alert('게시글을 불러올 수 없습니다.');
-          navigate('/community');
-        });
-    }
-  }, [id, post, navigate]);
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
+    api.get(`/community/${id}`)
+      .then((res) => {
+        setPost(res.data);
+      })
+      .catch((err) => {
+        console.error('게시글 조회 실패:', err);
+        alert('게시글을 불러올 수 없습니다.');
+        navigate('/community');
+      });
+  }, [id, navigate]);
 
   if (!post) return <div>로딩중...</div>
 
-  const {
-    title, content, nickname, createdAt,
-    likeCount, viewCount, commentCount,
-    imageUrls
-  } = post;
+  const { title, content, nickname, createdAt, likeCount, viewCount, commentCount, imageUrls, profileImage } = post;
 
   const handleEdit = () => {
     navigate(`/community/${id}/edit`, { state: { title, content } });
@@ -83,11 +74,15 @@ function CommunityDetailPage() {
       <div className="detail-meta">
 
       <div className="detail-author">
-        <img 
-          src={profileImage || '/default-profile.png'} 
-          alt="프로필 이미지" 
-          className="detail-profile-image"
-        />
+            <img
+              src={
+                typeof profileImage === 'string' && profileImage.trim() !== ''
+                  ? `http://localhost:8080${profileImage.slice(profileImage.indexOf('/uploads/'))}`
+                  : '/default-profile.png'
+              }
+              alt={`${nickname}님의 프로필`}
+              className="post-profile-image"
+            />
         <span className="author">{nickname}</span>
       </div>
 

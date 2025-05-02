@@ -50,9 +50,16 @@
 }
 
 .comment-header {
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-  color: rgb(71, 71, 71);
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.comment-time {
+  font-size: 0.8rem;
+  color: #999;
 }
 
 .comment-content {

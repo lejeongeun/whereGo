@@ -3,6 +3,26 @@ import api from '../../api';
 import './css/CommentSection.css';
 import { updateComment, deleteComment } from '../../api/communityApi';
 
+function getRelativeTime(createdAt) {
+  if (!createdAt) return '시간 정보 없음';
+  const createdDate = new Date(createdAt);
+  if (isNaN(createdDate)) return '시간 형식 오류';
+
+  const now = new Date();
+  const diffMs = now - createdDate;
+  const diffSeconds = Math.floor(diffMs / 1000);
+
+  if (diffSeconds < 60) return `${diffSeconds}초 전`;
+  const diffMinutes = Math.floor(diffSeconds / 60);
+  if (diffMinutes < 60) return `${diffMinutes}분 전`;
+  const diffHours = Math.floor(diffMinutes / 60);
+  if (diffHours < 24) return `${diffHours}시간 전`;
+  const diffDays = Math.floor(diffHours / 24);
+  if (diffDays < 7) return `${diffDays}일 전`;
+
+  return createdDate.toISOString().slice(0, 10);
+}
+
 function CommentSection({ postId }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
@@ -93,6 +113,7 @@ function CommentSection({ postId }) {
 
       <ul className="comment-list">
         {currentComments.map((comment) => {
+          console.log("🕓 댓글 하나의 createdAt:", comment.createdAt);
           const isEditing = editingStates[comment.commentId] === true;
 
           return (
@@ -115,7 +136,10 @@ function CommentSection({ postId }) {
                 </>
               ) : (
                 <>
-                  <div className="comment-header">{comment.nickname}</div>
+                  <div className="comment-header">
+                  <span className="comment-nickname">{comment.nickname}</span>
+                  <span className="comment-time">{getRelativeTime(comment.createdAt)}</span>
+                </div>
                   <div className="comment-content">{comment.content}</div>
                   <div className="comment-actions">
                   <button className="edit" onClick={() => startEditing(comment)}>수정</button>

@@ -49,9 +49,10 @@
   color: #4b5563;
   font-size: 0.95rem;
   margin-bottom: 8px;
+  width: 950px;
 }
 
-.post-footer {
+.post-stats {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -71,9 +72,11 @@
 }
 
 .post-thumbnail {
-  width: 100px;
-  height: 100px;
-  flex-shrink: 0;
+  width: 150px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 8px;
 }
 
 .thumbnail-image {
