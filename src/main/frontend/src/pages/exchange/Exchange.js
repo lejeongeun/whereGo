@@ -10,9 +10,9 @@ const Exchange = () => {
     timestamp: ''
   });
   const [conversionData, setConversionData] = useState({
-    from: 'USD',
-    to: 'KRW',
-    amount: 1,
+    from: 'KRW',
+    to: 'USD',
+    amount: 1000,
     result: 0,
     date: ''
   });

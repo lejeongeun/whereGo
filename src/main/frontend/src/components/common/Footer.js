@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Footer.css';
-import { FaFacebook } from "react-icons/fa";
+import { FaFacebook, FaInstagramSquare } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import { FaInstagramSquare } from "react-icons/fa";
 
 function Footer() {
   const currentYear = new Date().getFullYear();
@@ -31,57 +30,34 @@ function Footer() {
 
         <div className="footer-section">
           <h3>둘러보기</h3>
-          <ul className="footer-links">
-            <li>
-              <Link to="/">홈</Link>
-            </li>
-            <li>
-              <Link to="/trips">여행 일정</Link>
-            </li>
-            <li>
-              <Link to="/expenses">경비 계산</Link>
-            </li>
-            <li>
-              <Link to="/checklist">체크리스트</Link>
-            </li>
-            <li>
-              <Link to="/community">커뮤니티</Link>
-            </li>
-          </ul>
-        </div>
-
-        <div className="footer-section">
-          <h3>지원</h3>
-          <ul className="footer-links">
-            <li>
-              <Link to="/faq">자주 묻는 질문</Link>
-            </li>
-            <li>
-              <Link to="/contact">문의하기</Link>
-            </li>
-            <li>
-              <Link to="/privacy">개인정보 처리방침</Link>
-            </li>
-            <li>
-              <Link to="/terms">이용약관</Link>
-            </li>
-          </ul>
-        </div>
-
-        <div className="footer-section">
-          <h3>뉴스레터 구독</h3>
-          <p>최신 여행 정보와 프로모션을 받아보세요.</p>
-          <form className="newsletter-form">
-            <input
-              type="email"
-              className="newsletter-input"
-              placeholder="이메일 주소"
-              required
-            />
-            <button type="submit" className="newsletter-button">
-              구독
-            </button>
-          </form>
+          <div className="footer-links-container">
+            <div className="footer-links-column">
+              <ul className="footer-links">
+                <li>
+                  <Link to="/">홈</Link>
+                </li>
+                <li>
+                  <Link to="/trips">여행 일정</Link>
+                </li>
+                <li>
+                  <Link to="/weather">나라별 날씨</Link>
+                </li>
+              </ul>
+            </div>
+            <div className="footer-links-column">
+              <ul className="footer-links">
+                <li>
+                  <Link to="/exchange">나라별 환율</Link>
+                </li>
+                <li>
+                  <Link to="/checklist">체크리스트</Link>
+                </li>
+                <li>
+                  <Link to="/community">커뮤니티</Link>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
       
