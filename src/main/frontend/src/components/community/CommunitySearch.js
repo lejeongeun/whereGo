@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './CommunitySearch.css';
+import './css/CommunitySearch.css';
 
 function CommunitySearch({ onSearch }) {
   const [keyword, setKeyword] = useState('');
