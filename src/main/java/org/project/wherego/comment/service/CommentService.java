@@ -56,10 +56,6 @@ public class CommentService {
     // 댓글 조회
     @Transactional
     public List<CommentResponseDto> getComment(Long communityId){
-
-        // ghkjrdfls
-
-
         List<Comment> commentList = commentRepository.findAllByCommunityId(communityId);
 
         return commentList.stream()
