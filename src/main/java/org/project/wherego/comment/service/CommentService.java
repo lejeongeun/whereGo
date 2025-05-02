@@ -9,7 +9,7 @@ import org.project.wherego.community.domain.Community;
 import org.project.wherego.community.repository.CommunityRepository;
 import org.project.wherego.member.domain.Member;
 import org.project.wherego.member.repository.MemberRepository;
-//import org.project.wherego.websocket.notification.service.NotificationService;
+import org.project.wherego.websocket.notification.service.NotificationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +22,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final CommunityRepository communityRepository;
     private final MemberRepository memberRepository;
-//    private final NotificationService notificationService;
+    private final NotificationService notificationService;
 
 
     @Transactional
@@ -42,28 +42,20 @@ public class CommentService {
 
         commentRepository.save(newComment);
 
-<<<<<<< HEAD
-//        notificationService.sendNotification(community.getTitle() + " 게시물에 새로운 댓글이 등록되었습니다!");
-=======
 
         // 게시글 작성자
         Member postOwner = community.getMember();
 
         // 자기 자신이 댓글을 단 경우는 알림 X
         if (!member.getId().equals(postOwner.getId())) {
-            String message = "📢 \"" + community.getTitle() + "\" 게시물에 댓글이 등록되었습니다!";
+            String message = "🔔 \"" + community.getTitle() + "\" 게시물에 댓글이 등록되었습니다!";
             notificationService.sendNotificationToUser(postOwner.getEmail(), message);
         }
->>>>>>> develop
     }
 
     // 댓글 조회
     @Transactional
     public List<CommentResponseDto> getComment(Long communityId){
-
-        // ghkjrdfls
-
-
         List<Comment> commentList = commentRepository.findAllByCommunityId(communityId);
 
         return commentList.stream()
