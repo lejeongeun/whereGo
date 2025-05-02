@@ -14,13 +14,37 @@ const MyPage = () => {
     comunities: []
   });
   const [selectedImage, setSelectedImage] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null); // 실제 파일 객체 저장
+  const [selectedFile, setSelectedFile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null); // 성공 메시지 상태 추가
-  const [isUploading, setIsUploading] = useState(false); // 업로드 진행 상태
+  const [success, setSuccess] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
+
+  // 페이징 처리 함수수
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 5;
+
+  const sortedCommunities = [...(userData.comunities || [])].sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
+
+  const totalPosts = userData.comunities.length;
+  const totalPages = Math.ceil(totalPosts / postsPerPage);
+
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = sortedCommunities.slice(indexOfFirstPost, indexOfLastPost);
+
+  // 로컬 스토리지 키 생성 헬퍼 함수
+  const getProfileImageKey = (email) => `profileImage_${email}`;
+
+  // 상태 리셋 헬퍼 함수
+  const resetMessages = () => {
+    setError(null);
+    setSuccess(null);
+  };
 
   // 유저 데이터 불러오기
   useEffect(() => {
@@ -33,35 +57,12 @@ const MyPage = () => {
         setUserData(response.data);
         
         // 사용자 이메일을 키로 사용하여 프로필 이미지 가져오기
-        if (response.data.email) {
-          const userProfileImageKey = `profileImage_${response.data.email}`;
-          const savedImage = localStorage.getItem(userProfileImageKey);
-          if (savedImage) {
-            setSelectedImage(savedImage);
-          }
-        }
+        loadProfileImage(response.data.email);
         
         setIsLoading(false);
       } catch (err) {
-        // 더미 데이터
-        const dummyEmail = 'test@example.com';
-        setUserData({
-          email: dummyEmail,
-          nickname: '테스트사용자',
-          createdAt: '2023-04-24T10:00:00',
-          comunities: [
-            { id: 1, title: '여행 계획 공유합니다', content: '제주도 3박 4일 여행 계획이에요...', createdAt: '2023-04-20T15:30:00' },
-            { id: 2, title: '서울 맛집 추천', content: '강남역 근처 맛집 리스트입니다...', createdAt: '2023-04-15T09:45:00' }
-          ]
-        });
-        
-        // 더미 이메일을 키로 사용하여 프로필 이미지 가져오기
-        const userProfileImageKey = `profileImage_${dummyEmail}`;
-        const savedImage = localStorage.getItem(userProfileImageKey);
-        if (savedImage) {
-          setSelectedImage(savedImage);
-        }
-        
+        setError('사용자 데이터를 불러오는데 실패했습니다.');
+        console.error('Error fetching user data:', err);
         setIsLoading(false);
       }
     };
@@ -69,20 +70,58 @@ const MyPage = () => {
     fetchUserData();
   }, []);
 
+  // 프로필 이미지 로드 함수
+  const loadProfileImage = (email) => {
+    if (email) {
+      const userProfileImageKey = getProfileImageKey(email);
+      const savedImage = localStorage.getItem(userProfileImageKey);
+      if (savedImage) {
+        setSelectedImage(savedImage);
+      }
+    }
+  };
+
+  // 이미지 로컬 스토리지 저장 함수
+  const saveImageToLocalStorage = (email, imageData) => {
+    if (email) {
+      const userProfileImageKey = getProfileImageKey(email);
+      localStorage.setItem(userProfileImageKey, imageData);
+    }
+  };
+
+  // 이미지 로컬 스토리지 삭제 함수
+  const removeImageFromLocalStorage = (email) => {
+    if (email) {
+      const userProfileImageKey = getProfileImageKey(email);
+      localStorage.removeItem(userProfileImageKey);
+    }
+  };
+
+  // 파일 유효성 검사 함수
+  const validateImageFile = (file) => {
+    // 이미지 파일인지 확인
+    if (!file.type.startsWith('image/')) {
+      setError('이미지 파일만 업로드 가능합니다.');
+      return false;
+    }
+
+    // 파일 크기 제한 (10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      setError('파일 크기는 10MB 이하여야 합니다.');
+      return false;
+    }
+
+    return true;
+  };
+
   // 이미지 업로드 처리
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // 이미지 파일인지 확인
-    if (!file.type.startsWith('image/')) {
-      setError('이미지 파일만 업로드 가능합니다.');
-      return;
-    }
+    resetMessages();
 
-    // 파일 크기 제한 (10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      setError('파일 크기는 5MB 이하여야 합니다.');
+    if (!validateImageFile(file)) {
       return;
     }
 
@@ -92,14 +131,10 @@ const MyPage = () => {
       const imageDataUrl = e.target.result;
       setSelectedImage(imageDataUrl);
       
-      // 사용자 이메일을 키로 사용하여 localStorage에 이미지 저장
-      if (userData.email) {
-        const userProfileImageKey = `profileImage_${userData.email}`;
-        localStorage.setItem(userProfileImageKey, imageDataUrl);
-      }
+      // 로컬 스토리지에 이미지 저장
+      saveImageToLocalStorage(userData.email, imageDataUrl);
       
       setSelectedFile(file); // 파일 객체 저장
-      setError(null);
       
       // 이미지 선택 후 자동 업로드
       handleSaveProfileImage(file);
@@ -115,8 +150,7 @@ const MyPage = () => {
     }
 
     setIsUploading(true);
-    setError(null);
-    setSuccess(null);
+    resetMessages();
 
     // FormData 객체 생성 및 파일 추가
     const formData = new FormData();
@@ -157,27 +191,35 @@ const MyPage = () => {
 
   // 계정 탈퇴 핸들러
   const handleDeleteAccount = async () => {
-    const confirmed = window.confirm('정말로 계정을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.');
-    
-    if (confirmed) {
-      try {
-        await api.delete('/members', {
-          withCredentials: true
-        });
-        
-        // 계정 삭제 시 해당 사용자의 프로필 이미지 제거
-        if (userData.email) {
-          const userProfileImageKey = `profileImage_${userData.email}`;
-          localStorage.removeItem(userProfileImageKey);
-        }
-        
-        navigate('/');
-      } catch (err) {
-        setError('계정 삭제에 실패했습니다.');
-        console.error('Error deleting account:', err);
+  const confirmed = window.confirm('정말로 계정을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.');
+  
+  if (confirmed) {
+    try {
+      // 올바른 API 엔드포인트로 수정
+      await api.delete('/mypage/deletion', {
+        withCredentials: true
+      });
+      
+      // 계정 삭제 시 해당 사용자의 프로필 이미지 URL 제거
+      removeImageFromLocalStorage(userData.email);
+      
+      navigate('/');
+    } catch (err) {
+      setError('계정 탈퇴에 실패했습니다.');
+      console.error('Error deleting account:', err);
+      
+      // 더 자세한 오류 정보 로깅
+      if (err.response) {
+        console.error('Server response:', err.response.data);
+        console.error('Status code:', err.response.status);
+      } else if (err.request) {
+        console.error('No response received:', err.request);
+      } else {
+        console.error('Error message:', err.message);
       }
     }
-  };
+  }
+};
 
   // 게시글 상세 페이지로 이동
   const navigateToCommunityDetail = (postId) => {
@@ -188,6 +230,8 @@ const MyPage = () => {
   if (isLoading) {
     return <div className="my-page-container">loading...</div>;
   }
+
+  
 
   return (
     <div className="my-page-container">
@@ -242,12 +286,14 @@ const MyPage = () => {
           </div>
         </div>
       </div>
+      
       {/* 커뮤니티 섹션 */}
       <div className="community-section">
-        <h2>내가 작성한 글</h2>
-        {userData.comunities && userData.comunities.length > 0 ? (
+      <h2>내가 작성한 글</h2>
+      {totalPosts > 0 ? (
+        <>
           <div className="community-list">
-            {userData.comunities.map((post, index) => (
+            {currentPosts.map((post, index) => (
               <div key={post.id} className="community-item">
                 <h3 
                   className="post-title clickable" 
@@ -259,10 +305,24 @@ const MyPage = () => {
                 <div className="post-info">
                   <span className="post-date">작성일: {new Date(post.createdAt).toLocaleDateString()}</span>
                 </div>
-                {index < userData.comunities.length - 1 && <div className="post-divider"></div>}
+                {index < currentPosts.length - 1 && <div className="post-divider"></div>}
               </div>
             ))}
           </div>
+
+          {/* 페이지 버튼 */}
+          <div className="pagination">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i + 1}
+                onClick={() => setCurrentPage(i + 1)}
+                className={currentPage === i + 1 ? 'active-page' : ''}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+        </>
         ) : (
           <p className="no-posts">작성한 글이 없습니다.</p>
         )}
