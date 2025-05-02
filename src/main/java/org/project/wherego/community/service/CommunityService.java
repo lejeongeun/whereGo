@@ -16,6 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -66,12 +70,16 @@ public class CommunityService {
         community.setTitle(requestDto.getTitle());
         community.setContent(requestDto.getContent());
 
-        // 삭제할 이미지가 있다면 처리
         if (deleteImageIds != null && !deleteImageIds.isEmpty()) {
-            log.info("요청된 삭제 이미지 ID 목록: {}", deleteImageIds);
-            log.info("기존 이미지 목록: {}", community.getImages().stream().map(CommunityImage::getId).collect(Collectors.toList()));
-
-            community.getImages().removeIf(image -> deleteImageIds.contains(image.getId()));
+            List<CommunityImage> imagesToRemove = new ArrayList<>();
+            for (CommunityImage image : community.getImages()) {
+                if (deleteImageIds.contains(image.getId())) {
+                    deleteImageFile(image.getImageUrl()); // 실제 이미지 삭제
+                    image.setCommunity(null); // 연관관계 제거
+                    imagesToRemove.add(image);
+                }
+            }
+            community.getImages().removeAll(imagesToRemove);
         }
 
         // 새 이미지 추가
@@ -85,6 +93,13 @@ public class CommunityService {
                 community.getImages().add(image);
             }
         }
+    }
+    @Transactional
+    public void increaseViewCount(Long communityId) {
+        Community community = communityRepository.findById(communityId)
+                .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
+
+        community.setViewCount(community.getViewCount() + 1);
     }
 
     @Transactional(readOnly = true)
@@ -115,7 +130,6 @@ public class CommunityService {
         Member members = memberRepository.findByEmail(member.getEmail())
                 .orElseThrow(()-> new IllegalArgumentException("사용자가 존재하지 않습니다."));
 
-        community.setViewCount(community.getViewCount() + 1);
         communityRepository.save(community);
 
         return CommunityResponseDto.builder()
@@ -167,5 +181,26 @@ public class CommunityService {
         }
         return uploadFolder.getAbsolutePath();
     }
+
+    // 이미지 파일 삭제
+    private void deleteImageFile(String imageUrl) {
+        if (imageUrl == null || imageUrl.isBlank()) return;
+
+        try {
+            // /uploads/abc.jpg → abc.jpg (상대경로 추출)
+            String relativePath = imageUrl.replaceFirst("^/uploads/", "");
+
+            // uploads/abc.jpg → 절대 경로
+            Path path = Paths.get(getAbsoluteUploadDir(), relativePath);
+
+            // 실제 파일 삭제
+            Files.deleteIfExists(path);
+            log.info("✅ 이미지 파일 삭제 성공: {}", path.toAbsolutePath());
+        } catch (IOException e) {
+            log.error("❌ 이미지 파일 삭제 실패: {}", e.getMessage());
+        }
+    }
+
+
 
 }

@@ -107,18 +107,6 @@
   background-color: rgb(210, 210, 210);
 }
 
-.detail-images {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.detail-image {
-  max-width: 100%;
-  border-radius: 8px;
-}
-
 .detail-author {
   display: flex;
   align-items: center;
@@ -131,4 +119,18 @@
   object-fit: cover;
   background-color: #f0f0f0;
   margin-right: 8px;
+}
+
+.detail-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.detail-image {
+  max-width: 300px;
+  max-height: 200px;
+  border-radius: 8px;
+  object-fit: cover;
 }

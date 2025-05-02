@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -35,7 +36,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/ws/**", "/api/login", "/api/signup", "/api/logout", "/api/exchange/**", "/api/findPwd").permitAll()
+                        .requestMatchers("/uploads/**", "/ws/**", "/api/login", "/api/signup", "/api/logout", "/api/exchange/**", "/api/findPwd").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
