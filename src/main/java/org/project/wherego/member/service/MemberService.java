@@ -92,6 +92,7 @@ public class MemberService {
         SecurityContextHolder.clearContext(); // 인증 정보 삭제
     }
 
+    @Transactional(readOnly = true)
     public MyPageResponse mypageInfo(Member member) {
         List<Community> communities = communityRepository.findByMemberAndIsDeletedFalse(member);
         List<CommunityResponseDto> communityDtos = communities.stream()
