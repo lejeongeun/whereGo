@@ -25,38 +25,46 @@ public class CommunityController {
     public ResponseEntity<String> create(@AuthenticationPrincipal CustomUserDetails userDetails,
                                          @RequestPart("title") String title,
                                          @RequestPart("content") String content,
-                                         @RequestPart(value = "image", required = false) MultipartFile imageFile){
+                                         @RequestPart(value = "image", required = false) List<MultipartFile> imageFiles){
         String email = userDetails.getMember().getEmail();
         CommunityRequestDto requestDto = CommunityRequestDto.builder()
                 .title(title)
                 .content(content)
                 .build();
-        communityService.create(requestDto, email, imageFile);
+
+        communityService.create(requestDto, email, imageFiles);
         return ResponseEntity.ok("게시글이 성공적으로 작성되었습니다.");
     }
 
+    // 게시글 수정
+    @PutMapping("/{id}/edit")
+    public ResponseEntity<String> edit(@PathVariable Long id,
+                                       @RequestPart("title") String title,
+                                       @RequestPart("content") String content,
+                                       @RequestPart(value = "images", required = false) List<MultipartFile> newImages,
+                                       @RequestPart(value = "deleteImageIds", required = false) List<Long> deleteImageIds){
+        CommunityRequestDto requestDto = CommunityRequestDto.builder()
+                .title(title)
+                .content(content)
+                .build();
+
+        communityService.edit(id, requestDto, newImages, deleteImageIds);
+        return ResponseEntity.ok("글 수정 완료");
+    }
     // 게시글 전체 확인
     @GetMapping("/list")
-    public ResponseEntity<List<CommunityResponseDto>> getAllPosts(@AuthenticationPrincipal CustomUserDetails userDetails){
-        List<CommunityResponseDto> allPosts = communityService.getAllPosts();
-        return ResponseEntity.ok(allPosts);
+    public ResponseEntity<List<CommunityResponseDto>> getAllPosts(){;
+        return ResponseEntity.ok(communityService.getAllPosts());
     }
 
     // 하나의 게시물 조회
     @GetMapping("/{id}")
     public ResponseEntity<CommunityResponseDto> getPost(@PathVariable Long id,
                                                         @AuthenticationPrincipal CustomUserDetails userDetails){
+        communityService.increaseViewCount(id);
         CommunityResponseDto post = communityService.getPosts(id, userDetails.getMember());
         return ResponseEntity.ok(post);
 
-    }
-
-    // 게시글 수정
-    @PutMapping("/{id}/edit")
-    public ResponseEntity<String> edit (@PathVariable Long id,
-                                        @Valid @RequestBody CommunityRequestDto requestDto){
-        communityService.edit(id,requestDto);
-        return ResponseEntity.ok("글 수정 완료");
     }
 
     // 게시글 삭제

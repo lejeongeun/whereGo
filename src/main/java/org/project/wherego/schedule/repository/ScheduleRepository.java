@@ -9,4 +9,5 @@ import java.util.List;
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     List<Schedule> findAllByMember(Member member);
 
+    List<Schedule> findByMember(Member member);
 }

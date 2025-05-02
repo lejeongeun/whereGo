@@ -3,15 +3,25 @@ package org.project.wherego.member.service;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.project.wherego.checklist.domain.Checklist;
+import org.project.wherego.checklist.domain.ChecklistGroup;
+import org.project.wherego.checklist.dto.CheckListDto;
+import org.project.wherego.checklist.dto.CheckListGroupDto;
 import org.project.wherego.checklist.repository.CheckListGroupRepository;
 import org.project.wherego.community.domain.Community;
 import org.project.wherego.community.dto.CommunityResponseDto;
 import org.project.wherego.community.repository.CommunityRepository;
+import org.project.wherego.member.config.CustomUserDetails;
 import org.project.wherego.member.config.FileStorageProperties;
 import org.project.wherego.member.domain.Member;
 import org.project.wherego.member.dto.*;
 import org.project.wherego.member.repository.MemberRepository;
+import org.project.wherego.schedule.domain.Schedule;
+import org.project.wherego.schedule.dto.ScheduleResponseDto;
+import org.project.wherego.schedule.repository.ScheduleRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,14 +46,16 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final FileStorageProperties fileStorageProperties;
     private final HttpServletRequest request; // HttpServletRequest를 사용하여 세션 정보에 접근
-    private String absoluteUploadDir;
+    private final ScheduleRepository scheduleRepository;
+
+    @Value("${file.upload-dir}")
+    private String uploadDir;
 
     @PostConstruct
     public void init() { // 절대경로 설정
         String uploadDir = fileStorageProperties.getUploadDir();
-        System.out.println("uploadDir: " + uploadDir);
-        this.absoluteUploadDir = new File(System.getProperty("user.dir"), uploadDir).getAbsolutePath(); //user.dir"는 현재 작업 디렉토리
-        System.out.println("absoluteUploadDir: " + this.absoluteUploadDir); // 디버깅 로그
+        this.uploadDir = new File(System.getProperty("user.dir"), uploadDir).getAbsolutePath(); //user.dir"는 현재 작업 디렉토리
+        System.out.println("uploadDir: " + this.uploadDir); // 디버깅 로그
     }
 
     // 회원가입
@@ -93,7 +105,34 @@ public class MemberService {
                         .build())
                 .collect(Collectors.toList());
 
-        return new MyPageResponse(member.getEmail(), member.getNickname(), member.getProfileImage(), communityDtos);
+        List<Schedule> schedules = scheduleRepository.findByMember(member);
+        List<ScheduleResponseDto> scheduleDtos = schedules.stream()
+                .map(schedule -> ScheduleResponseDto.builder()
+                        .id(schedule.getId())
+                        .title(schedule.getTitle())
+                        .description(schedule.getDescription())
+                        .startDate(schedule.getStartDate())
+                        .endDate(schedule.getEndDate())
+                        .build())
+                .collect(Collectors.toList());
+
+        List<ChecklistGroup> checklistGroups = checklistGroupRepository.findByMember(member);
+        List<CheckListGroupDto> checklistDtos = checklistGroups.stream()
+                .map(checklistGroup -> CheckListGroupDto.builder()
+                        .id(checklistGroup.getId())
+                        .title(checklistGroup.getTitle())
+                        .items(checklistGroup.getItems().stream()
+                                .map(checklist -> CheckListDto.builder()
+                                        .item(checklist.getItem())
+                                        .isChecked(checklist.getIsChecked())
+                                        .groupId(checklist.getGroup() != null ? checklist.getGroup().getId() : null)
+                                        .id(checklist.getId())
+                                        .build())
+                                .collect(Collectors.toList()))
+                        .build())
+                .collect(Collectors.toList());
+
+        return new MyPageResponse(member.getEmail(), member.getNickname(), member.getProfileImage(), communityDtos, scheduleDtos, checklistDtos);
     }
 
     public ChangePwdRequest changwPwd(Member member, ChangePwdRequest pwdrequest) {
@@ -150,7 +189,7 @@ public class MemberService {
         }
 
         // 사용자별 디렉토리 생성 (예: /uploads/user@example.com/)
-        String userDir = absoluteUploadDir + File.separator + member.getEmail();
+        String userDir = uploadDir + File.separator + member.getEmail();
         Files.createDirectories(Paths.get(userDir));
 
         // 기존 DB랑 디렉토리에 path랑 이미지가 있으면 삭제
@@ -170,7 +209,6 @@ public class MemberService {
         // Member 엔티티에 파일 경로 저장
         member.setProfileImage(filePath);
         memberRepository.save(member);
-
     }
 
     @Transactional //  데이터베이스 작업을 하나의 트랜잭션으로 묶어 처리하고, 오류 발생 시 전체 작업을 롤백
@@ -198,10 +236,15 @@ public class MemberService {
 
         if (OpUser.isPresent()) {
             Member m = OpUser.get();
-
             m.setNickname(nickNameRequest.getNewNickname());
-
             memberRepository.save(m);
+
+            //세션 갱신: 새로운 사용자 정보로 Authentication 다시 설정
+            CustomUserDetails updatedUserDetails = new CustomUserDetails(m);
+            UsernamePasswordAuthenticationToken token =
+                    new UsernamePasswordAuthenticationToken(
+                            updatedUserDetails, null, updatedUserDetails.getAuthorities()); // 세션 정보 갱신 : 비밀번호 재인증 불필요
+            SecurityContextHolder.getContext().setAuthentication(token);
 
             return nickNameRequest.builder()
                     .newNickname(m.getNickname())

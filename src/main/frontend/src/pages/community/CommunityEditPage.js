@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import api from '../../api';
-import './CommunityEditPage.css';
+import './css/CommunityEditPage.css';
 
 function CommunityEditPage() {
   const { id } = useParams();               

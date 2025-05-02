@@ -3,6 +3,8 @@ package org.project.wherego.community.dto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,6 +16,4 @@ public class CommunityRequestDto {
 
     @NotBlank(message = "본문을 입력해 주세요.")
     private String content;
-
-    private String imageUrl;
 }

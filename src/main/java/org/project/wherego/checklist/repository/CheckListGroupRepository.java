@@ -11,4 +11,6 @@ public interface CheckListGroupRepository extends JpaRepository<ChecklistGroup, 
     List<ChecklistGroup> findAllByMember(Member member);
 
     void deleteByMember(Member member);
+
+    List<ChecklistGroup> findByMember(Member member);
 }
