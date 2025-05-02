@@ -22,7 +22,7 @@ function CommunityWritePage() {
     }
 
     // ✨ API 호출 (createPost 대신 직접 api.post 사용)
-    api.post('/community/write', formData, {
+    api.post('/community/create', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
