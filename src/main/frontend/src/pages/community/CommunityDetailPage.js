@@ -46,7 +46,11 @@ function CommunityDetailPage() {
 
   if (!post) return <div>로딩중...</div>
 
-  const { title, content, nickname, createdAt, likeCount, viewCount, commentCount } = post;
+  const {
+    title, content, nickname, createdAt,
+    likeCount, viewCount, commentCount,
+    imageUrls
+  } = post;
 
   const handleEdit = () => {
     navigate(`/community/${id}/edit`, { state: { title, content } });
@@ -97,6 +101,20 @@ function CommunityDetailPage() {
           </button>
           <span><FaRegComment /> {commentCount}</span>
         </div>
+
+        {Array.isArray(imageUrls) && imageUrls.length > 0 && (
+            <div className="detail-images">
+              {imageUrls.map((url, index) => (
+                  <img
+                      key={index}
+                      src={`http://localhost:8080${url}`}
+                      alt={`이미지-${index}`}
+                      className="detail-image"
+                  />
+              ))}
+            </div>
+        )}
+
         <div className="detail-content">
           <p>{content}</p>
         </div>

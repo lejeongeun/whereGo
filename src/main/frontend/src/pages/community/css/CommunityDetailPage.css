@@ -106,3 +106,16 @@
 .delete-button:hover {
   background-color: rgb(210, 210, 210);
 }
+.detail-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.detail-image {
+  max-width: 300px;
+  max-height: 200px;
+  border-radius: 8px;
+  object-fit: cover;
+}

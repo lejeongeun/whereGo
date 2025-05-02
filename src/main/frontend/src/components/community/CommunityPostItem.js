@@ -20,21 +20,31 @@ function getRelativeTime(createdAt) {
   
   return createdDate.toISOString().slice(0, 10);
 }
-
-function CommunityPostItem({ id, title, content, nickname, createdAt, likeCount, viewCount, commentCount, profileImage, imageUrl  }) {
-  console.log("🧩 post 데이터:", {
+function CommunityPostItem({
     id, title, content, nickname, createdAt,
     likeCount, viewCount, commentCount,
-    profileImage, imageUrl
-  });
-  const relativeTime = getRelativeTime(createdAt);
+    profileImage, imageUrls
+  }) {
+    console.log("🧩 post 데이터:", {
+      id, title, content, nickname, createdAt,
+      likeCount, viewCount, commentCount,
+      profileImage, imageUrls
+    });
+  
+    const relativeTime = getRelativeTime(createdAt);
+
+    const thumbnail = Array.isArray(imageUrls) && imageUrls.length > 0 ? imageUrls[0] : null;
   
   
   return (
     <div className="post-card">
       <Link
         to={`/community/${id}`}
-        state={{ id, title, content, nickname, createdAt, likeCount, viewCount, commentCount }}
+        state={{
+            id, title, content, nickname, createdAt,
+            likeCount, viewCount, commentCount,
+            imageUrls, profileImage
+          }}
         className="post-link-horizontal"
       >
         <div className="post-left">
@@ -58,10 +68,10 @@ function CommunityPostItem({ id, title, content, nickname, createdAt, likeCount,
           </div>
         </div>
 
-        {imageUrl && (
+        {thumbnail && (
           <div className="post-thumbnail">
             <img
-              src={imageUrl}
+              src={`http://localhost:8080${thumbnail}`}
               alt="썸네일"
               className="thumbnail-image"
             />
