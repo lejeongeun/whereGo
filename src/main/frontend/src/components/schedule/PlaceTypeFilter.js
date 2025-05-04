@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import './PlaceTypeFilter.css';
+import './schedule.css';
 
 const PlaceTypeFilter = ({ selectedType, onTypeChange }) => {
   const [isOpen, setIsOpen] = useState(false);

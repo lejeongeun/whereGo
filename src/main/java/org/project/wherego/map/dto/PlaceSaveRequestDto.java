@@ -15,4 +15,5 @@ public class PlaceSaveRequestDto {
     private String description;
     private Long scheduleId;
     private String email;
+    private int dayNumber;
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { CiImageOff } from 'react-icons/ci';
-import './MapPlaceInfoCard.css';
+import './schedule.css';
 
 function MapPlaceInfoCard({ place, onAdd }) {
   if (!place) return null;
@@ -20,7 +20,7 @@ function MapPlaceInfoCard({ place, onAdd }) {
   // 전화번호
   const phone = hasDetails && place.details.formattedPhoneNumber 
     ? place.details.formattedPhoneNumber 
-    : (place.phone || '+82 31-602-1847');
+    : (place.phone);
   
   // 웹사이트
   const website = hasDetails && place.details.website 
@@ -49,7 +49,7 @@ function MapPlaceInfoCard({ place, onAdd }) {
         {/* 기본 정보 */}
         <div className="basic-info">
           {/* 장소 이름 */}
-          <h3>{place.name || 'Ilpyeondaksim'}</h3>
+          <h3>{place.name}</h3>
           
           {/* 평점 표시 */}
           {isValidRating && (
@@ -69,7 +69,7 @@ function MapPlaceInfoCard({ place, onAdd }) {
         <div className="address-container">
           <span className="address-icon">📍</span>
           <p className="address">
-            {place.address || '22 Pangyoyeok-ro 192beon-gil, Seongnam, Gyeonggi-do South Korea'}
+            {place.address}
           </p>
         </div>
         {/* 전화번호 */}
@@ -95,8 +95,7 @@ function MapPlaceInfoCard({ place, onAdd }) {
       <div className="button-container">
         <button 
           className="add-button"
-          onClick={() => onAdd(place)}
-        >
+          onClick={() => onAdd(place)}>
           일정에 추가
         </button>
       </div>
