@@ -22,6 +22,9 @@ public class Place{
     private double latitude;
     private double longitude;
     private String address;
+    private int dayNumber;
+    @Column(name = "`order`")
+    private int order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)

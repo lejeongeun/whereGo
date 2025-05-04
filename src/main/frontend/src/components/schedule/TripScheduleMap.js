@@ -1,12 +1,15 @@
 import React from 'react';
 import MapContainer from './MapContainer';
 import MapPlaceInfoCard from './MapPlaceInfoCard';
-import './TripScheduleMap.css';
+import './schedule.css';
 
 function TripScheduleMap({ setSelectedPlace, selectedPlace, onAddToSchedule }) {
   return (
     <div className="map-container">
-      <MapContainer setSelectedPlace={setSelectedPlace} />
+      <MapContainer 
+        setSelectedPlace={setSelectedPlace}
+        selectedPlace={selectedPlace}
+      />
       {selectedPlace && (
         <MapPlaceInfoCard 
           place={selectedPlace} 

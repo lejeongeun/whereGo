@@ -44,5 +44,13 @@ public class PlaceController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping
+    public ResponseEntity<List<Place>> getPlacesByScheduleAndDay(
+            @RequestParam Long scheduleId,
+            @RequestParam int dayNumber,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        String email = userDetails.getMember().getEmail();
+        return ResponseEntity.ok(placeService.getPlacesByScheduleAndDay(scheduleId, dayNumber, email));
+    }
 
 }

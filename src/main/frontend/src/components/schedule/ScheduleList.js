@@ -1,6 +1,6 @@
 // src/components/schedule/ScheduleList.js
 import React from 'react';
-import './ScheduleList.css';
+import './schedule.css';
 
 function ScheduleList({ places, onDelete }) {
   return (
