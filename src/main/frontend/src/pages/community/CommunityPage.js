@@ -17,14 +17,11 @@ function CommunityPage() {
       .then(res => {
         setPosts(res.data);
         setFilteredPosts(res.data);
-
-        // 인기 게시물 3개 추출 (기준: 좋아요순 또는 댓글 많은 순)
-        let sortedPopularPosts = [...res.data];
-
-        // 예시: 좋아요순으로 정렬
-        sortedPopularPosts.sort((a, b) => b.likeCount - a.likeCount);
-
-        // 상위 3개 게시물만 가져오기
+  
+        const sorted = [...res.data].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setFilteredPosts(sorted);
+  
+        const sortedPopularPosts = [...res.data].sort((a, b) => b.likeCount - a.likeCount);
         setPopularPosts(sortedPopularPosts.slice(0, 3));
       })
       .catch(err => console.error('게시글 불러오기 실패:', err));

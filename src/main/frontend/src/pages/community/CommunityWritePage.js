@@ -6,7 +6,7 @@ import api from '../../api';
 function CommunityWritePage() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [image, setImage] = useState(null); 
+  const [images, setImages] = useState([]); 
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -15,9 +15,10 @@ function CommunityWritePage() {
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
-    if (image) {
-      formData.append('image', image); 
-    }
+
+    images.forEach((img) => {
+      formData.append('image', img); // ✅ 여러 장 첨부
+    });
 
     api.post('/community/create', formData, {
       headers: {'Content-Type': 'multipart/form-data'}
@@ -34,7 +35,7 @@ function CommunityWritePage() {
 };
 
   const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
+    setImages([...e.target.files]);
   };
 
   return (
@@ -60,11 +61,12 @@ function CommunityWritePage() {
         <input
           type="file"
           accept="image/*"
+          multiple
           onChange={handleImageChange}
           className="image-input"
         />
 
-        {image && <p className="image-name">선택된 파일: {image.name}</p>}
+        {images && <p className="image-name">선택된 파일: {images.name}</p>}
 
         <div className="button-group">
           <button type="submit" className="submit-button">작성 완료</button>

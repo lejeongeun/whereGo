@@ -135,7 +135,7 @@ public class CommunityService {
         return CommunityResponseDto.builder()
                 .title(community.getTitle())
                 .content(community.getContent())
-                .nickname(members.getNickname())
+                .nickname(community.getMember().getNickname())
                 .createdAt(community.getCreatedAt())
                 .viewCount(community.getViewCount())
                 .likeCount(community.getLikes().size()) // 좋아요 수
