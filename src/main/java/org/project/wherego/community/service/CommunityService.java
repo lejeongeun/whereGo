@@ -110,6 +110,7 @@ public class CommunityService {
                         .title(community.getTitle())
                         .content(community.getContent())
                         .nickname(community.getMember().getNickname())
+                        .email(community.getMember().getEmail())
                         .createdAt(community.getCreatedAt())
                         .viewCount(community.getViewCount())
                         .likeCount(community.getLikes().size())
@@ -135,7 +136,8 @@ public class CommunityService {
         return CommunityResponseDto.builder()
                 .title(community.getTitle())
                 .content(community.getContent())
-                .nickname(community.getMember().getNickname())
+                .nickname(members.getNickname())
+                .email(community.getMember().getEmail())
                 .createdAt(community.getCreatedAt())
                 .viewCount(community.getViewCount())
                 .likeCount(community.getLikes().size()) // 좋아요 수

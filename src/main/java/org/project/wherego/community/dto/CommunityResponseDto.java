@@ -23,4 +23,5 @@ public class CommunityResponseDto {
 
     private List<String> imageUrls; // 다중 이미지 지원
     private String profileImage;
+    private String email; // 작성자 이메일
 }

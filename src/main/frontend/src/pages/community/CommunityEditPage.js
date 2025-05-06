@@ -14,23 +14,21 @@ function CommunityEditPage() {
   const [newImages, setNewImages] = useState([]);
 
   useEffect(() => {
-    if (location.state) {
-      setTitle(location.state.title);
-      setContent(location.state.content);
-      api.get(`/community/${id}`).then(res => setExistingImages(res.data.imageUrls));
-    } else {
-      api.get(`/community/${id}`).then(res => {
-        setTitle(res.data.title);
-        setContent(res.data.content);
-        setExistingImages(res.data.imageUrls);
-      });
-    }
-  }, [id, location.state]);
+    api.get(`/community/${id}`)
+    .then(res => {
+      console.log("🔥 전체 응답:", res.data);
+      const images = res.data.imageUrls;
+      console.log("✅ imageUrls:", images); // ⬅️ 이 줄 꼭 넣기
+      setTitle(res.data.title);
+      setContent(res.data.content);
+      setExistingImages(images);
+    })
+    .catch(err => console.error('❌ 가져오기 실패:', err));;
+  }, [id]);
 
-  const handleImageDeleteToggle = (url) => {
-    const fileName = url.split('/').pop();
+  const handleImageDeleteToggle = (id) => {
     setDeleteImageIds(prev =>
-      prev.includes(fileName) ? prev.filter(f => f !== fileName) : [...prev, fileName]
+      prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
     );
   };
 
@@ -76,23 +74,20 @@ function CommunityEditPage() {
           onChange={(e) => setContent(e.target.value)}
         />
 
-        <div className="image-preview-section">
-          {existingImages.map((url, index) => (
-            <div key={index} className="image-preview">
-              <img
-                src={`http://localhost:8080${url}`}
-                alt={`기존이미지-${index}`}
-              />
-              <label>
-                <input
-                  type="checkbox"
-                  onChange={() => handleImageDeleteToggle(url)}
-                  checked={deleteImageIds.includes(url.split('/').pop())}
-                /> 삭제
-              </label>
-            </div>
-          ))}
-        </div>
+<div className="image-preview-section">
+  {existingImages.map((img, index) => (
+    <div key={img.id} className="image-preview">
+      <img src={`http://localhost:8080${img.url}`} alt={`기존-${index}`} />
+      <label>
+        <input
+          type="checkbox"
+          onChange={() => handleImageDeleteToggle(img.id)}
+          checked={deleteImageIds.includes(img.id)}
+        /> 삭제
+      </label>
+    </div>
+  ))}
+</div>
 
         <input
           type="file"

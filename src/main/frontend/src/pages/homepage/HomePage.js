@@ -124,12 +124,11 @@ function HomePage() {
         <div className="travel-tips">
           <h2>인기게시물</h2>
           <div className="tips-grid">
-            {popularPosts.map((post, index) => (
-              <div className="tip-card" key={post.id}>
-                <h4>{post.title}</h4>
-                <p>{post.content.slice(0, 50)}...</p>
-                <Link to={`/community/${post.id}`} className="tip-link">자세히 보기</Link>
-              </div>
+            {popularPosts.map((post) => (
+              <Link to={`/community/${post.id}`} className="tip-card" key={post.id}>
+                <h4 className="post-title">{post.title}</h4>
+                <p className="post-preview">{post.content.slice(0, 50)}...</p>
+              </Link>
             ))}
           </div>
         </div>

@@ -199,3 +199,11 @@
     height: 8px;
   }
 }
+
+.post-title {
+  margin-left: 14px;
+}
+
+.tip-card {
+  text-decoration: none;
+}

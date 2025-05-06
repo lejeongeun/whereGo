@@ -23,23 +23,50 @@ function getRelativeTime(createdAt) {
   return createdDate.toISOString().slice(0, 10);
 }
 
+function getFormattedTime(createdAt) {
+  if (!createdAt) return '';
+  const date = new Date(createdAt);
+  return date.toLocaleString('ko-KR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
+}
+
 function CommentSection({ postId }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [editingStates, setEditingStates] = useState({}); 
   const [editContents, setEditContents] = useState({});    
-
+  const [showMenuId, setShowMenuId] = useState(null);
+  const [loggedInEmail, setLoggedInEmail] = useState(localStorage.getItem('email') || '');
   const [currentPage, setCurrentPage] = useState(1);
   const commentsPerPage = 5;
 
   const fetchComments = async () => {
     try {
       const res = await api.get(`/community/${postId}/comment/allList`);
-      setComments(res.data);
+      setComments(res.data.reverse());
     } catch (err) {
       console.error('댓글 불러오기 실패:', err);
     }
   };
+
+  useEffect(() => {
+    const handleLoginStateChange = () => {
+      const updatedEmail = localStorage.getItem('email') || '';
+      console.log('📢 [loginStateChanged] 업데이트된 email:', updatedEmail);
+      setLoggedInEmail(updatedEmail);
+    };
+  
+    window.addEventListener('loginStateChanged', handleLoginStateChange);
+    return () => {
+      window.removeEventListener('loginStateChanged', handleLoginStateChange);
+    };
+  }, []);
 
   useEffect(() => {
     fetchComments();
@@ -81,6 +108,10 @@ function CommentSection({ postId }) {
       });
   };
 
+  const toggleMenu = (id) => {
+    setShowMenuId(prev => (prev === id ? null : id));
+  };
+
   const handleDelete = (commentId) => {
     if (!window.confirm('정말 삭제하시겠습니까?')) return;
 
@@ -100,6 +131,8 @@ function CommentSection({ postId }) {
   const totalPages = Math.ceil(comments.length / commentsPerPage);
 
   return (
+    <>
+    <div className="comment-divider"></div>
     <div className="comment-section">
       <h3>댓글</h3>
       <form onSubmit={handleSubmit} className="comment-form">
@@ -110,47 +143,79 @@ function CommentSection({ postId }) {
         />
         <button type="submit">등록</button>
       </form>
+      
 
       <ul className="comment-list">
-        {currentComments.map((comment) => {
-          console.log("🕓 댓글 하나의 createdAt:", comment.createdAt);
+        {
+        comments.length === 0 ? (
+          <p className="no-comments">댓글이 없습니다.</p>
+        ) : (
+        
+        currentComments.map((comment) => {
           const isEditing = editingStates[comment.commentId] === true;
+
+          console.log('🔎 comment.email:', comment.email);
+          console.log('🔎 loggedInEmail:', loggedInEmail);
+          console.log('🔎 canEditOrDelete:', comment.email === loggedInEmail);
 
           return (
             <li key={comment.commentId} className="comment-item">
-              {isEditing ? (
-                <>
-                  <textarea
-                    value={editContents[comment.commentId] || ''}
-                    onChange={(e) =>
-                      setEditContents(prev => ({
-                        ...prev,
-                        [comment.commentId]: e.target.value,
-                      }))
-                    }
-                  />
-                  <div className="comment-actions">
-                  <button onClick={() => handleEditSubmit(comment.commentId)}>저장</button>
-                  <button onClick={() => setEditingStates(prev => ({ ...prev, [comment.commentId]: false }))}>취소</button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="comment-header">
-                  <span className="comment-nickname">{comment.nickname}</span>
-                  <span className="comment-time">{getRelativeTime(comment.createdAt)}</span>
-                </div>
-                  <div className="comment-content">{comment.content}</div>
-                  <div className="comment-actions">
-                  <button className="edit" onClick={() => startEditing(comment)}>수정</button>
-                  <button className="delete" onClick={() => handleDelete(comment.commentId)}>삭제</button>
-                  </div>
-                </>
-              )}
-            </li>
+  {isEditing ? (
+    <>
+      <textarea
+        value={editContents[comment.commentId] || ''}
+        onChange={(e) =>
+          setEditContents(prev => ({
+            ...prev,
+            [comment.commentId]: e.target.value,
+          }))
+        }
+      />
+      <div className="comment-actions">
+        <button onClick={() => handleEditSubmit(comment.commentId)}>저장</button>
+        <button onClick={() =>
+          setEditingStates(prev => ({
+            ...prev,
+            [comment.commentId]: false,
+          }))
+        }>취소</button>
+      </div>
+    </>
+  ) : (
+    <>
+<div className="comment-header">
+  <div className="comment-header-top">
+    <span className="comment-nickname">{comment.nickname}</span>
+
+    {loggedInEmail === comment.email && (
+      <div className="comment-more-container">
+        <button className="comment-more-button" onClick={() => toggleMenu(comment.commentId)}>⋯</button>
+        {showMenuId === comment.commentId && (
+          <div className="comment-more-menu">
+            <button onClick={() => startEditing(comment)}>수정</button>
+            <button onClick={() => handleDelete(comment.commentId)}>삭제</button>
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+
+  <div className="comment-time-under">
+    {getFormattedTime(comment.createdAt)}
+  </div>
+</div>
+
+<div className="comment-content">{comment.content}</div>
+
+    </>
+  )}
+</li>
           );
-        })}
+        })
+      )}
       </ul>
+
+      {comments.length > 0 && (
         <div className="pagination">
           <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}>이전</button>
           {Array.from({ length: totalPages }, (_, i) => (
@@ -164,7 +229,9 @@ function CommentSection({ postId }) {
           ))}
           <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>다음</button>
         </div>
+      )}
     </div>
+    </>
   );
 }
 

@@ -65,20 +65,26 @@ function CommunityPostItem({
             <span className="post-meta">{relativeTime}</span>
           </div>
     
-          {thumbnail && (
-            <div className="post-right">
-              <img
-                src={`http://localhost:8080${thumbnail}`}
-                alt="썸네일"
-                className="post-thumbnail"
-              />
-              <div className="post-stats">
-                <span><AiOutlineLike /> {likeCount}</span>
-                <span><LuEye /> {viewCount}</span>
-                <span><FaRegComment /> {commentCount}</span>
-              </div>
+          <div className="post-right">
+            <div className="thumbnail-wrapper">
+              {thumbnail ? (
+                <img
+                  src={`http://localhost:8080${thumbnail}`}
+                  alt="썸네일"
+                  className="post-thumbnail"
+                />
+              ) : (
+                <div className="thumbnail-placeholder" />
+              )}
             </div>
-          )}
+
+            <div className="post-stats">
+              <span><AiOutlineLike /> {likeCount}</span>
+              <span><LuEye /> {viewCount}</span>
+              <span><FaRegComment /> {commentCount}</span>
+            </div>
+          </div>
+
         </Link>
       </div>
     );

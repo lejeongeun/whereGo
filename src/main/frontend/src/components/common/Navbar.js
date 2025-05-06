@@ -55,6 +55,7 @@ function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('email');
     setIsLoggedIn(false);
     setUser(null);
     window.dispatchEvent(new Event('loginStateChanged'));

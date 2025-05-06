@@ -29,3 +29,28 @@
   margin: 0 6px;
   color: #bbb;
 }
+
+.post-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 중앙 정렬 */
+  justify-content: flex-start;
+  width: 160px;
+}
+
+.post-thumbnail {
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.thumbnail-placeholder {
+  height: 117px; /* 이미지 대신 자리만 차지 */
+}
+
+.post-stats {
+  margin-top: 2px;
+  color: #777;
+  font-size: 0.9rem;
+  margin-right: 10px;
+}

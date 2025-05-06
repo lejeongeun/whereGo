@@ -14,5 +14,5 @@ public class CommentResponseDto {
     private String nickname;
     private String content; // 댓글 내용
     private LocalDateTime createdAt;
-
+    private String email;
 }

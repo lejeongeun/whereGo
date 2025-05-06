@@ -11,6 +11,7 @@ function CommunityPage() {
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [sortOrder, setSortOrder] = useState('최신순');
   const [popularPosts, setPopularPosts] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     api.get('/community/list')
@@ -46,12 +47,16 @@ function CommunityPage() {
   const handleSearch = (keyword) => {
     if (!keyword) {
       setFilteredPosts(posts);
+      setIsSearching(false); // 검색 중 아님
       return;
     }
+  
     const result = posts.filter(p => 
       p.title.includes(keyword) || p.content.includes(keyword)
     );
+  
     setFilteredPosts(result);
+    setIsSearching(true); // 검색 중
   };
 
   return (
@@ -65,7 +70,7 @@ function CommunityPage() {
 
       <div className="post-list-wrapper">
         <div className="left-content">
-          <CommunityPostList posts={filteredPosts} />
+          <CommunityPostList posts={filteredPosts} isSearching={isSearching}/>
         </div>
 
         {/* <div className="right-sidebar">

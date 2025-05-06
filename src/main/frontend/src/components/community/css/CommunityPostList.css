@@ -1,3 +1,11 @@
+.no-posts {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 18px;
+  color: #777;
+  font-style: normal !important;
+}
+
 .post-list {
     padding: 1.5rem 0;
     display: flex;

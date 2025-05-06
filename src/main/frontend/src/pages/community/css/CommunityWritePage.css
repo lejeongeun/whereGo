@@ -24,7 +24,7 @@ form {
 }
 
 .content-textarea {
-  width: 100%;
+  width: 100%; /* 반응형 지원 */
   height: 400px;
   resize: vertical;
   margin-top: 10px;
@@ -32,6 +32,7 @@ form {
   font-size: 16px;
   border-radius: 8px;
   border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
 .toastui-editor-default {
@@ -52,14 +53,18 @@ form {
 }
 
 .write-container .submit-button {
+  background-color: #4A90E2; 
+  color: #ffffff;
   padding: 10px 20px;
-  font-size: 16px;
-  background-color: #3498db;
-  color: white;
   border: none;
   border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1); 
 }
+
 .write-container .submit-button:hover {
-  background-color: #4c9dd3;
+  background-color: #357ABD; /* 효과 추가 */
 }

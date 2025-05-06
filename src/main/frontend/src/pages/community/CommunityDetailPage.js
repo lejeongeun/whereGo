@@ -13,25 +13,26 @@ function CommunityDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
-  const loggedInNickname = localStorage.getItem('nickname');
-  console.log("🔥 로그인 닉네임:", localStorage.getItem('nickname'));
-  console.log("🔥 게시글 작성자 닉네임:", post?.nickname);
-  
+  const loggedInEmail = localStorage.getItem('email');
+  const [showMenu, setShowMenu] = useState(false);
+
   useEffect(() => {
     api.get(`/community/${id}`)
-      .then((res) => setPost(res.data))
+      .then((res) => {
+        setPost(res.data);
+      })
       .catch((err) => {
         alert('게시글 불러오기 실패');
         navigate('/community');
       });
-  }, [id, navigate]);
+  }, [id, navigate, loggedInEmail]);
 
   if (!post) return <div>로딩중...</div>;
 
   const {
     title, content, nickname, createdAt,
     likeCount, viewCount, commentCount,
-    imageUrls, profileImage
+    imageUrls, profileImage,
   } = post;
 
   const handleEdit = () => {
@@ -68,19 +69,38 @@ function CommunityDetailPage() {
           />
           <span className="author">{nickname}</span>
         </div>
-        <div className="time-and-views">
-          <span className="time">{new Date(createdAt).toLocaleString()}</span>
-          <span className="views"><LuEye /> {viewCount}</span>
+
+        <div className="meta-right">
+          <div className="time-and-views">
+            <span className="time">{new Date(createdAt).toLocaleString()}</span>
+            <span className="views"><LuEye /> {viewCount}</span>
+          </div>
+
+
         </div>
       </div>
 
       <div className="detail-body">
-        <div className="detail-like">
-          <button onClick={handleLike} className="like-icon-button">
-            <AiOutlineLike /> {likeCount}
-          </button>
-          <span><FaRegComment /> {commentCount}</span>
-        </div>
+  <div className="detail-like-row">
+    <div className="detail-like">
+      <button onClick={handleLike} className="like-icon-button">
+        <AiOutlineLike /> {likeCount}
+      </button>
+      <span><FaRegComment /> {commentCount}</span>
+    </div>
+
+    {loggedInEmail && post?.email?.trim() === loggedInEmail.trim() && (
+      <div className="more-options-container">
+        <button className="more-button" onClick={() => setShowMenu(prev => !prev)}>⋯</button>
+        {showMenu && (
+          <div className="more-menu">
+            <button onClick={handleEdit} className="edit-button">수정</button>
+            <button onClick={handleDelete} className="delete-button">삭제</button>
+          </div>
+        )}
+      </div>
+    )}
+  </div>
 
         {Array.isArray(imageUrls) && imageUrls.length > 0 && (
           <div className="detail-images">
@@ -98,15 +118,6 @@ function CommunityDetailPage() {
         <div className="detail-content">
           <p>{content}</p>
         </div>
-      </div>
-
-      <div className="button-group">
-        {post?.nickname === loggedInNickname && (
-          <>
-            <button onClick={handleEdit} className="edit-button">수정</button>
-            <button onClick={handleDelete} className="delete-button">삭제</button>
-          </>
-        )}
       </div>
 
       <CommentSection postId={id} />
