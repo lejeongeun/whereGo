@@ -37,7 +37,9 @@ function MapPlaceInfoCard({ place, onAdd }) {
       <div className="card-top">
         {/* 이미지 표시 (정사각형) */}
         <div className="place-image">
-          {place.photo ? (
+          {place.imageUrl ? (
+            <img src={place.imageUrl} alt={place.name} />
+          ) : place.photo ? (
             <img src={place.photo} alt={place.name} />
           ) : (
             <div className="no-image">
