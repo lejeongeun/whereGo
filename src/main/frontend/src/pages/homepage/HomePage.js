@@ -86,22 +86,22 @@ function HomePage() {
           <h2>인기 여행지</h2>
           <div className="destinations-grid">
             <div className="destination-card">
-              <img src="/resources/img/뽜리.jpg" alt="파리" />
+              <img src="/resources/img/paris.jpg" alt="파리" />
               <h3>파리</h3>
               <p>프랑스의 아름다운 수도</p>
             </div>
             <div className="destination-card">
-              <img src="/resources/img/도쿄.jpg" alt="도쿄" />
+              <img src="/resources/img/tokyo.jpg" alt="도쿄" />
               <h3>도쿄</h3>
               <p>일본의 활기찬 도시</p>
             </div>
             <div className="destination-card">
-              <img src="/resources/img/뉴욕.jpg" alt="뉴욕" />
+              <img src="/resources/img/newyork.jpg" alt="뉴욕" />
               <h3>뉴욕</h3>
               <p>잠들지 않는 도시</p>
             </div>
             <div className="destination-card">
-              <img src="/resources/img/로마.jpg" alt="로마" />
+              <img src="/resources/img/rome.jpg" alt="로마" />
               <h3>로마</h3>
               <p>이탈리아의 역사적인 도시</p>
             </div>

@@ -1,5 +1,6 @@
 package org.project.wherego.map.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Getter
@@ -16,4 +17,6 @@ public class PlaceSaveRequestDto {
     private Long scheduleId;
     private String email;
     private int dayNumber;
+    @JsonProperty("imageUrl")
+    private String imageUrl;
 }

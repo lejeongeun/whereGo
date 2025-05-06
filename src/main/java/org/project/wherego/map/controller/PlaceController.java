@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.project.wherego.map.domain.Place;
 import org.project.wherego.map.dto.PlaceSaveRequestDto;
 import org.project.wherego.map.dto.PlaceSearchResponse;
+import org.project.wherego.map.dto.PlaceOrderUpdateRequest;
 import org.project.wherego.map.service.PlaceService;
 import org.project.wherego.member.config.CustomUserDetails;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +52,12 @@ public class PlaceController {
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         String email = userDetails.getMember().getEmail();
         return ResponseEntity.ok(placeService.getPlacesByScheduleAndDay(scheduleId, dayNumber, email));
+    }
+
+    @PatchMapping("/reorder")
+    public ResponseEntity<Void> reorderPlaces(@RequestBody List<PlaceOrderUpdateRequest> orderList) {
+        placeService.reorderPlaces(orderList);
+        return ResponseEntity.ok().build();
     }
 
 }

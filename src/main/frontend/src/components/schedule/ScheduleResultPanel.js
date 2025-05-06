@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { getPlacesByScheduleAndDay, deletePlaceFromSchedule } from '../../api/scheduleApi';
+import { getPlacesByScheduleAndDay, deletePlaceFromSchedule, addPlaceToSchedule } from '../../api/scheduleApi';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import api from '../../api';
 
 // 나라별 추천 장소 더미 데이터
 const recommendedPlacesByCountry = {
@@ -205,6 +207,7 @@ function ScheduleResultPanel({
   // localStorage에서 저장된 일정 데이터 불러오기
   const [scheduleData, setScheduleData] = useState(null);
   const [scheduleId, setScheduleId] = useState(null);
+  const [hoveredIdx, setHoveredIdx] = useState(null);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -252,19 +255,47 @@ function ScheduleResultPanel({
   };
 
   // 추천 장소를 일정에 추가하는 함수
-  const onAddRecommendedPlace = (place) => {
-    // 위도/경도 등 상세 정보가 있다면 함께 추가
-    setDayPlaces(prev => [
-      ...prev,
-      {
-        id: `recommended-${place.name}`,
+  const onAddRecommendedPlace = async (place) => {
+    try {
+      const savedPlace = await addPlaceToSchedule({
         name: place.name,
         address: place.address || '',
         latitude: place.latitude,
         longitude: place.longitude,
-        // 기타 필요한 필드
-      }
-    ]);
+        scheduleId: scheduleId,
+        dayNumber: selectedDay,
+        imageUrl: place.img
+      });
+      setDayPlaces(prev => [...prev, savedPlace]);
+    } catch (error) {
+      alert('추천 장소를 일정에 추가하는 데 실패했습니다.');
+    }
+  };
+
+  // 순서 재정렬 함수
+  const reorder = (list, startIndex, endIndex) => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+    return result;
+  };
+
+  const handleDragEnd = async (result) => {
+    if (!result.destination) return;
+    const reordered = reorder(dayPlaces, result.source.index, result.destination.index);
+    // order 1부터 재정렬
+    const orderList = reordered.map((place, idx) => ({
+      id: place.id,
+      order: idx + 1
+    }));
+    try {
+      console.log('orderList to send:', orderList); // 실제 전송 데이터 확인
+      await api.patch('/places/reorder', orderList);
+      setDayPlaces(reordered);
+    } catch (e) {
+      console.error('순서 저장 에러:', e); // 에러 상세 출력
+      alert('순서 저장에 실패했습니다.');
+    }
   };
 
   // scheduleData가 없으면 로딩 표시
@@ -308,10 +339,10 @@ function ScheduleResultPanel({
     }}>
       {/* 추천 장소 섹션 */}
       <div style={{
-        background: '#fff',
+        background: '#f0f4ff',
         borderRadius: '16px',
         boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
-        padding: '24px',
+        padding: '3px 0px 8px 8px',
       }}>
         <div style={{
           fontSize: '1.2rem',
@@ -319,11 +350,13 @@ function ScheduleResultPanel({
           marginBottom: '16px',
           display: 'flex',
           alignItems: 'center',
-          gap: '4px'
+          gap: '4px',
+          marginLeft: '10px',
+          marginTop: '2px',
         }}>
           추천 장소<span style={{fontSize:'1.3rem'}}>✨</span>
         </div>
-        <div style={scrollableContainerStyle}>
+        <div className="recommended-scrollbar" style={scrollableContainerStyle}>
           <div style={{
             display: 'flex',
             gap: '15px',
@@ -334,36 +367,41 @@ function ScheduleResultPanel({
                 key={index}
                 style={{
                   flex: '0 0 150px',
-                  height: '160px',
+                  height: '152px',
                   background: '#f3f6fa',
-                  padding: '12px',
+                  padding: 0,
                   borderRadius: '12px',
                   fontSize: '0.95rem',
                   textAlign: 'center',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  justifyContent: 'center',
+                  justifyContent: 'flex-start',
                   wordBreak: 'keep-all',
                   cursor: 'pointer',
                   boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
                   transition: 'box-shadow 0.15s',
+                  overflow: 'hidden', // 카드 전체에 overflow hidden 적용
                 }}
                 onClick={() => onAddRecommendedPlace(place)}
               >
                 {place.img && (
                   <div style={{
                     width: '100%',
-                    height: '100px',
-                    borderRadius: '16px',
+                    height: '120px',
+                    borderTopLeftRadius: '12px',
+                    borderTopRightRadius: '12px',
+                    borderBottomLeftRadius: 0,
+                    borderBottomRightRadius: 0,
                     overflow: 'hidden',
-                    marginBottom: '12px',
-                    background: '#f3f6fa'
+                    margin: 0,
+                    background: '#f3f6fa',
+                    display: 'flex',
                   }}>
                     <img src={place.img} alt={place.name} style={{width: '100%', height: '100%', objectFit: 'cover', display: 'block', borderRadius: 0}} />
                   </div>
                 )}
-                <span style={{fontWeight:600, fontSize:'1.08rem'}}>{place.name}</span>
+                <span style={{fontWeight:600, fontSize:'1.08rem', marginTop: 0, marginBottom: 3}}>{place.name}</span>
               </div>
             ))}
           </div>
@@ -375,15 +413,15 @@ function ScheduleResultPanel({
         background: '#fff',
         borderRadius: '16px',
         boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
-        padding: '24px',
+        padding: '16px 24px 24px 24px',
       }}>
         {/* DAY 탭 */}
-        <div style={scrollableContainerStyle}>
+        <div className="daytab-scrollbar" style={scrollableContainerStyle}>
           <div style={{
             display: 'flex',
             gap: '8px',
             minWidth: 'min-content',
-            marginBottom: '24px',
+            marginBottom: '8px',
           }}>
             {Array.from({length: dayCount}, (_, i) => {
               const dayNumber = i + 1;
@@ -407,7 +445,7 @@ function ScheduleResultPanel({
                     background: selectedDay === dayNumber ? '#1976d2' : '#f3f6fa',
                     color: selectedDay === dayNumber ? '#fff' : '#222',
                     fontWeight: selectedDay === dayNumber ? 700 : 500,
-                    fontSize: '1rem',
+                    fontSize: '0.95rem',
                     cursor: 'pointer',
                     transition: 'background 0.15s',
                     whiteSpace: 'nowrap',
@@ -426,80 +464,133 @@ function ScheduleResultPanel({
           minHeight:'200px',
           background:'#fafbfc',
           borderRadius:'12px',
-          padding:'24px',
+          padding:'24px 0',
           boxSizing:'border-box',
           fontSize:'1.1rem',
           color:'#222',
         }}>
-          {dayPlaces.length === 0 ? (
-            <div style={{color:'#888',display:'flex',alignItems:'center',justifyContent:'center',height:'100%'}}>아직 일정이 없습니다</div>
-          ) : (
-            <ul style={{listStyle:'none',padding:0,margin:0}}>
-              {dayPlaces.map((place, idx) => (
-                <li
-                  key={place.id || idx}
-                  style={{
-                    background: '#fff',
-                    borderRadius: '12px',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                    marginBottom: idx === dayPlaces.length - 1 ? 0 : '16px',
-                    padding: '18px 20px',
-                    borderBottom: 'none',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    transition: 'box-shadow 0.2s',
-                    position: 'relative',
-                  }}
-                  onMouseEnter={e => {
-                    const btn = e.currentTarget.querySelector('.place-delete-btn');
-                    if (btn) btn.style.display = 'block';
-                  }}
-                  onMouseLeave={e => {
-                    const btn = e.currentTarget.querySelector('.place-delete-btn');
-                    if (btn) btn.style.display = 'none';
-                  }}
+          
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <Droppable droppableId="places-droppable">
+              {(provided) => (
+                <ul
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  style={{ listStyle: 'none', padding: 0, margin: 0 }}
                 >
-                  <button
-                    className="place-delete-btn"
-                    style={{
-                      display: 'none',
-                      position: 'absolute',
-                      top: '16px',
-                      right: '18px',
-                      background: 'none',
-                      border: 'none',
-                      color: '#e74c3c',
-                      fontSize: '1.6rem',
-                      cursor: 'pointer',
-                      zIndex: 2,
-                      padding: 0,
-                      lineHeight: 1,
-                    }}
-                    title="삭제"
-                    onClick={async (e) => {
-                      e.stopPropagation();
-                      if (String(place.id).startsWith('recommended-')) {
-                        // 추천장소: 프론트에서만 제거
-                        setDayPlaces(prev => prev.filter(p => p.id !== place.id));
-                      } else {
-                        // DB 장소: API 호출 후 제거
-                        try {
-                          await deletePlaceFromSchedule(place.id);
-                          setDayPlaces(prev => prev.filter(p => p.id !== place.id));
-                        } catch (err) {
-                          alert('삭제에 실패했습니다.');
-                        }
-                      }
-                    }}
-                  >
-                    &minus;
-                  </button>
-                  <div style={{fontWeight:600,fontSize:'1.08rem'}}>{place.name}</div>
-                  <div style={{fontSize:'0.97rem',color:'#555'}}>{place.address}</div>
-                </li>
-              ))}
-            </ul>
-          )}
+                  {!scheduleData ? (
+                    <li style={{ color:'#888', display:'flex', alignItems:'center', justifyContent:'center', height:'100%' }}>
+                      일정을 불러오는 중...
+                    </li>
+                  ) : dayPlaces.length === 0 ? (
+                    <li style={{ color:'#888', display:'flex', alignItems:'center', justifyContent:'center', height:'100%' }}>
+                      아직 일정이 없습니다
+                    </li>
+                  ) : (
+                    dayPlaces.map((place, idx) => (
+                      <Draggable key={place.id} draggableId={String(place.id)} index={idx}>
+                        {(provided, snapshot) => (
+                          <li
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={{
+                              userSelect: 'none',
+                              padding: 16,
+                              margin: '0 0 16px 0',
+                              minHeight: '80px',
+                              background: snapshot.isDragging ? '#e3f2fd' : '#fff',
+                              color: '#222',
+                              borderRadius: 12,
+                              boxShadow: snapshot.isDragging
+                                ? '0 8px 24px rgba(33, 150, 243, 0.25)'
+                                : '0 2px 8px rgba(0,0,0,0.06)',
+                              transition: 'box-shadow 0.2s, background 0.2s, transform 0.2s',
+                              transform: snapshot.isDragging ? 'scale(1.03)' : 'scale(1)',
+                              opacity: 1,
+                              zIndex: snapshot.isDragging ? 20 : 1,
+                              cursor: 'grab',
+                              position: 'relative',
+                              ...provided.draggableProps.style
+                            }}
+                          >
+                            <button
+                              className="place-delete-btn"
+                              style={{
+                                position: 'absolute',
+                                top: 8,
+                                right: -32,
+                                background: 'none',
+                                border: 'none',
+                                color: '#e74c3c',
+                                fontSize: '2.2rem',
+                                cursor: 'pointer',
+                                zIndex: 100,
+                                padding: '6px 10px',
+                                lineHeight: 1,
+                              }}
+                              title="삭제"
+                              onMouseDown={e => e.stopPropagation()}
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                if (String(place.id).startsWith('recommended-')) {
+                                  setDayPlaces(prev => prev.filter(p => p.id !== place.id));
+                                } else {
+                                  try {
+                                    await deletePlaceFromSchedule(place.id);
+                                    setDayPlaces(prev => prev.filter(p => p.id !== place.id));
+                                  } catch (err) {
+                                    alert('삭제에 실패했습니다.');
+                                  }
+                                }
+                              }}
+                            >
+                              &minus;
+                            </button>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                              {/* 이미지 영역 */}
+                              <div style={{
+                                width: 70,
+                                height: 70,
+                                borderRadius: 8,
+                                overflow: 'hidden',
+                                background: '#f3f6fa',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flexShrink: 0
+                              }}>
+                                {place.imageUrl ? (
+                                  <img
+                                    src={place.imageUrl}
+                                    alt={place.name}
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                  />
+                                ) : (
+                                  <span style={{ color: '#bbb', fontSize: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
+                                    <svg width="32" height="32" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                      <rect x="3" y="3" width="18" height="18" rx="2" />
+                                      <path d="M3 17l6-6 4 4 8-8" />
+                                    </svg>
+                                  </span>
+                                )}
+                              </div>
+                              {/* 텍스트 영역 */}
+                              <div style={{ flex: 1 }}>
+                                <div style={{ fontWeight: 600, fontSize: '1.08rem' }}>{place.name}</div>
+                                <div style={{ fontSize: '0.97rem', color: '#555' }}>{place.address}</div>
+                              </div>
+                            </div>
+                          </li>
+                        )}
+                      </Draggable>
+                    ))
+                  )}
+                  {provided.placeholder}
+                </ul>
+              )}
+            </Droppable>
+          </DragDropContext>
         </div>
       </div>
 

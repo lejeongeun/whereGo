@@ -2,6 +2,7 @@ package org.project.wherego.map.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import org.project.wherego.common.domain.BaseEntity;
@@ -25,6 +26,9 @@ public class Place{
     private int dayNumber;
     @Column(name = "`order`")
     private int order;
+    @Column(name = "image_url", columnDefinition = "TEXT")
+    @JsonProperty("imageUrl")
+    private String imageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
