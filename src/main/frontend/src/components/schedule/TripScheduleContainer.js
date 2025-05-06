@@ -112,6 +112,7 @@ function TripScheduleContainer() {
         address: place.address,
         latitude: place.latitude,
         longitude: place.longitude,
+        imageUrl: place.imageUrl,
         scheduleId,
         dayNumber: selectedDay,
       });
