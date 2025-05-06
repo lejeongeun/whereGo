@@ -119,7 +119,7 @@ function HomePage() {
             <div className="tip-card">
               <h3>환전 팁</h3>
               <p>가장 좋은 환율을 얻는 방법</p>
-              <Link to="/currency" className="tip-link">자세히 보기</Link>
+              <Link to="/exchange" className="tip-link">자세히 보기</Link>
             </div>
             <div className="tip-card">
               <h3>안전 여행</h3>

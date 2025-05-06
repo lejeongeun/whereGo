@@ -37,7 +37,7 @@ function Footer() {
                   <Link to="/">홈</Link>
                 </li>
                 <li>
-                  <Link to="/trips">여행 일정</Link>
+                  <Link to="/schedule">여행 일정</Link>
                 </li>
                 <li>
                   <Link to="/weather">나라별 날씨</Link>
