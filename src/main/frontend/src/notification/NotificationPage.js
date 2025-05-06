@@ -1,11 +1,11 @@
 import React from 'react';
 
-import './NotificationPage.css'; // 스타일은 유지
+import './NotificationPage.css';
 
 const NotificationPage = ({ messages }) => {
     return (
         <div className="notification-page">
-            <h2 className="notification-title">🔔 실시간 알림</h2>
+            <h2 className="notification-title">🔔실시간 알림</h2>
             {messages.length === 0 ? (
                 <p className="notification-empty">아직 알림이 없습니다.</p>
             ) : (

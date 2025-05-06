@@ -48,7 +48,7 @@ public class CommentService {
 
         // 자기 자신이 댓글을 단 경우는 알림 X
         if (!member.getId().equals(postOwner.getId())) {
-            String message = "📢 \"" + community.getTitle() + "\" 게시물에 댓글이 등록되었습니다!";
+            String message = "🔔 \"" + community.getTitle() + "\" 게시물에 댓글이 등록되었습니다!";
             notificationService.sendNotificationToUser(postOwner.getEmail(), message);
         }
     }
@@ -56,10 +56,6 @@ public class CommentService {
     // 댓글 조회
     @Transactional
     public List<CommentResponseDto> getComment(Long communityId){
-
-        // ghkjrdfls
-
-
         List<Comment> commentList = commentRepository.findAllByCommunityId(communityId);
 
         return commentList.stream()

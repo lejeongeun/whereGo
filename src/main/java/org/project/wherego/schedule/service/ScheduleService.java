@@ -33,7 +33,7 @@ public class ScheduleService {
 
         Schedule schedule = Schedule.builder()
                 .title(requestDto.getTitle())
-                .description(requestDto.getDescription())
+                // .description(requestDto.getDescription()) // description 주석처리
                 .startDate(requestDto.getStartDate())
                 .endDate(requestDto.getEndDate())
                 .member(member)

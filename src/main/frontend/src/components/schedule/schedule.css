@@ -1,0 +1,823 @@
+/* 공통 변수 */
+:root {
+  --primary-color: #4f8cff;
+  --primary-hover: #3a7aee;
+  --secondary-color: #4caf50;
+  --secondary-hover: #449c47;
+  --text-color: #333;
+  --text-light: #555;
+  --border-color: #ddd;
+  --background-light: #f5f5f5;
+  --shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* 공통 스타일 */
+.button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.primary-button {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.primary-button:hover {
+  background-color: var(--primary-hover);
+}
+
+.secondary-button {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.secondary-button:hover {
+  background-color: var(--secondary-hover);
+}
+
+/* MapPlaceInfoCard 스타일 */
+.map-place-info-card {
+  font-family: 'Arial', sans-serif;
+  padding: 16px;
+  background-color: white;
+  box-shadow: var(--shadow);
+  border-radius: 4px;
+  margin-bottom: 15px;
+  width: 100%;
+  margin: 0;
+  margin-top: 16px;
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 453px;
+}
+
+.card-top {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.place-image {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  margin-right: 16px;
+  overflow: hidden;
+  border-radius: 4px;
+  position: relative;
+}
+
+.place-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.no-image {
+  width: 100%;
+  height: 100%;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+}
+
+.basic-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.map-place-info-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: #333;
+}
+
+.rating {
+  display: flex;
+  margin-bottom: 8px;
+}
+
+.rating-star {
+  color: #FFB400;
+  font-size: 18px;
+  margin-right: 2px;
+}
+
+.reviews-count {
+  font-size: 14px;
+  color: #555;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.info-section {
+  margin-bottom: 8px;
+}
+
+.info-title {
+  font-size: 13px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.info-content {
+  font-size: 13px;
+  color: #333;
+  margin: 0;
+}
+
+.ranking {
+  font-size: 13px;
+  color: #555;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.tag {
+  background-color: #f2f2f2;
+  border-radius: 20px;
+  padding: 3px 8px;
+  font-size: 11px;
+  color: #333;
+}
+
+.details-info {
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.address-container {
+  display: flex;
+  margin-bottom: 8px;
+  align-items: flex-start;
+}
+
+.address-icon {
+  color: #888;
+  font-size: 16px;
+  margin-right: 8px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.address {
+  font-size: 13px;
+  color: #333;
+  line-height: 1.4;
+  flex: 1;
+  margin: 0;
+}
+
+.phone-container {
+  display: flex;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.phone-icon {
+  color: #888;
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+.phone {
+  font-size: 13px;
+  color: #333;
+}
+
+.links-container {
+  display: flex;
+  margin-top: 15px;
+  border-top: 1px solid #eee;
+  padding-top: 12px;
+}
+
+.link-button {
+  padding: 8px 12px;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: bold;
+  color: #0B7BFF;
+  text-decoration: none;
+  flex: 1;
+}
+
+.link-button:hover {
+  background-color: #f7f7f7;
+}
+
+.button-container {
+  margin-top: 12px;
+}
+
+.add-button {
+  width: 100%;
+  background-color: #0B7BFF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.add-button:hover {
+  background-color: #0967d2;
+}
+
+/* MapContainer 스타일 */
+.map-container-wrapper {
+  font-family: 'Arial', sans-serif;
+  padding: 15px;
+  height: 100%;
+  position: relative;
+}
+
+.search-controls {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  align-items: center;
+}
+
+.search-autocomplete {
+  flex: 1;
+  min-width: 250px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.loading-indicator {
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.loading-text {
+  color: #555;
+  font-size: 14px;
+}
+
+.map-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  height: 620px;
+  position: relative;
+}
+
+.map-wrapper {
+  width: 100%;
+  height: 400px;
+  margin-bottom: 0;
+  border-radius: 4px;
+  overflow: visible;
+}
+
+.place-info-wrapper {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.schedule-wrapper {
+  margin-top: 20px;
+}
+
+.schedule-wrapper h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.loading-map {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  color: #555;
+  font-size: 16px;
+}
+
+/* PlaceTypeFilter 스타일 */
+.place-type-filter {
+  position: relative;
+  width: 180px;
+  font-family: 'Arial', sans-serif;
+  user-select: none;
+}
+
+.selected-type {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  transition: border-color 0.2s;
+}
+
+.selected-type:hover {
+  border-color: #bbb;
+}
+
+.dropdown-arrow {
+  font-size: 10px;
+  color: #888;
+}
+
+.type-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.type-option {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 14px;
+}
+
+.type-option:hover {
+  background-color: #f5f5f5;
+}
+
+.type-option.active {
+  background-color: #f0f7ff;
+  font-weight: 500;
+}
+
+/* TripScheduleContainer 스타일 */
+.trip-schedule-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+.left-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: auto;
+  min-height: 0;
+}
+
+.right-panel {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* TripScheduleSurvey 스타일 */
+.survey-container {
+  height: 100%;
+  width: 100%;
+}
+
+/* TripScheduleMap 스타일 */
+.map-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+}
+
+/* TripScheduleLogin 스타일 */
+.login-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.login-message {
+  font-size: 1.3rem;
+  margin-bottom: 2rem;
+}
+
+.login-button {
+  composes: button;
+  composes: primary-button;
+  padding: 1rem 2.5rem;
+  font-size: 1.2rem;
+  border-radius: 12px;
+}
+
+/* SearchResultCard 스타일 */
+.search-result-card {
+  display: flex;
+  align-items: flex-start;
+  background: white;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  margin: 16px auto;
+  max-width: 640px;
+  overflow: hidden;
+}
+
+.result-card-image {
+  width: 120px;
+  height: 100px;
+  object-fit: cover;
+  border-right: 1px solid #eee;
+}
+
+.result-card-content {
+  padding: 12px 16px;
+  flex: 1;
+}
+
+.result-card-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.result-card-desc {
+  margin: 6px 0 12px;
+  font-size: 14px;
+  color: #666;
+}
+
+.result-card-add-button {
+  padding: 6px 12px;
+  font-size: 14px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.result-card-add-button:hover {
+  background-color: #449c47;
+}
+
+/* Calendar 스타일 개선 */
+.react-calendar {
+  width: 100%;
+  max-width: 100%;
+  background: white;
+  border: none;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.125em;
+  padding: 20px;
+  border-radius: 16px;
+}
+
+.react-calendar__navigation {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  height: 40px;
+  justify-content: space-between;
+}
+
+.react-calendar__navigation button {
+  min-width: 44px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #666;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.react-calendar__navigation button:disabled {
+  color: #ddd;
+}
+
+.react-calendar__navigation button.react-calendar__navigation__label {
+  font-weight: bold;
+  font-size: 18px;
+  color: #333;
+  pointer-events: none;
+}
+
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  padding: 8px;
+  color: #666;
+}
+
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none;
+  border: none;
+}
+
+.react-calendar__tile {
+  max-width: 100%;
+  padding: 12px 6px;
+  background: none;
+  text-align: center;
+  line-height: 16px;
+  font-size: 14px;
+  border-radius: 8px;
+}
+
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.react-calendar__tile--now {
+  background: #fff5d9;
+  color: #333;
+  border-radius: 8px;
+}
+
+.react-calendar__tile--now:enabled:hover,
+.react-calendar__tile--now:enabled:focus {
+  background: #ffe69c;
+}
+
+.react-calendar__tile--hasActive {
+  background: var(--primary-color);
+  color: white;
+  border-radius: 8px;
+}
+
+.react-calendar__tile--hasActive:enabled:hover,
+.react-calendar__tile--hasActive:enabled:focus {
+  background: var(--primary-hover);
+}
+
+.react-calendar__tile--active {
+  background: var(--primary-color);
+  color: white;
+  border-radius: 8px;
+}
+
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
+  background: var(--primary-hover);
+}
+
+.react-calendar__month-view__days__day--weekend {
+  color: #e85c5c;
+}
+
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #ccc;
+}
+
+.calendar-badge-today {
+  font-size: 10px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.calendar-label {
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+.calendar-label-start {
+  color: white;
+}
+
+.calendar-label-end {
+  color: white;
+}
+
+/* 버튼 스타일 개선 */
+.schedule-date-btns {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  margin-top: 24px;
+}
+
+.calendar-reset-btn {
+  flex: 1;
+  padding: 16px 0;
+  background: white;
+  color: var(--primary-color);
+  border: 1.5px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.calendar-reset-btn:disabled {
+  color: #bbb;
+  border-color: #eee;
+  cursor: not-allowed;
+}
+
+.calendar-reset-btn:hover:enabled {
+  background: #f8f9fa;
+  border-color: var(--primary-color);
+}
+
+.calendar-next-btn {
+  flex: 1;
+  padding: 16px 0;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.calendar-next-btn:disabled {
+  background: #e8f0fe;
+  color: #a8c0e8;
+  cursor: not-allowed;
+}
+
+.calendar-next-btn:hover:enabled {
+  background: var(--primary-hover);
+}
+
+/* 달력 컨테이너 스타일 */
+.schedule-date-calendar-wrapper {
+  width: 100%;
+  padding: 0 10px;
+}
+
+/* ScheduleList 스타일 */
+.schedule-list {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  margin: 16px;
+}
+
+.schedule-list h3 {
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+.schedule-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.schedule-list li {
+  margin-bottom: 12px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.list-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.schedule-list button {
+  background: none;
+  border: none;
+  color: #e74c3c;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 480px) {
+  .card-top {
+    flex-direction: column;
+  }
+  
+  .place-image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1.5 / 1;
+    margin-right: 0;
+    margin-bottom: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .search-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .place-type-filter {
+    width: 100%;
+  }
+  
+  .search-autocomplete {
+    width: 100%;
+  }
+}
+
+.place-delete-btn {
+  display: none;
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  background: none;
+  border: none;
+  color: #e74c3c;
+  font-size: 1.6rem;
+  cursor: pointer;
+  z-index: 2;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+li:hover .place-delete-btn {
+  display: block;
+}
+
+.recommended-scrollbar::-webkit-scrollbar {
+  height: 12px;
+}
+.recommended-scrollbar::-webkit-scrollbar-thumb {
+  background: #a0a7b1;
+  border-radius: 6px;
+}
+.recommended-scrollbar::-webkit-scrollbar-track {
+  background: #f0f4ff;
+  border-radius: 6px;
+}
+
+/* Firefox */
+.recommended-scrollbar {
+  scrollbar-color: #a0a7b1 #f0f4ff;
+  scrollbar-width: thin;
+}
+
+.daytab-scrollbar::-webkit-scrollbar {
+  height: 12px;
+}
+.daytab-scrollbar::-webkit-scrollbar-thumb {
+  background: #a0a7b1;
+  border-radius: 6px;
+}
+.daytab-scrollbar::-webkit-scrollbar-track {
+  background: #fff;
+  border-radius: 6px;
+}
+
+/* Firefox */
+.daytab-scrollbar {
+  scrollbar-color: #a0a7b1 #fff;
+  scrollbar-width: thin;
+} 

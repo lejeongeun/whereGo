@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface PlaceRepository extends JpaRepository<Place, Long> {
     List<Place> findByScheduleId(Long scheduleId);
+    List<Place> findByScheduleIdAndDayNumberOrderByOrderAsc(Long scheduleId, int dayNumber);
 }

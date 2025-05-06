@@ -10,9 +10,8 @@ import './ChecklistPage.css';
 
 const ChecklistPage = () => {
   const navigate = useNavigate();
-  const [checklistGroups, setChecklistGroups] = useState([]);
+  const [checklistGroups, setChecklistGroups] = useState(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   // 로그인 상태 체크
@@ -28,9 +27,7 @@ const ChecklistPage = () => {
   useEffect(() => {
     const fetchChecklistGroups = async () => {
       try {
-        setLoading(true);
         const groups = await checklistApi.getAllGroups();
-        console.log('체크리스트 그룹 데이터:', groups);
         // 데이터 구조 확인 및 수정
         const formattedGroups = groups.map(group => ({
           ...group,
@@ -49,8 +46,6 @@ const ChecklistPage = () => {
         }
         setError('체크리스트를 불러오는데 실패했습니다.');
         console.error(err);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -75,7 +70,7 @@ const ChecklistPage = () => {
           isChecked: item.checked ?? false
         }))
       };
-      console.log('저장되는 groupData:', groupData);
+      // console.log('저장되는 groupData:', groupData);
       await checklistApi.createGroup(groupData);
       
       const updatedGroups = await checklistApi.getAllGroups();
@@ -194,23 +189,20 @@ const ChecklistPage = () => {
     </div>
   );
 
-  if (loading) {
-    return (
-      <div className="checklist-container">
-        <h1>체크리스트</h1>
-        <div className="loading-checklist">
-          <div className="loading-spinner"></div>
-          <p>체크리스트를 불러오는 중...</p>
-        </div>
-      </div>
-    );
-  }
-
   if (error) {
     return (
       <div className="checklist-container">
         <h1>체크리스트</h1>
         <div className="error-message">{error}</div>
+      </div>
+    );
+  }
+
+  if (checklistGroups === undefined) {
+    return (
+      <div className="checklist-container">
+        <h1>체크리스트</h1>
+        <div style={{ minHeight: '500px' }}></div>
       </div>
     );
   }

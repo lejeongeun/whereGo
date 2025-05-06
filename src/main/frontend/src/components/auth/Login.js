@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 // import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import api from '../../api.js';
-function Login() {
+
+function Login(props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -44,10 +45,16 @@ function Login() {
           user: localStorage.getItem('user')
         });
         
-        
-        // 홈페이지로 리다이렉트
-        window.location.href = '/';
-
+        // onLoginSuccess prop이 있으면 호출
+        if (typeof props?.onLoginSuccess === 'function') {
+          props.onLoginSuccess();
+        }
+        // 현재 경로가 /schedule이면 새로고침, 아니면 메인화면으로 이동
+        if (window.location.pathname === '/schedule') {
+          window.location.reload();
+        } else {
+          window.location.href = '/';
+        }
       }
   
     } catch (error) {
