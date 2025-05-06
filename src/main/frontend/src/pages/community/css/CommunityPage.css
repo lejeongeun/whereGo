@@ -1,0 +1,64 @@
+/* CommunityPage.css */
+
+.community-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.top-bar {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+/* 왼쪽 콘텐츠와 오른쪽 인기 게시물을 나누는 부분 */
+.content-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.left-content {
+  flex: 4;
+  padding-right: 20px;
+}
+
+.right-sidebar {
+  flex: 1;
+  background-color: #f7f7f7;
+  padding: 20px;
+  position: sticky;  /* 사이드바가 스크롤을 따라가도록 */
+  top: 20px;  /* 스크롤에 따라 올라오지 않도록 설정 */
+  
+}
+
+.popular-posts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.popular-post-item {
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.popular-post-item h4 {
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+
+.popular-post-item p {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 5px;
+}
+
+.right-sidebar h3 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}

@@ -1,6 +1,6 @@
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import './CommunityDetailPage.css';
+import './css/CommunityDetailPage.css';
 import { deletePost } from '../../api/communityApi';
 import api from '../../api';
 import CommentSection from '../../components/community/CommentSection';
@@ -17,14 +17,20 @@ function CommunityDetailPage() {
   const [post, setPost] = useState(location.state || null);
 
   useEffect(() => {
-    api.post(`/community/${id}/view`)
-    .then(() => {
-      console.log('조회수 증가 성공');
-    })
-    .catch(err => {
-      console.error('조회수 증가 실패:', err);
-    });
-    
+    const token = localStorage.getItem('token');
+  
+    if (token) {
+      api.post(`/community/${id}/view`)
+        .then(() => {
+          console.log("조회수 증가 성공");
+        })
+        .catch((err) => {
+          console.error("조회수 증가 실패:", err);
+        });
+    } else {
+      console.warn("비로그인 상태, 조회수 증가 요청 안 보냄");
+    }
+  
     if (!post) {
       api.get(`/community/${id}`)
         .then(res => {
@@ -40,7 +46,11 @@ function CommunityDetailPage() {
 
   if (!post) return <div>로딩중...</div>
 
-  const { title, content, nickname, createdAt, likeCount, viewCount, commentCount } = post;
+  const {
+    title, content, nickname, createdAt,
+    likeCount, viewCount, commentCount,
+    imageUrls
+  } = post;
 
   const handleEdit = () => {
     navigate(`/community/${id}/edit`, { state: { title, content } });
@@ -91,6 +101,20 @@ function CommunityDetailPage() {
           </button>
           <span><FaRegComment /> {commentCount}</span>
         </div>
+
+        {Array.isArray(imageUrls) && imageUrls.length > 0 && (
+            <div className="detail-images">
+              {imageUrls.map((url, index) => (
+                  <img
+                      key={index}
+                      src={`http://localhost:8080${url}`}
+                      alt={`이미지-${index}`}
+                      className="detail-image"
+                  />
+              ))}
+            </div>
+        )}
+
         <div className="detail-content">
           <p>{content}</p>
         </div>

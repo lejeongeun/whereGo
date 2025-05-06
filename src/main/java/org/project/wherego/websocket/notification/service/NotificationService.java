@@ -16,4 +16,8 @@ public class NotificationService {
         log.info("알림 전송 메시지 : {} ", message);
         messagingTemplate.convertAndSend("/topic/notifications", message);
     }
+    public void sendNotificationToUser(String receiverEmail, String message) {
+        log.info("🔔 {}에게 알림 전송: {}", receiverEmail, message);
+        messagingTemplate.convertAndSend("/topic/notifications/" + receiverEmail, message);
+    }
 }

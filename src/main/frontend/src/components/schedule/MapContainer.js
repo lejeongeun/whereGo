@@ -5,7 +5,7 @@ import PlaceTypeFilter from './PlaceTypeFilter';
 import ScheduleList from '../schedule/ScheduleList';
 import api from '../../api';
 import travelAdvisorAPI from '../../api/travelAdvisorAPI';
-import './MapContainer.css';
+import './schedule.css';
 
 const containerStyle = {
   width: '100%',
@@ -19,7 +19,7 @@ const center = {
 
 const libraries = ['places'];
 
-const MapContainer = () => {
+const MapContainer = ({ setSelectedPlace, selectedPlace }) => {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -29,7 +29,6 @@ const MapContainer = () => {
   const [map, setMap] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [autocomplete, setAutocomplete] = useState(null);
-  const [selectedPlace, setSelectedPlace] = useState(null);
   const [schedulePlaces, setSchedulePlaces] = useState([]);
   const [currentScheduleId, setCurrentScheduleId] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -115,9 +114,6 @@ const MapContainer = () => {
       
       setMarkers(newMarkers);
       
-      if (results.length > 0 && !selectedPlace) {
-        setSelectedPlace(results[0]);
-      }
     } catch (error) {
       console.error('장소 검색 오류:', error);
     } finally {
@@ -198,16 +194,6 @@ const MapContainer = () => {
           ))}
         </GoogleMap>
       </div>
-      
-      <div className="place-info-wrapper">
-        {selectedPlace && (
-          <MapPlaceInfoCard 
-            place={selectedPlace} 
-            // onAdd={handleAddToSchedule} 
-          />
-        )}
-      </div>
-      
     </div>
   ) : (
     <div className="loading-map">지도를 불러오는 중...</div>

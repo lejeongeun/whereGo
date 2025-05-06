@@ -1,5 +1,6 @@
 // import React from 'react';
 // import './SearchResultCard.css';
+import './schedule.css';
 
 // function SearchResultCard({ place, onAdd }) {
 //   return (
