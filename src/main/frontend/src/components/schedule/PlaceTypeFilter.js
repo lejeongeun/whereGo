@@ -8,7 +8,6 @@ const PlaceTypeFilter = ({ selectedType, onTypeChange }) => {
   // 타입별 레이블 및 값 매핑
   const placeTypes = [
     { label: 'Restaurants', value: 'restaurants' },
-    { label: 'Hotels', value: 'hotels' },
     { label: 'Attractions', value: 'attractions' }
   ];
 

@@ -15,7 +15,7 @@ getRestaurants: async (bounds) => {
         bl_longitude: bounds.bl_longitude || '126.95710022735595',
         tr_longitude: bounds.tr_longitude || '126.99889977264404',
         restaurant_tagcategory: '10591',
-        limit: '30',
+        limit: '10',
         currency: 'USD',
         open_now: 'false',
         lunit: 'km',
@@ -55,53 +55,17 @@ getRestaurants: async (bounds) => {
   }
 },
 
-  // 지역 경계 내 호텔 검색
-  getHotels: async (bounds) => {
-    try {
-      const { data } = await axios.get(
-        'https://travel-advisor.p.rapidapi.com/hotels/list-in-boundary',
-        {
-          params: {
-            bl_latitude: bounds?.bl_latitude || '37.5528',
-            tr_latitude: bounds?.tr_latitude || '37.5801',
-            bl_longitude: bounds?.bl_longitude || '126.9571',
-            tr_longitude: bounds?.tr_longitude || '126.9989',
-            limit: '30'
-          },
-          headers: {
-            'x-rapidapi-key': API_KEY,
-            'x-rapidapi-host': 'travel-advisor.p.rapidapi.com',
-          },
-        }
-      );
-  
-      return (data.data || []).map(item => ({
-        id: item.location_id,
-        name: item.name || '이름 없음',
-        address: item.location_string || '',
-        latitude: parseFloat(item.latitude) || 0,
-        longitude: parseFloat(item.longitude) || 0,
-        rating: item.rating ? parseFloat(item.rating) : null,
-        photo: item.photo?.images?.medium?.url || null,
-        type: 'hotels'
-      }));
-    } catch (error) {
-      console.error('호텔 정보 가져오기 오류:', error.response?.data || error.message);
-      return [];
-    }
-  },
-
   // 지역 경계 내 관광지 검색
   getAttractions: async (bounds) => {
     const options = {
       method: 'GET',
       url: 'https://travel-advisor.p.rapidapi.com/attractions/list-in-boundary',
       params: {
-        bl_latitude: bounds.bl_latitude || '37.552892082641534', // 서울 좌표
+        bl_latitude: bounds.bl_latitude || '37.552892082641534', 
         tr_latitude: bounds.tr_latitude || '37.580105431907505',
         bl_longitude: bounds.bl_longitude || '126.95710022735595',
         tr_longitude: bounds.tr_longitude || '126.99889977264404',
-        limit: '15',
+        limit: '10',
         currency: 'USD',
         lunit: 'km',
         lang: 'ko_KR'
