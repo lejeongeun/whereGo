@@ -1,12 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Footer.css';
-import { FaFacebook } from "react-icons/fa";
+import { FaFacebook, FaInstagramSquare } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import { FaInstagramSquare } from "react-icons/fa";
 
 function Footer() {
   const currentYear = new Date().getFullYear();
+  const navigate = useNavigate();
+  
+  // 페이지 이동과 동시에 스크롤을 최상단으로 올리는 함수
+  const navigateAndScrollTop = (to) => {
+    navigate(to);
+    window.scrollTo(0, 0);
+  };
 
   return (
     <footer className="footer">
@@ -21,67 +27,44 @@ function Footer() {
               <FaFacebook size={24}/>
             </a>
             <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-            <FaXTwitter size={24}/>
+              <FaXTwitter size={24}/>
             </a>
             <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-            <FaInstagramSquare size={24}/>
+              <FaInstagramSquare size={24}/>
             </a>
           </div>
         </div>
 
         <div className="footer-section">
           <h3>둘러보기</h3>
-          <ul className="footer-links">
-            <li>
-              <Link to="/">홈</Link>
-            </li>
-            <li>
-              <Link to="/trips">여행 일정</Link>
-            </li>
-            <li>
-              <Link to="/expenses">경비 계산</Link>
-            </li>
-            <li>
-              <Link to="/checklist">체크리스트</Link>
-            </li>
-            <li>
-              <Link to="/community">커뮤니티</Link>
-            </li>
-          </ul>
-        </div>
-
-        <div className="footer-section">
-          <h3>지원</h3>
-          <ul className="footer-links">
-            <li>
-              <Link to="/faq">자주 묻는 질문</Link>
-            </li>
-            <li>
-              <Link to="/contact">문의하기</Link>
-            </li>
-            <li>
-              <Link to="/privacy">개인정보 처리방침</Link>
-            </li>
-            <li>
-              <Link to="/terms">이용약관</Link>
-            </li>
-          </ul>
-        </div>
-
-        <div className="footer-section">
-          <h3>뉴스레터 구독</h3>
-          <p>최신 여행 정보와 프로모션을 받아보세요.</p>
-          <form className="newsletter-form">
-            <input
-              type="email"
-              className="newsletter-input"
-              placeholder="이메일 주소"
-              required
-            />
-            <button type="submit" className="newsletter-button">
-              구독
-            </button>
-          </form>
+          <div className="footer-links-container">
+            <div className="footer-links-column">
+              <ul className="footer-links">
+                <li>
+                  <span className="custom-link" onClick={() => navigateAndScrollTop('/')}>홈</span>
+                </li>
+                <li>
+                  <span className="custom-link" onClick={() => navigateAndScrollTop('/schedule')}>여행 일정</span>
+                </li>
+                <li>
+                  <span className="custom-link" onClick={() => navigateAndScrollTop('/weather')}>나라별 날씨</span>
+                </li>
+              </ul>
+            </div>
+            <div className="footer-links-column">
+              <ul className="footer-links">
+                <li>
+                  <span className="custom-link" onClick={() => navigateAndScrollTop('/exchange')}>나라별 환율</span>
+                </li>
+                <li>
+                  <span className="custom-link" onClick={() => navigateAndScrollTop('/checklist')}>체크리스트</span>
+                </li>
+                <li>
+                  <span className="custom-link" onClick={() => navigateAndScrollTop('/community')}>커뮤니티</span>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
       

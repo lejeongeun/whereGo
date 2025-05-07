@@ -137,14 +137,11 @@ const MapContainer = ({ setSelectedPlace, selectedPlace }) => {
         case 'restaurants':
           results = await travelAdvisorAPI.getRestaurants(bounds);
           break;
-        case 'hotels':
-          results = await travelAdvisorAPI.getHotels(bounds);
-          break;
         case 'attractions':
           results = await travelAdvisorAPI.getAttractions(bounds);
           break;
-        default:
-          results = await travelAdvisorAPI.getRestaurants(bounds);
+        // default:
+        //   results = await travelAdvisorAPI.getRestaurants(bounds);
       }
       
       const newMarkers = results

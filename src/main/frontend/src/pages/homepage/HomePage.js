@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './HomePage.css';
 import api from '../../api';
+import { AiOutlineLike } from 'react-icons/ai';
+import { LuEye } from 'react-icons/lu';
+import { FaRegComment } from 'react-icons/fa';
 
 function HomePage() {
+  const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   // 이미지 경로 배열
@@ -31,6 +35,7 @@ function HomePage() {
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
   
+
   const [popularPosts, setPopularPosts] = useState([]);
 
     useEffect(() => {
@@ -42,6 +47,14 @@ function HomePage() {
           setPopularPosts(sorted.slice(0, 3));
         });
     }, []);
+
+
+  const navigateAndScrollTop = (to, e) => {
+    e.preventDefault();
+    navigate(to);
+    window.scrollTo(0, 0);
+  };
+  
 
   return (
     <div className="home-page">
@@ -122,18 +135,25 @@ function HomePage() {
         </div>
         
         <div className="travel-tips">
-          <h2>인기게시물</h2>
-          <div className="tips-grid">
-            {popularPosts.map((post) => (
-              <Link to={`/community/${post.id}`} className="tip-card" key={post.id}>
-                <h4 className="post-title">{post.title}</h4>
-                <p className="post-preview">{post.content.slice(0, 50)}...</p>
-              </Link>
-            ))}
-          </div>
+
+                <h2>인기게시물 ✨</h2>
+        <div className="tips-grid">
+          {popularPosts.map((post) => (
+            <Link to={`/community/${post.id}`} className="tip-card" key={post.id}>
+              <h4 className="post-title">{post.title}</h4>
+              <p className="post-preview">{post.content.slice(0, 50)}...</p>
+              <div className="post-stats">
+                <span><AiOutlineLike /> {post.likeCount}</span>
+                <span><LuEye /> {post.viewCount}</span>
+                <span><FaRegComment /> {post.commentCount}</span>
+              </div>
+            </Link>
+          ))}
+
         </div>
       </div>
     </div>
+  </div>
   );
 }
 
