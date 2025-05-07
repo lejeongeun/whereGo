@@ -53,7 +53,7 @@ function Navbar() {
   }, []);
 
   const handleLogout = () => {
-    // 모든 사용자 관련 데이터 제거
+    // 1. 모든 사용자 관련 데이터 제거
     const keysToRemove = ['token', 'user', 'email', 'nickname'];
     
     // localStorage에서 사용자 관련 데이터 제거
@@ -76,21 +76,41 @@ function Navbar() {
       }
     }
     
-    // 상태 초기화
-    // 인증 관련 데이터만 삭제
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('email');
-
+    // 2. 세션 스토리지에서도 데이터 제거
+    sessionStorage.clear();
+    
+    // 3. 모든 쿠키 삭제
+    const cookies = document.cookie.split(';');
+    
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i];
+      const eqPos = cookie.indexOf('=');
+      const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+      
+      // 모든 쿠키 만료 처리 (path와 domain 옵션을 정확히 맞춰야 함)
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+      
+      // API path에 설정된 쿠키도 처리
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/api`;
+      
+      // 다른 가능한 경로에도 처리
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/ws`;
+    }
+    
+    // 4. 상태 초기화
     setIsLoggedIn(false);
     setMember(null);
     setMessages([]);
     setHasNewNotification(false);
     
-    // 로그인 상태 변경 이벤트 발생시키기
+    // 5. 로그인 상태 변경 이벤트 발생시키기
     window.dispatchEvent(new Event('loginStateChanged'));
     
+    // 6. 홈페이지로 리다이렉트
     navigate('/');
+    
+    // 7. 선택적: 로그아웃 확인 메시지 표시
+    console.log('로그아웃 되었습니다. 모든 인증 정보가 삭제되었습니다.');
   };
 
   const toggleMenu = () => {
