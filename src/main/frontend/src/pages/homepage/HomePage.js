@@ -31,14 +31,13 @@ function HomePage() {
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
   
-<<<<<<< HEAD
   // 도시 카드 클릭 핸들러
   const handleDestinationClick = (cityName) => {
     // /schedule 페이지로 이동하면서 검색할 도시 이름 전달
     navigate('/schedule', { state: { searchCity: cityName } });
   };
   
-=======
+
   const [popularPosts, setPopularPosts] = useState([]);
 
     useEffect(() => {
@@ -51,7 +50,6 @@ function HomePage() {
         });
     }, []);
 
->>>>>>> 572434b3832888d8abbb6d74cd48fdf0fbbb41a7
   return (
     <div className="home-page">
       <div className="content-container">

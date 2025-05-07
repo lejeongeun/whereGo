@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-<<<<<<< HEAD
-=======
 // import { useNavigate } from 'react-router-dom';
->>>>>>> 572434b3832888d8abbb6d74cd48fdf0fbbb41a7
 import './Login.css';
 import api from '../../api.js';
 
@@ -13,11 +10,6 @@ function Login(props) {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-<<<<<<< HEAD
-  // const navigate = useNavigate();
-=======
-//  const navigate = useNavigate();
->>>>>>> 572434b3832888d8abbb6d74cd48fdf0fbbb41a7
 
   const handleSubmit = async (e) => {
     e.preventDefault();
