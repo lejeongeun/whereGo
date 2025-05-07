@@ -32,7 +32,6 @@ function CommunityPostItem({
     });
   
     const relativeTime = getRelativeTime(createdAt);
-
     const thumbnail = Array.isArray(imageUrls) && imageUrls.length > 0 ? imageUrls[0] : null;
   
   
@@ -71,12 +70,13 @@ function CommunityPostItem({
         {thumbnail && (
           <div className="post-thumbnail">
             <img
-              src={`http://localhost:8080${thumbnail}`}
+              src={`http://localhost:8080${thumbnail}`} // 상대경로에 도메인 붙이기
               alt="썸네일"
               className="thumbnail-image"
             />
           </div>
         )}
+        
       </Link>
     </div>
 
