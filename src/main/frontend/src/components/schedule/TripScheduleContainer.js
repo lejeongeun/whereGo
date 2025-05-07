@@ -76,7 +76,7 @@ function TripScheduleContainer() {
   }, [scheduleId, selectedDay]);
 
   React.useEffect(() => {
-    console.log('Selected day changed:', selectedDay);
+    // console.log('Selected day changed:', selectedDay);
   }, [selectedDay]);
 
   const fetchDayPlaces = async (dayNumber) => {
@@ -90,11 +90,11 @@ function TripScheduleContainer() {
   };
 
   const handleAddToSchedule = async (place) => {
-    console.log('Adding place to schedule:', {
-      place,
-      scheduleId,
-      selectedDay
-    });
+    // console.log('Adding place to schedule:', {
+    //   place,
+    //   scheduleId,
+    //   selectedDay
+    // });
 
     if (!scheduleId) {
       alert('일정이 먼저 생성되어야 합니다.');
@@ -117,7 +117,7 @@ function TripScheduleContainer() {
         dayNumber: selectedDay,
       });
 
-      console.log('Place added successfully:', result);
+      // console.log('Place added successfully:', result);
       setDayPlaces(prevPlaces => [...prevPlaces, result]);
     } catch (error) {
       console.error('Error adding place:', error);
