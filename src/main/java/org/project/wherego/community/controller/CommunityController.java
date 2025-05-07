@@ -62,7 +62,7 @@ public class CommunityController {
         return ResponseEntity.ok(communityService.getAllPosts());
     }
 
-    // 하나의 게시물 조회
+    // 게시글 상세 조회
     @GetMapping("/{id}")
     public ResponseEntity<CommunityResponseDto> getPost(@PathVariable Long id){
         communityService.increaseViewCount(id);

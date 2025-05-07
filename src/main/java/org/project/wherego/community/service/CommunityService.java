@@ -67,7 +67,6 @@ public class CommunityService {
     public void edit(Long id, String email, CommunityRequestDto requestDto, List<MultipartFile> newImages, List<Long> deleteImageIds) {
         Community community = communityRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
-
         if (!community.getMember().getEmail().equals(email)) {
             throw new SecurityException("작성자만 수정할 수 있습니다.");
         }
