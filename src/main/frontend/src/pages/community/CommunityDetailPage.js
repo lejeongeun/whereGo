@@ -4,6 +4,7 @@ import './css/CommunityDetailPage.css';
 import { deletePost } from '../../api/communityApi';
 import api from '../../api';
 import CommentSection from '../../components/community/CommentSection';
+import { BsPersonCircle } from 'react-icons/bs';
 
 import { AiOutlineLike } from "react-icons/ai";
 import { LuEye } from "react-icons/lu";
@@ -58,15 +59,17 @@ function CommunityDetailPage() {
       <h2 className="detail-title">{title}</h2>
       <div className="detail-meta">
         <div className="detail-author">
-          <img
-            src={
-              typeof profileImage === 'string' && profileImage.trim() !== ''
-                ? `http://localhost:8080${profileImage.slice(profileImage.indexOf('/uploads/'))}`
-                : '/default-profile.png'
-            }
-            alt={`${nickname}님의 프로필`}
-            className="post-profile-image"
-          />
+
+        {typeof profileImage === 'string' && profileImage.trim() !== '' ? (
+  <img
+    src={`http://localhost:8080${profileImage.slice(profileImage.indexOf('/uploads/'))}`}
+    alt={`${nickname}님의 프로필`}
+    className="post-profile-image"
+  />
+) : (
+  <BsPersonCircle className="post-profile-image" size={32} color="#6c757d" />
+)}
+
           <span className="author">{nickname}</span>
         </div>
 

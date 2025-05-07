@@ -27,12 +27,17 @@
   margin-bottom: 8px;
 }
 
-.community-post-item .post-profile-image {
-  width: 36px;
-  height: 36px;
+.community-post-item .post-profile-image,
+.post-profile-icon {
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   object-fit: cover;
-  margin-left: 14px;
+}
+
+.community-post-item .post-profile-icon {
+  width: 32px;
+  height: 32px;
 }
 
 .community-post-item .author-name {
@@ -108,4 +113,10 @@
   color: #9ca3af;
   margin-top: auto;
   margin-right: 35px;
+}
+
+.community-post-item .post-header svg {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
 }

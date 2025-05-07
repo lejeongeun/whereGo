@@ -200,24 +200,20 @@ function CommentSection({ postId }) {
     )}
   </div>
 
-      <div className="comment-time-top">
-        {getFormattedTime(comment.createdAt)}
-      </div>
-    </div>
+  <div className="comment-time-under">
+    {getFormattedTime(comment.createdAt)}
+  </div>
+</div>
 
-    <div className="comment-content">{comment.content}</div>
+<div className="comment-content">{comment.content}</div>
 
-    <div className="comment-time-under">
-        {getRelativeTime(comment.createdAt)}
-      </div>
-        </>
-      )}
+    </>
+  )}
 </li>
           );
         })
       )}
       </ul>
-
 
       {comments.length > 0 && (
         <div className="pagination">
