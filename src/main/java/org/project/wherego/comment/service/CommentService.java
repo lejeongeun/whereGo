@@ -42,7 +42,6 @@ public class CommentService {
 
         commentRepository.save(newComment);
 
-
         // 게시글 작성자
         Member postOwner = community.getMember();
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './HomePage.css';
 import api from '../../api';
 import { AiOutlineLike } from 'react-icons/ai';
@@ -7,6 +7,7 @@ import { LuEye } from 'react-icons/lu';
 import { FaRegComment } from 'react-icons/fa';
 
 function HomePage() {
+  const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   // 이미지 경로 배열
@@ -34,6 +35,7 @@ function HomePage() {
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
   
+
   const [popularPosts, setPopularPosts] = useState([]);
 
     useEffect(() => {
@@ -45,6 +47,14 @@ function HomePage() {
           setPopularPosts(sorted.slice(0, 3));
         });
     }, []);
+
+
+  const navigateAndScrollTop = (to, e) => {
+    e.preventDefault();
+    navigate(to);
+    window.scrollTo(0, 0);
+  };
+  
 
   return (
     <div className="home-page">
@@ -125,6 +135,7 @@ function HomePage() {
         </div>
         
         <div className="travel-tips">
+
                 <h2>인기게시물 ✨</h2>
         <div className="tips-grid">
           {popularPosts.map((post) => (
@@ -138,6 +149,7 @@ function HomePage() {
               </div>
             </Link>
           ))}
+
         </div>
       </div>
     </div>

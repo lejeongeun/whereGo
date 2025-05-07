@@ -41,7 +41,17 @@ const COUNTRIES = [
   { code: 'de', name: '독일', capital: 'Berlin', flag: '🇩🇪' },
   { code: 'it', name: '이탈리아', capital: 'Rome', flag: '🇮🇹' },
   { code: 'es', name: '스페인', capital: 'Madrid', flag: '🇪🇸' },
-  { code: 'ca', name: '캐나다', capital: 'Ottawa', flag: '🇨🇦' }
+  { code: 'ca', name: '캐나다', capital: 'Ottawa', flag: '🇨🇦' },
+  { code: 'au', name: '호주', capital: 'Canberra', flag: '🇦🇺' },
+  { code: 'br', name: '브라질', capital: 'Brasília', flag: '🇧🇷' },
+  { code: 'ru', name: '러시아', capital: 'Moscow', flag: '🇷🇺' },
+  { code: 'in', name: '인도', capital: 'New Delhi', flag: '🇮🇳' },
+  { code: 'mx', name: '멕시코', capital: 'Mexico City', flag: '🇲🇽' },
+  { code: 'za', name: '남아프리카공화국', capital: 'Pretoria', flag: '🇿🇦' },
+  { code: 'id', name: '인도네시아', capital: 'Jakarta', flag: '🇮🇩' },
+  { code: 'ar', name: '아르헨티나', capital: 'Buenos Aires', flag: '🇦🇷' },
+  { code: 'se', name: '스웨덴', capital: 'Stockholm', flag: '🇸🇪' },
+  { code: 'th', name: '태국', capital: 'Bangkok', flag: '🇹🇭' }
 ];
 
 const utils = {
@@ -262,8 +272,6 @@ const WeatherWorld = () => {
   return (
     <div className="weather-container">
       <div className="blue-header">
-        {/* <h2>전 세계 날씨 정보를 한눈에</h2> */}
-        
         <div className="search-bar">
           <select 
             value={selectedCountry}

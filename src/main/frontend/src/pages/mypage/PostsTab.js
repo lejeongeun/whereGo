@@ -35,7 +35,7 @@ const PostsTab = ({ posts, navigate }) => {
                 >
                   {post.title}
                 </h3>
-                <p className="post-content">{post.content}</p>
+                <p className="post-content-my">{post.content}</p>
                 <div className="post-info">
                   <span className="post-date">작성일: {new Date(post.createdAt).toLocaleDateString()}</span>
                 </div>
