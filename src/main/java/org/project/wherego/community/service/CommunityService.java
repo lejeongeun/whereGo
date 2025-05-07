@@ -125,6 +125,7 @@ public class CommunityService {
                         .profileImage(community.getMember().getProfileImage())
                         .build())
                 .collect(Collectors.toList());
+
     }
 
     // 한개의 게시물 가져오기
