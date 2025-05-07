@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './HomePage.css';
-import api from '../../api';
-import { AiOutlineLike } from "react-icons/ai";
-import { LuEye } from "react-icons/lu";
-import { FaRegComment } from "react-icons/fa";
 
 function HomePage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const navigate = useNavigate();
   
   // 이미지 경로 배열
   const images = Array.from({ length: 9 }, (_, i) => `/resources/img/homepage_img${i + 1}.png`);
   
+  // 자동 슬라이드 기능
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
@@ -34,25 +30,6 @@ function HomePage() {
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
   
-  // 도시 카드 클릭 핸들러
-  const handleDestinationClick = (cityName) => {
-    // /schedule 페이지로 이동하면서 검색할 도시 이름 전달
-    navigate('/schedule', { state: { searchCity: cityName } });
-  };
-  
-
-  const [popularPosts, setPopularPosts] = useState([]);
-
-    useEffect(() => {
-      api.get('/community/list')
-        .then(res => {
-          const sorted = [...res.data].sort((a, b) =>
-            (b.likeCount + b.commentCount) - (a.likeCount + a.commentCount)
-          );
-          setPopularPosts(sorted.slice(0, 3));
-        });
-    }, []);
-
   return (
     <div className="home-page">
       <div className="content-container">
@@ -108,38 +85,22 @@ function HomePage() {
         <div className="popular-destinations">
           <h2>인기 여행지</h2>
           <div className="destinations-grid">
-            <div 
-              className="destination-card" 
-              onClick={() => handleDestinationClick('파리')}
-              style={{ cursor: 'pointer' }}
-            >
+            <div className="destination-card">
               <img src="/resources/img/paris.jpg" alt="파리" />
               <h3>파리</h3>
               <p>프랑스의 아름다운 수도</p>
             </div>
-            <div 
-              className="destination-card" 
-              onClick={() => handleDestinationClick('도쿄')}
-              style={{ cursor: 'pointer' }}
-            >
+            <div className="destination-card">
               <img src="/resources/img/tokyo.jpg" alt="도쿄" />
               <h3>도쿄</h3>
               <p>일본의 활기찬 도시</p>
             </div>
-            <div 
-              className="destination-card" 
-              onClick={() => handleDestinationClick('뉴욕')}
-              style={{ cursor: 'pointer' }}
-            >
+            <div className="destination-card">
               <img src="/resources/img/newyork.jpg" alt="뉴욕" />
               <h3>뉴욕</h3>
               <p>잠들지 않는 도시</p>
             </div>
-            <div 
-              className="destination-card" 
-              onClick={() => handleDestinationClick('로마')}
-              style={{ cursor: 'pointer' }}
-            >
+            <div className="destination-card">
               <img src="/resources/img/rome.jpg" alt="로마" />
               <h3>로마</h3>
               <p>이탈리아의 역사적인 도시</p>
@@ -148,8 +109,7 @@ function HomePage() {
         </div>
         
         <div className="travel-tips">
-<<<<<<< HEAD
-          <h2>인기게시물</h2>
+          <h2>여행 팁</h2>
           <div className="tips-grid">
             <div className="tip-card">
               <h3>여행 준비물</h3>
@@ -158,35 +118,16 @@ function HomePage() {
             </div>
             <div className="tip-card">
               <h3>환전 팁</h3>
-              <p>정확한 환율을 실시간으로 찾아보기</p>
+              <p>가장 좋은 환율을 얻는 방법</p>
               <Link to="/exchange" className="tip-link">자세히 보기</Link>
             </div>
-
-            {popularPosts.map((post) => (
-              <Link to={`/community/${post.id}`} className="tip-card" key={post.id}>
-                <h4 className="post-title">{post.title}</h4>
-                <p className="post-preview">{post.content.slice(0, 50)}...</p>
-              </Link>
-            ))}
-
+            <div className="tip-card">
+              <h3>안전 여행</h3>
+              <p>해외여행 시 알아야 할 안전 수칙</p>
+              <Link to="/safety" className="tip-link">자세히 보기</Link>
+            </div>
           </div>
-=======
-  <h2>인기게시물</h2>
-  <div className="tips-grid">
-    {popularPosts.map((post) => (
-      <Link to={`/community/${post.id}`} className="tip-card" key={post.id}>
-        <h4 className="post-title">{post.title}</h4>
-        <p className="post-preview">{post.content.slice(0, 50)}...</p>
-        <div className="post-stats">
-          <span><AiOutlineLike /> {post.likeCount}</span>
-          <span><LuEye /> {post.viewCount}</span>
-          <span><FaRegComment /> {post.commentCount}</span>
->>>>>>> 4a05cbfc1cd12937e9315fbeaae4552980abec63
         </div>
-      </Link>
-    ))}
-  </div>
-</div>
       </div>
     </div>
   );
