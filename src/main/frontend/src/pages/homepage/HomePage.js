@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './HomePage.css';
+import api from '../../api';
+import { AiOutlineLike } from 'react-icons/ai';
+import { LuEye } from 'react-icons/lu';
+import { FaRegComment } from 'react-icons/fa';
 
 function HomePage() {
   const navigate = useNavigate();
@@ -31,12 +35,27 @@ function HomePage() {
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
   
+
+  const [popularPosts, setPopularPosts] = useState([]);
+
+    useEffect(() => {
+      api.get('/community/list')
+        .then(res => {
+          const sorted = [...res.data].sort((a, b) =>
+            (b.likeCount + b.commentCount) - (a.likeCount + a.commentCount)
+          );
+          setPopularPosts(sorted.slice(0, 3));
+        });
+    }, []);
+
+
   const navigateAndScrollTop = (to, e) => {
     e.preventDefault();
     navigate(to);
     window.scrollTo(0, 0);
   };
   
+
   return (
     <div className="home-page">
       <div className="content-container">
@@ -116,22 +135,25 @@ function HomePage() {
         </div>
         
         <div className="travel-tips">
-          <h2>여행 팁</h2>
-          <div className="tips-grid">
-            <div className="tip-card">
-              <h3>여행 준비물</h3>
-              <p>여행 전 꼭 챙겨야 할 필수 아이템들</p>
-              <Link to="/checklist" className="tip-link" onClick={(e) => navigateAndScrollTop('/checklist', e)}>자세히 보기</Link>
-            </div>
-            <div className="tip-card">
-              <h3>환전 팁</h3>
-              <p>가장 빠르고 정확한 환율 보러 가기</p>
-              <Link to="/exchange" className="tip-link" onClick={(e) => navigateAndScrollTop('/exchange', e)}>자세히 보기</Link>
-            </div>
-          </div>
+
+                <h2>인기게시물 ✨</h2>
+        <div className="tips-grid">
+          {popularPosts.map((post) => (
+            <Link to={`/community/${post.id}`} className="tip-card" key={post.id}>
+              <h4 className="post-title">{post.title}</h4>
+              <p className="post-preview">{post.content.slice(0, 50)}...</p>
+              <div className="post-stats">
+                <span><AiOutlineLike /> {post.likeCount}</span>
+                <span><LuEye /> {post.viewCount}</span>
+                <span><FaRegComment /> {post.commentCount}</span>
+              </div>
+            </Link>
+          ))}
+
         </div>
       </div>
     </div>
+  </div>
   );
 }
 
