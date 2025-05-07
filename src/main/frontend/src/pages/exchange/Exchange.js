@@ -10,9 +10,9 @@ const Exchange = () => {
     timestamp: ''
   });
   const [conversionData, setConversionData] = useState({
-    from: 'USD',
-    to: 'KRW',
-    amount: 1,
+    from: 'KRW',
+    to: 'USD',
+    amount: 1000,
     result: 0,
     date: ''
   });
@@ -169,7 +169,7 @@ const Exchange = () => {
 
   return (
     <div className="exchange-container">
-      <h1>환율 정보 서비스</h1>
+      {/* <h1>환율 정보 서비스</h1> */}
       
       {error && <div className="error-message">{error}</div>}
       

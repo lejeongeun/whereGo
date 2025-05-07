@@ -14,14 +14,11 @@ const ChangePwd = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // 비밀번호 확인 검증
     if (newPassword !== confirmPassword) {
       setError('새 비밀번호와 확인 비밀번호가 일치하지 않습니다.');
       return;
     }
-
     try {
-      // 백엔드 API와 필드명 일치시킴
       const response = await api.post('/changePwd', {
         oldPassword: oldPassword,
         newPassword: newPassword,
@@ -29,10 +26,9 @@ const ChangePwd = () => {
       });
       
       setSuccess('비밀번호가 성공적으로 변경되었습니다.');
-      // 성공 후 3초 뒤에 마이페이지로 리다이렉트
       setTimeout(() => {
         navigate('/mypage');
-      }, 3000);
+      }, 2000);
     } catch (err) {
       setError(err || '비밀번호 변경에 실패했습니다.');
     }

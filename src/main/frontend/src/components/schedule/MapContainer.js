@@ -137,9 +137,6 @@ const MapContainer = ({ setSelectedPlace, selectedPlace }) => {
         case 'restaurants':
           results = await travelAdvisorAPI.getRestaurants(bounds);
           break;
-        case 'hotels':
-          results = await travelAdvisorAPI.getHotels(bounds);
-          break;
         case 'attractions':
           results = await travelAdvisorAPI.getAttractions(bounds);
           break;
