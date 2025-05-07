@@ -37,6 +37,7 @@ function CommunityPostItem({
     : content;
 
     return (
+      <div className="community-post-item"> 
       <div className="post-card">
         <Link
           to={`/community/${id}`}
@@ -84,8 +85,8 @@ function CommunityPostItem({
               <span><FaRegComment /> {commentCount}</span>
             </div>
           </div>
-
         </Link>
+      </div>
       </div>
     );
   }

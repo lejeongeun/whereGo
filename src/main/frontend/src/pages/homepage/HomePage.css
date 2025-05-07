@@ -201,7 +201,7 @@
 }
 
 .post-title {
-  margin-left: 14px;
+  margin-left: 14px !important;
 }
 
 .tip-card {

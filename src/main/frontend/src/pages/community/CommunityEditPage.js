@@ -15,15 +15,21 @@ function CommunityEditPage() {
 
   useEffect(() => {
     api.get(`/community/${id}`)
-    .then(res => {
-      console.log("🔥 전체 응답:", res.data);
-      const images = res.data.imageUrls;
-      console.log("✅ imageUrls:", images); // ⬅️ 이 줄 꼭 넣기
-      setTitle(res.data.title);
-      setContent(res.data.content);
-      setExistingImages(images);
-    })
-    .catch(err => console.error('❌ 가져오기 실패:', err));;
+      .then(res => {
+        console.log("🔥 전체 응답:", res.data);
+        console.log("🔥 이미지 응답:", res.data.imageUrls);
+        let images = res.data.imageUrls;
+  
+        // 문자열 배열일 경우 객체 배열로 변환
+        if (typeof images[0] === 'string') {
+          images = images.map((url, index) => ({ id: index, url }));
+        }
+  
+        setTitle(res.data.title);
+        setContent(res.data.content);
+        setExistingImages(images);
+      })
+      .catch(err => console.error('❌ 가져오기 실패:', err));
   }, [id]);
 
   const handleImageDeleteToggle = (id) => {
@@ -43,8 +49,11 @@ function CommunityEditPage() {
     newImages.forEach(img => formData.append('images', img));
 
     // 삭제할 이미지 ID들
-    deleteImageIds.forEach(id => formData.append('deleteImageIds', id));
-
+    formData.append(
+      "deleteImageIds",
+      new Blob([JSON.stringify(deleteImageIds)], { type: "application/json" })
+    );
+    
     api.put(`/community/${id}/edit`, formData)
       .then(() => {
         alert('게시글이 수정되었습니다.');
