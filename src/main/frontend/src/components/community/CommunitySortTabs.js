@@ -1,29 +1,29 @@
-import './CommunitySortTabs.css';
+import './css/CommunitySortTabs.css';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 
-function CommunitySortTabs() {
-  const [activeTab, setActiveTab] = useState('최신순');
+function CommunitySortTabs({ onSort }) {
+  const [activeTab, setActiveTab] = useState('최신순'); 
+  const tabs = ['최신순', '답변많은순', '좋아요순', '인기순'];
 
-  const tabs = ['최신순', '정확도순', '답변많은순', '좋아요순'];
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);  
+    onSort(tab);  
+  };
 
   return (
     <div className="sort-tabs-container">
       <div className="sort-tabs">
-        {tabs.map((tab, index) => (
+        {tabs.map((tab, i) => (
           <span
             key={tab}
             className={`tab-item ${activeTab === tab ? 'active' : ''}`}
-            onClick={() => setActiveTab(tab)}
+            onClick={() => handleTabClick(tab)} 
           >
             {tab}
-            {index < tabs.length - 1 && <span className="dot">·</span>}
+            {i < tabs.length - 1 && <span className="dot">·</span>}
           </span>
         ))}
       </div>
-      <Link to="/community/write">
-        <button className="write-button">✏️ 글쓰기</button>
-      </Link>
     </div>
   );
 }

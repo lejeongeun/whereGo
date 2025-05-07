@@ -163,4 +163,50 @@
 .add-checklist-button:hover {
   transform: scale(1.1);
   background-color: #357ABD;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.custom-dark-pagination,
+.custom-dark-pagination .pagination {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.custom-dark-pagination .page-link {
+  padding: 0.3rem 0.8rem;
+  border: 1px solid #ccc;
+  background-color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #333;
+  text-decoration: none;
+}
+
+.custom-dark-pagination .page-item.disabled .page-link {
+  color: #aaa;
+  border-color: #eee;
+  cursor: not-allowed;
+  background-color: #fafafa;
+}
+
+.custom-dark-pagination .page-item.active .page-link {
+  background-color: rgb(238, 238, 238);
+  border-color: rgb(224, 224, 224);
+  color: #333;
+}
+
+.custom-dark-pagination .page-link:hover {
+  background-color: rgb(238, 238, 238);
+  border-color: rgb(224, 224, 224);
+}
+
+.custom-dark-pagination .visually-hidden {
+  display: none !important;
 } 

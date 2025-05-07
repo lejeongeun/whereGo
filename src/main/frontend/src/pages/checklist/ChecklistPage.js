@@ -1,104 +1,184 @@
+//
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { checklistApi } from '../../api/checklistApi';
 import { AiOutlinePlus } from 'react-icons/ai';
 import NewChecklistPage from './NewChecklistPage';
 import ChecklistListPage from './ChecklistListPage';
 import './ChecklistPage.css';
+// import axios from 'axios';
 
 const ChecklistPage = () => {
-  const [checklists, setChecklists] = useState([]);
+  const navigate = useNavigate();
+  const [checklistGroups, setChecklistGroups] = useState(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [initialized, setInitialized] = useState(false);
+  const [error, setError] = useState(null);
 
-  // localStorage에서 체크리스트 데이터 불러오기 (컴포넌트 마운트 시 1회만 실행)
+  // 로그인 상태 체크
   useEffect(() => {
-    try {
-      const savedChecklists = localStorage.getItem('checklists');
-      if (savedChecklists) {
-        const parsedChecklists = JSON.parse(savedChecklists);
-        if (Array.isArray(parsedChecklists)) {
-          setChecklists(parsedChecklists);
-          console.log('Loaded checklists from localStorage:', parsedChecklists);
-        }
-      }
-    } catch (error) {
-      console.error('Error loading checklists from localStorage:', error);
-    }
-    setInitialized(true);
-  }, []);
- 
-  // 체크리스트 데이터가 변경될 때마다 localStorage에 저장
-  useEffect(() => {
-    // 초기화가 완료된 후에만 저장 실행
-    if (initialized) {
-      try {
-        console.log('Saving checklists to localStorage:', checklists);
-        localStorage.setItem('checklists', JSON.stringify(checklists));
-      } catch (error) {
-        console.error('Error saving checklists to localStorage:', error);
-      }
-    }
-  }, [checklists, initialized]);
-
-  const handleSaveChecklist = (checklist) => {
-    if (!checklist.title.trim() || checklist.items.length === 0) {
-      alert('제목과 최소 1개 이상의 항목이 필요합니다.');
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
       return;
     }
+  }, [navigate]);
 
-    const newChecklist = {
-      id: checklists.length > 0 ? Math.max(...checklists.map(list => list.id)) + 1 : 1,
-      title: checklist.title,
-      items: checklist.items.map((item, index) => ({
-        id: index + 1,
-        text: item.text,
-        checked: item.checked
-      }))
+  // 체크리스트 그룹 불러오기
+  useEffect(() => {
+    const fetchChecklistGroups = async () => {
+      try {
+        const groups = await checklistApi.getAllGroups();
+        // 데이터 구조 확인 및 수정
+        const formattedGroups = groups.map(group => ({
+          ...group,
+          items: group.items.map(item => ({
+            ...item,
+            id: item.id || item.checklistId, // id가 없는 경우 checklistId 사용
+            isChecked: item.isChecked || false
+          }))
+        }));
+        setChecklistGroups(formattedGroups);
+      } catch (err) {
+        if (err.response && err.response.status === 401) {
+          localStorage.removeItem('token');
+          navigate('/login');
+          return;
+        }
+        setError('체크리스트를 불러오는데 실패했습니다.');
+        console.error(err);
+      }
     };
 
-    setChecklists([...checklists, newChecklist]);
-    setIsModalOpen(false);
-  };
+    const token = localStorage.getItem('token');
+    if (token) {
+      fetchChecklistGroups();
+    }
+  }, [navigate]);
 
-  const handleDeleteChecklist = (id) => {
-    setChecklists(checklists.filter(list => list.id !== id));
-  };
-
-  const handleToggleItem = (checklistId, itemId) => {
-    setChecklists(checklists.map(list => {
-      if (list.id === checklistId) {
-        return {
-          ...list,
-          items: list.items.map(item => 
-            item.id === itemId ? { ...item, checked: !item.checked } : item
-          )
-        };
+  const handleSaveChecklist = async (checklist) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
       }
-      return list;
-    }));
+
+      const groupData = {
+        title: checklist.title,
+        items: checklist.items.map(item => ({
+          item: item.text,
+          isChecked: item.checked ?? false
+        }))
+      };
+      // console.log('저장되는 groupData:', groupData);
+      await checklistApi.createGroup(groupData);
+      
+      const updatedGroups = await checklistApi.getAllGroups();
+      setChecklistGroups(updatedGroups);
+      setIsModalOpen(false);
+    } catch (err) {
+      if (err.response && err.response.status === 401) {
+        localStorage.removeItem('token');
+        navigate('/login');
+        return;
+      }
+      setError('체크리스트 저장에 실패했습니다.');
+      console.error(err);
+    }
   };
 
-  const handleAddItem = (checklistId, newItem) => {
-    setChecklists(checklists.map(list => {
-      if (list.id === checklistId) {
-        return {
-          ...list,
-          items: [...list.items, newItem]
-        };
-      }
-      return list;
-    }));
+  const handleDeleteGroup = async (groupId) => {
+    try {
+      await checklistApi.deleteGroup(groupId);
+      const updatedGroups = await checklistApi.getAllGroups();
+      setChecklistGroups(updatedGroups);
+    } catch (err) {
+      setError('체크리스트 삭제에 실패했습니다.');
+      console.error(err);
+    }
   };
 
-  const handleDeleteItem = (checklistId, itemId) => {
-    setChecklists(checklists.map(list => {
-      if (list.id === checklistId) {
-        return {
-          ...list,
-          items: list.items.filter(item => item.id !== itemId)
-        };
+  const handleToggleItem = async (checklistId, itemId) => {
+    try {
+      if (!itemId) {
+        console.error('아이템 ID가 없습니다.');
+        return;
       }
-      return list;
-    }));
+
+      const checklist = checklistGroups.find(c => c.id === checklistId);
+      if (!checklist) {
+        console.error('체크리스트를 찾을 수 없습니다.');
+        return;
+      }
+
+      const item = checklist.items.find(i => i.id === itemId);
+      if (!item) {
+        console.error('항목을 찾을 수 없습니다.');
+        return;
+      }
+
+      await checklistApi.toggleItem(checklistId, itemId);
+      const updatedChecklists = checklistGroups.map(checklist => {
+        if (checklist.id === checklistId) {
+          return {
+            ...checklist,
+            items: checklist.items.map(item => 
+              item.id === itemId ? { ...item, isChecked: !item.isChecked } : item
+            )
+          };
+        }
+        return checklist;
+      });
+      setChecklistGroups(updatedChecklists);
+    } catch (error) {
+      console.error('항목 토글 중 오류 발생:', error);
+    }
+  };
+
+  const handleAddItem = async (groupId, newItem) => {
+    try {
+      await checklistApi.addItem(groupId, { item: newItem.text, isChecked: false });
+      const updatedGroups = await checklistApi.getAllGroups();
+      setChecklistGroups(updatedGroups);
+    } catch (err) {
+      setError('항목 추가에 실패했습니다.');
+      console.error(err);
+    }
+  };
+
+  const handleDeleteItem = async (checklistId, itemId) => {
+    try {
+      if (!itemId) {
+        console.error('아이템 ID가 없습니다.');
+        return;
+      }
+
+      const checklist = checklistGroups.find(c => c.id === checklistId);
+      if (!checklist) {
+        console.error('체크리스트를 찾을 수 없습니다.');
+        return;
+      }
+
+      const item = checklist.items.find(i => i.id === itemId);
+      if (!item) {
+        console.error('항목을 찾을 수 없습니다.');
+        return;
+      }
+
+      await checklistApi.deleteItem(checklistId, itemId);
+      const updatedChecklists = checklistGroups.map(checklist => {
+        if (checklist.id === checklistId) {
+          return {
+            ...checklist,
+            items: checklist.items.filter(item => item.id !== itemId)
+          };
+        }
+        return checklist;
+      });
+      setChecklistGroups(updatedChecklists);
+    } catch (error) {
+      console.error('항목 삭제 중 오류 발생:', error);
+    }
   };
 
   const EmptyState = () => (
@@ -109,13 +189,31 @@ const ChecklistPage = () => {
     </div>
   );
 
+  if (error) {
+    return (
+      <div className="checklist-container">
+        <h1>체크리스트</h1>
+        <div className="error-message">{error}</div>
+      </div>
+    );
+  }
+
+  if (checklistGroups === undefined) {
+    return (
+      <div className="checklist-container">
+        <h1>체크리스트</h1>
+        <div style={{ minHeight: '500px' }}></div>
+      </div>
+    );
+  }
+
   return (
     <div className="checklist-container">
       <h1>체크리스트</h1>
-      {checklists.length > 0 ? (
+      {checklistGroups.length > 0 ? (
         <ChecklistListPage
-          checklists={checklists}
-          onDeleteChecklist={handleDeleteChecklist}
+          checklists={checklistGroups}
+          onDeleteChecklist={handleDeleteGroup}
           onToggleItem={handleToggleItem}
           onAddItem={handleAddItem}
           onDeleteItem={handleDeleteItem}

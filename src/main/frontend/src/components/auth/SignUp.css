@@ -123,59 +123,6 @@
     text-align: center;
   }
   
-  .social-SignUp {
-    margin-top: 20px;
-    text-align: center;
-  }
-  
-  .social-SignUp p {
-    font-size: 14px;
-    color: #777;
-    margin-bottom: 15px;
-    position: relative;
-  }
-  
-  .social-SignUp p::before,
-  .social-SignUp p::after {
-    content: "";
-    display: inline-block;
-    width: 25%;
-    height: 1px;
-    background-color: #ddd;
-    vertical-align: middle;
-    margin: 0 10px;
-  }
-  
-  .social-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .social-button {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: opacity 0.3s;
-  }
-  
-  .social-button:hover {
-    opacity: 0.9;
-  }
-  
-  .social-button.google {
-    background-color: #fff;
-    color: #555;
-    border: 1px solid #ddd;
-  }
-  
-  .social-button.kakao {
-    background-color: #FEE500;
-    color: #3C1E1E;
-  }
-  
   /* 반응형 스타일 */
   @media (max-width: 480px) {
     .SignUp-card {

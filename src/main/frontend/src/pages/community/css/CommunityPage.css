@@ -1,0 +1,104 @@
+.community-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+}
+
+.community-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.sort-tabs-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.content-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.left-content {
+  flex: 4;
+  padding-right: 20px;
+}
+
+.post-list-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.right-sidebar {
+  flex: 1;
+  background-color: #f7f7f7;
+  padding: 20px;
+  position: sticky;
+  top: 20px;
+}
+
+.popular-posts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.popular-post-item {
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.popular-post-item h4 {
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+
+.popular-post-item p {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 5px;
+}
+
+.right-sidebar h3 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.bottom-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.write-button {
+  white-space: nowrap;
+  padding: 8px 16px;
+  font-weight: bold;
+  background-color: #4A90E2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.search-write-bar .write-button:hover {
+  background-color: #4c9dd3;
+}
+
+
+.search-write-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  gap: 12px;
+}

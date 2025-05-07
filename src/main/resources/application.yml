@@ -1,10 +1,20 @@
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 60m
+
+      cookie:
+        same-site: none
+        secure: true
+
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/wherego
     username: root
-    password: 7575
-
+    password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -12,3 +22,21 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  servlet:
+    multipart: # 파일 업로드 크기 제한 설정.
+      max-file-size: 20MB # 파일 최대 크기
+      max-request-size: 20MB # 요청 최대 크기
+  web:
+    resources:
+      static-locations: file:./uploads/,classpath:/static/ #디렉토리를 정적 리소스로 제공.
+
+file:
+  upload-dir: uploads # 파일 저장 디렉토리
+
+exchangerate:
+  api:
+    key: d220ecd90955e48da00bf0ce1be98552
+
+google:
+  map:
+    api_key: AIzaSyB63gpLTMYZ1RuMjpUq7S5AgnTL_B-DEXs

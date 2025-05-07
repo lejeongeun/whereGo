@@ -1,48 +1,81 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import './Login.css';
+import api from '../../api.js';
 
-function Login() {
+function Login(props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
-  const navigate = useNavigate();
+
+//  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
+    console.log('전송할 데이터:', { email, password });
     // 입력값 검증
     if (!email || !password) {
       setError('이메일과 비밀번호를 모두 입력해주세요.');
       return;
     }
-    
+
     try {
       setIsLoading(true);
       setError('');
-      
-      // 실제 구현에서는 여기서 API 호출
-      // 예시: const response = await loginUser(email, password);
-      
-      // 로그인 성공 처리 (임시 구현)
-      setTimeout(() => {
-        // 로컬 스토리지에 토큰 저장 (실제 구현에서는 API 응답에서 받은 토큰 사용)
-        localStorage.setItem('token', 'dummy-token');
-        localStorage.setItem('user', JSON.stringify({ email, name: '사용자' }));
+
+      // 로그인 API 호출
+      const response = await api.post('/login', { email, password });
+
+      // 로그인 성공 처리
+      if (response.data && response.data.email) {
+
+        // 사용자 정보와 토큰을 로컬 스토리지에 저장
+        localStorage.setItem('token', 'jwt-token-here'); // 백엔드에서 토큰을 제공한다면 response.data.token 사용
+        localStorage.setItem('user', JSON.stringify({ 
+          email: response.data.email,
+          nickname: response.data.nickname 
+        }));
+        localStorage.setItem('email', response.data.email);
         
-        // 홈페이지로 리다이렉트
-        navigate('/');
-        setIsLoading(false);
-      }, 1000);
+        console.log('로그인 성공 - 저장된 데이터:', {
+          token: localStorage.getItem('token'),
+          user: localStorage.getItem('user')
+        });
+        
+        // onLoginSuccess prop이 있으면 호출
+        if (typeof props?.onLoginSuccess === 'function') {
+          props.onLoginSuccess();
+        }
+        // 현재 경로가 /schedule이면 새로고침, 아니면 메인화면으로 이동
+        if (window.location.pathname === '/schedule') {
+          window.location.reload();
+        } else {
+          window.location.href = '/';
+        }
+      }
+  
+    } catch (error) {
+      console.error('로그인 오류:', error);
       
-    } catch (err) {
-      setError('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
+      // HTTP 상태 코드로 오류 구분
+      if (error.response) {
+        if (error.response.status === 401) {
+          setError('이메일 또는 비밀번호가 잘못되었습니다.');
+        } else {
+          setError(error.response.data?.message || '로그인 중 오류가 발생했습니다.');
+        }
+      } else if (error.request) {
+        setError('서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.');
+      } else {
+        setError('로그인 요청 생성 중 오류가 발생했습니다.');
+      }
+    } finally {
       setIsLoading(false);
     }
   };
-
   return (
     <div className="login-container">
       <div className="login-card">
@@ -76,7 +109,7 @@ function Login() {
           </div>
           
           <div className="forgot-password">
-            <Link to="/forgot-password">비밀번호를 잊으셨나요?</Link>
+            <Link to="/findPwd">비밀번호를 잊으셨나요?</Link>
           </div>
           
           <button 
@@ -89,19 +122,7 @@ function Login() {
         </form>
         
         <div className="register-link">
-          계정이 없으신가요? <Link to="/register">회원가입</Link>
-        </div>
-        
-        <div className="social-login">
-          <p>또는 소셜 계정으로 로그인</p>
-          <div className="social-buttons">
-            <button className="social-button google">
-              Google로 로그인
-            </button>
-            <button className="social-button kakao">
-              Kakao로 로그인
-            </button>
-          </div>
+          계정이 없으신가요? <Link to="/signUp">회원가입</Link>
         </div>
       </div>
     </div>

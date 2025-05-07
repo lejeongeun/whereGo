@@ -1,0 +1,36 @@
+.community-search-form {
+  all: unset; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 1.5rem 0;
+  width:100%;
+}
+
+.community-search-input {
+  flex: 1;
+  max-width: 400px;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-left: 140px; 
+}
+
+.community-search-button {
+  background-color: #4A90E2; /* 파란 계열 (사이트 메인색과 유사) */
+  color: #ffffff; /* 흰색 텍스트 */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px; /* 둥근 모서리 */
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1); /* 약간의 그림자 */
+}
+
+.community-search-button:hover {
+  background-color: #609bdf; 
+}

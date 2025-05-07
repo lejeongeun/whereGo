@@ -1,25 +1,61 @@
+import { useState } from 'react';
 import CommunityPostItem from './CommunityPostItem';
+import './css/CommunityPostList.css';
 
-const posts = [
-  {
-    id: 1,
-    title: '타입체크 관련질문입니다.',
-    content: 'npm install -D vue-tsc 했는데 타입체크가 안 돼요.',
-    author: '김창훈',
-    time: '10분 전',
-    likes: 0,
-    views: 1,
-    comments: 0,
-  },
-];
+function CommunityPostList({ posts, isSearching }) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 5;
 
-function CommunityPostList() {
+  if (!posts || posts.length === 0) {
+    return (
+      <div className="no-posts">
+        {isSearching ? '검색 결과가 없습니다.' : '등록된 게시글이 없습니다.'}
+      </div>
+    );
+  }
+
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+
+  const totalPages = Math.ceil(posts.length / postsPerPage);
+
+  const goToPrevPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
   return (
-    <div>
-      {posts.map((post, index) => (
-        <CommunityPostItem key={index} {...post} />
+    <div className="post-list">
+      {currentPosts.map(post => (
+        <CommunityPostItem key={post.id} {...post} />
       ))}
+
+      <div className="pagination">
+        <button onClick={goToPrevPage} disabled={currentPage === 1}>
+          이전
+        </button>
+
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              onClick={() => setCurrentPage(i + 1)} 
+              className={currentPage === i + 1 ? 'active' : ''}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+        <button onClick={goToNextPage} disabled={currentPage === totalPages}>
+          다음
+        </button>
+      </div>
     </div>
+    
   );
 }
+
 export default CommunityPostList;
