@@ -96,10 +96,8 @@ function Navbar() {
       webSocketFactory: () => socket,
       reconnectDelay: 5000,
       onConnect: () => {
-        console.log('웹소켓 연결 완료');
         // 사용자 개인 구독 채널
         client.subscribe(`/topic/notifications/${member.email}`, (message) => {
-          console.log('📩 알림 도착:', message.body);
           setMessages(prev => [...prev, message.body]);
           setHasNewNotification(true); // 새 알림 표시
         });
