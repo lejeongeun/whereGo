@@ -784,4 +784,40 @@
 
 li:hover .place-delete-btn {
   display: block;
+}
+
+.recommended-scrollbar::-webkit-scrollbar {
+  height: 12px;
+}
+.recommended-scrollbar::-webkit-scrollbar-thumb {
+  background: #a0a7b1;
+  border-radius: 6px;
+}
+.recommended-scrollbar::-webkit-scrollbar-track {
+  background: #f0f4ff;
+  border-radius: 6px;
+}
+
+/* Firefox */
+.recommended-scrollbar {
+  scrollbar-color: #a0a7b1 #f0f4ff;
+  scrollbar-width: thin;
+}
+
+.daytab-scrollbar::-webkit-scrollbar {
+  height: 12px;
+}
+.daytab-scrollbar::-webkit-scrollbar-thumb {
+  background: #a0a7b1;
+  border-radius: 6px;
+}
+.daytab-scrollbar::-webkit-scrollbar-track {
+  background: #fff;
+  border-radius: 6px;
+}
+
+/* Firefox */
+.daytab-scrollbar {
+  scrollbar-color: #a0a7b1 #fff;
+  scrollbar-width: thin;
 } 

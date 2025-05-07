@@ -22,6 +22,7 @@ public class CommunityResponseDto {
     private int likeCount;
     private int commentCount;
 
-    private List<CommunityImage> imageUrls; // 다중 이미지 지원
+    private List<ImageDto> imageUrls; // 다중 이미지 지원
     private String profileImage;
+    private String email; // 작성자 이메일
 }

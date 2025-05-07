@@ -7,6 +7,7 @@ import com.google.maps.model.PlacesSearchResponse;
 import org.project.wherego.map.domain.Place;
 import org.project.wherego.map.dto.PlaceSaveRequestDto;
 import org.project.wherego.map.dto.PlaceSearchResponse;
+import org.project.wherego.map.dto.PlaceOrderUpdateRequest;
 import org.project.wherego.map.repository.PlaceRepository;
 import org.project.wherego.member.domain.Member;
 import org.project.wherego.member.repository.MemberRepository;
@@ -67,6 +68,7 @@ public class PlaceService {
                 .address(dto.getAddress())
                 .latitude(dto.getLatitude())
                 .longitude(dto.getLongitude())
+                .imageUrl(dto.getImageUrl())
                 .member(member)
                 .schedule(schedule)
                 .dayNumber(dto.getDayNumber())
@@ -101,5 +103,15 @@ public class PlaceService {
         }
 
         placeRepository.delete(place);
+    }
+
+    @Transactional
+    public void reorderPlaces(List<PlaceOrderUpdateRequest> orderList) {
+        for (PlaceOrderUpdateRequest req : orderList) {
+            Place place = placeRepository.findById(req.getId())
+                .orElseThrow(() -> new IllegalArgumentException("장소를 찾을 수 없습니다."));
+            place.setOrder(req.getOrder());
+            // JPA dirty checking으로 자동 저장
+        }
     }
 }
