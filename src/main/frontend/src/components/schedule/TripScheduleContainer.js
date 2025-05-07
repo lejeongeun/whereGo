@@ -90,11 +90,6 @@ function TripScheduleContainer() {
   };
 
   const handleAddToSchedule = async (place) => {
-    // console.log('Adding place to schedule:', {
-    //   place,
-    //   scheduleId,
-    //   selectedDay
-    // });
 
     if (!scheduleId) {
       alert('일정이 먼저 생성되어야 합니다.');
