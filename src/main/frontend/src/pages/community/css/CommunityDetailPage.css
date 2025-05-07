@@ -133,11 +133,10 @@
 }
 
 .post-profile-image {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   object-fit: cover;
-  background-color: #f0f0f0;
   margin-right: 8px;
 }
 
