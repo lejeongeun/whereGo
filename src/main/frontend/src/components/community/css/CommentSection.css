@@ -205,9 +205,15 @@
   align-items: center;
 }
 
-.comment-time-under {
+.comment-time-top {
   font-size: 0.8rem;
   color: #999;
   margin-top: 10px;
+  margin-left: 2px;
+}
+
+.comment-time-under {
+  font-size: 0.8rem;
+  color: #999;
   margin-left: 2px;
 }
