@@ -5,7 +5,6 @@ import { deletePost } from '../../api/communityApi';
 import api from '../../api';
 import CommentSection from '../../components/community/CommentSection';
 import { BsPersonCircle } from 'react-icons/bs';
-
 import { AiOutlineLike } from "react-icons/ai";
 import { LuEye } from "react-icons/lu";
 import { FaRegComment } from "react-icons/fa";
@@ -14,8 +13,11 @@ function CommunityDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
-  const loggedInEmail = localStorage.getItem('email');
   const [showMenu, setShowMenu] = useState(false);
+
+  const token = localStorage.getItem('token');
+  const loggedInEmail = localStorage.getItem('email');
+  const isLoggedIn = !!token;
 
   useEffect(() => {
     api.get(`/community/${id}`)
@@ -26,7 +28,7 @@ function CommunityDetailPage() {
         alert('게시글 불러오기 실패');
         navigate('/community');
       });
-  }, [id, navigate, loggedInEmail]);
+  }, [id, navigate]);
 
   if (!post) return <div>로딩중...</div>;
 
@@ -34,7 +36,10 @@ function CommunityDetailPage() {
     title, content, nickname, createdAt,
     likeCount, viewCount, commentCount,
     imageUrls, profileImage,
+    email: authorEmail,
   } = post;
+
+  const isAuthor = isLoggedIn && loggedInEmail === authorEmail;
 
   const handleEdit = () => {
     navigate(`/community/${id}/edit`, { state: { title, content, imageUrls } });
@@ -59,17 +64,15 @@ function CommunityDetailPage() {
       <h2 className="detail-title">{title}</h2>
       <div className="detail-meta">
         <div className="detail-author">
-
-        {typeof profileImage === 'string' && profileImage.trim() !== '' ? (
-  <img
-    src={`http://localhost:8080${profileImage.slice(profileImage.indexOf('/uploads/'))}`}
-    alt={`${nickname}님의 프로필`}
-    className="post-profile-image"
-  />
-) : (
-  <BsPersonCircle className="post-profile-image" size={32} color="#6c757d" />
-)}
-
+          {typeof profileImage === 'string' && profileImage.trim() !== '' ? (
+            <img
+              src={`http://localhost:8080${profileImage.slice(profileImage.indexOf('/uploads/'))}`}
+              alt={`${nickname}님의 프로필`}
+              className="post-profile-image"
+            />
+          ) : (
+            <BsPersonCircle className="post-profile-image" size={32} color="#6c757d" />
+          )}
           <span className="author">{nickname}</span>
         </div>
 
@@ -78,32 +81,30 @@ function CommunityDetailPage() {
             <span className="time">{new Date(createdAt).toLocaleString()}</span>
             <span className="views"><LuEye /> {viewCount}</span>
           </div>
-
-
         </div>
       </div>
 
       <div className="detail-body">
-  <div className="detail-like-row">
-    <div className="detail-like">
-      <button onClick={handleLike} className="like-icon-button">
-        <AiOutlineLike /> {likeCount}
-      </button>
-      <span><FaRegComment /> {commentCount}</span>
-    </div>
-
-    {loggedInEmail && post?.email?.trim() === loggedInEmail.trim() && (
-      <div className="more-options-container">
-        <button className="more-button" onClick={() => setShowMenu(prev => !prev)}>⋯</button>
-        {showMenu && (
-          <div className="more-menu">
-            <button onClick={handleEdit} className="edit-button">수정</button>
-            <button onClick={handleDelete} className="delete-button">삭제</button>
+        <div className="detail-like-row">
+          <div className="detail-like">
+            <button onClick={handleLike} className="like-icon-button">
+              <AiOutlineLike /> {likeCount}
+            </button>
+            <span><FaRegComment /> {commentCount}</span>
           </div>
-        )}
-      </div>
-    )}
-  </div>
+
+          {isAuthor && (
+            <div className="more-options-container">
+              <button className="more-button" onClick={() => setShowMenu(prev => !prev)}>⋯</button>
+              {showMenu && (
+                <div className="more-menu">
+                  <button onClick={handleEdit} className="edit-button">수정</button>
+                  <button onClick={handleDelete} className="delete-button">삭제</button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         {Array.isArray(imageUrls) && imageUrls.length > 0 && (
           <div className="detail-images">
@@ -124,7 +125,7 @@ function CommunityDetailPage() {
         </div>
       </div>
 
-      <CommentSection postId={id} />
+      <CommentSection postId={id} isLoggedIn={isLoggedIn} currentUserEmail={loggedInEmail} />
     </div>
   );
 }
