@@ -10,7 +10,6 @@ function Login(props) {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-//  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

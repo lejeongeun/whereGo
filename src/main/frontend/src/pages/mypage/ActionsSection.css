@@ -1,0 +1,95 @@
+/* 액션 섹션 스타일 */
+.actions-section {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+  }
+  
+  @media (min-width: 768px) {
+    .actions-section {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+  
+  .action-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-weight: 500;
+    width: 100%;
+    font-size: 14px;
+  }
+  
+  @media (min-width: 768px) {
+    .action-button {
+      width: 48%;
+    }
+  }
+  
+  .action-button:hover {
+    background-color: #0069d9;
+  }
+  
+  .delete-account {
+    background-color: #dc3545;
+  }
+  
+  .delete-account:hover {
+    background-color: #c82333;
+  }
+  
+  /* 비밀번호 변경 버튼 스타일 */
+  .submit-button {
+    background-color: #4285f4; /* 파란색 계열 */
+    color: white;
+    border: 1px solid #3367d6;
+    padding: 10px 16px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 8px;
+  }
+  
+  .submit-button:hover {
+    background-color: #3367d6;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .cancel-button {
+    background-color: #f5f5f5; /* 흰색/회색 계열 */
+    color: #3c4043;
+    border: 1px solid #dadce0;
+    padding: 10px 16px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 8px;
+  }
+  
+  .cancel-button:hover {
+    background-color: #e8e8e8;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .cancel-button:active {
+    background-color: #dadce0;
+    transform: translateY(1px);
+  }

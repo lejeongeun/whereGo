@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { AiOutlineLike } from "react-icons/ai";
 import { LuEye } from "react-icons/lu";
 import { FaRegComment } from "react-icons/fa";
+import { BsPersonCircle } from 'react-icons/bs';
 
 function getRelativeTime(createdAt) {
   const now = new Date();
@@ -52,15 +53,17 @@ function CommunityPostItem({
         >
           <div className="post-left">
             <div className="post-header">
-            <img
-              src={
-                typeof profileImage === 'string' && profileImage.trim() !== ''
-                  ? `http://localhost:8080${profileImage.slice(profileImage.indexOf('/uploads/'))}`
-                  : '/default-profile.png'
-              }
-              alt={`${nickname}님의 프로필`}
-              className="post-profile-image"
-            />
+
+            {typeof profileImage === 'string' && profileImage.trim() !== '' ? (
+  <img
+    src={profileImage.slice(profileImage.indexOf('/uploads/'))}
+    alt={`${nickname}님의 프로필`}
+    className="post-profile-image"
+  />
+) : (
+  <BsPersonCircle className="post-profile-icon" size={32} color="#999" />
+)}
+
               <span className="author-name">{nickname}</span>
             </div>
             <strong className="post-title">{title}</strong>

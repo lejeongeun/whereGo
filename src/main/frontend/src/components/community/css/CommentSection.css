@@ -184,6 +184,7 @@
   margin-right: 8px;
   display: inline-block;
   margin-top: 5px;
+  margin-bottom: 10px;
 }
 
 .comment-header-left {
@@ -205,9 +206,15 @@
   align-items: center;
 }
 
-.comment-time-under {
+.comment-time-top {
   font-size: 0.8rem;
   color: #999;
   margin-top: 10px;
+  margin-left: 2px;
+}
+
+.comment-time-under {
+  font-size: 0.8rem;
+  color: #999;
   margin-left: 2px;
 }
