@@ -40,16 +40,20 @@ public class CommunityController {
     // 게시글 수정
     @PutMapping("/{id}/edit")
     public ResponseEntity<String> edit(@PathVariable Long id,
+                                       @AuthenticationPrincipal CustomUserDetails userDetails,
                                        @RequestPart("title") String title,
                                        @RequestPart("content") String content,
                                        @RequestPart(value = "images", required = false) List<MultipartFile> newImages,
                                        @RequestPart(value = "deleteImageIds", required = false) List<Long> deleteImageIds){
+        String email = userDetails.getMember().getEmail();
+
         CommunityRequestDto requestDto = CommunityRequestDto.builder()
                 .title(title)
                 .content(content)
                 .build();
 
-        communityService.edit(id, requestDto, newImages, deleteImageIds);
+
+        communityService.edit(id, email, requestDto, newImages, deleteImageIds);
         return ResponseEntity.ok("글 수정 완료");
     }
     // 게시글 전체 확인
@@ -60,18 +64,18 @@ public class CommunityController {
 
     // 하나의 게시물 조회
     @GetMapping("/{id}")
-    public ResponseEntity<CommunityResponseDto> getPost(@PathVariable Long id,
-                                                        @AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<CommunityResponseDto> getPost(@PathVariable Long id){
         communityService.increaseViewCount(id);
-        CommunityResponseDto post = communityService.getPosts(id, userDetails.getMember());
+        CommunityResponseDto post = communityService.getPosts(id);
         return ResponseEntity.ok(post);
 
     }
 
     // 게시글 삭제
     @DeleteMapping("/{id}/delete")
-    public ResponseEntity<String> delete (@PathVariable Long id){
-        communityService.delete(id);
+    public ResponseEntity<String> delete (@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
+        String email = userDetails.getMember().getEmail();
+        communityService.delete(id, email);
         return ResponseEntity.ok("게시글 삭제 완료");
     }
 
