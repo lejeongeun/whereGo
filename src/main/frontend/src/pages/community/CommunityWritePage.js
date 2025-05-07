@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { createPost } from '../../api/communityApi'; 
 import { useNavigate } from 'react-router-dom';
 import './css/CommunityWritePage.css';
 import api from '../../api'; 
@@ -7,7 +6,7 @@ import api from '../../api';
 function CommunityWritePage() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [image, setImage] = useState(null); 
+  const [images, setImages] = useState([]); 
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -16,26 +15,27 @@ function CommunityWritePage() {
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
-    if (image) {
-      formData.append('image', image); 
-    }
+
+    images.forEach((img) => {
+      formData.append('image', img); // ✅ 여러 장 첨부
+    });
 
     api.post('/community/create', formData, {
       headers: {'Content-Type': 'multipart/form-data'}
 
     })
     .then(() => {
-      alert('게시글이 수정되었습니다.');
+      alert('게시글이 생성되었습니다.');
       navigate('/community/');
     })
     .catch((err) => {
-      console.error('게시글 수정 실패:', err);
-      alert('수정 중 오류가 발생했습니다.');
+      console.error('게시글 생성 실패:', err);
+      alert('생성 중 오류가 발생했습니다.');
     });
 };
 
   const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
+    setImages([...e.target.files]);
   };
 
   return (
@@ -55,17 +55,18 @@ function CommunityWritePage() {
           className="content-textarea"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          style={{ width: '100%', height: '400px', resize: 'vertical', marginTop: '10px' }}
         />
 
         {/* 이미지 업로드 input 추가 */}
         <input
           type="file"
           accept="image/*"
+          multiple
           onChange={handleImageChange}
           className="image-input"
-          style={{ marginTop: '10px' }}
         />
+
+        {images && <p className="image-name">선택된 파일: {images.name}</p>}
 
         <div className="button-group">
           <button type="submit" className="submit-button">작성 완료</button>

@@ -1,4 +1,8 @@
-/* CommunityPage.css */
+.community-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+}
 
 .community-container {
   max-width: 1200px;
@@ -9,12 +13,12 @@
   flex-direction: column;
 }
 
-.top-bar {
+.sort-tabs-wrapper {
   display: flex;
+  justify-content: center;
   margin-bottom: 1rem;
 }
 
-/* 왼쪽 콘텐츠와 오른쪽 인기 게시물을 나누는 부분 */
 .content-wrapper {
   display: flex;
   justify-content: space-between;
@@ -26,13 +30,18 @@
   padding-right: 20px;
 }
 
+.post-list-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .right-sidebar {
   flex: 1;
   background-color: #f7f7f7;
   padding: 20px;
-  position: sticky;  /* 사이드바가 스크롤을 따라가도록 */
-  top: 20px;  /* 스크롤에 따라 올라오지 않도록 설정 */
-  
+  position: sticky;
+  top: 20px;
 }
 
 .popular-posts {
@@ -61,4 +70,35 @@
 .right-sidebar h3 {
   font-size: 1.5rem;
   margin-bottom: 20px;
+}
+
+.bottom-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.write-button {
+  white-space: nowrap;
+  padding: 8px 16px;
+  font-weight: bold;
+  background-color: #4A90E2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.search-write-bar .write-button:hover {
+  background-color: #4c9dd3;
+}
+
+
+.search-write-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  gap: 12px;
 }

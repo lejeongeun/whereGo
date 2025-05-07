@@ -56,6 +56,7 @@ function Navbar() {
     // 인증 관련 데이터만 삭제
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('email');
     setIsLoggedIn(false);
     setUser(null);
     window.dispatchEvent(new Event('loginStateChanged'));
