@@ -53,6 +53,7 @@ function Navbar() {
   }, []);
 
   const handleLogout = () => {
+<<<<<<< HEAD
     // 모든 사용자 관련 데이터 제거
     const keysToRemove = ['token', 'user', 'email', 'nickname'];
     
@@ -77,6 +78,12 @@ function Navbar() {
     }
     
     // 상태 초기화
+=======
+    // 인증 관련 데이터만 삭제
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('email');
+>>>>>>> 572434b3832888d8abbb6d74cd48fdf0fbbb41a7
     setIsLoggedIn(false);
     setMember(null);
     setMessages([]);

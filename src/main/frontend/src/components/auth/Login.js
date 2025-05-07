@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+<<<<<<< HEAD
+=======
+// import { useNavigate } from 'react-router-dom';
+>>>>>>> 572434b3832888d8abbb6d74cd48fdf0fbbb41a7
 import './Login.css';
 import api from '../../api.js';
 
@@ -9,7 +13,11 @@ function Login(props) {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+<<<<<<< HEAD
   // const navigate = useNavigate();
+=======
+//  const navigate = useNavigate();
+>>>>>>> 572434b3832888d8abbb6d74cd48fdf0fbbb41a7
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,8 +42,10 @@ function Login(props) {
         // 사용자 정보와 토큰을 로컬 스토리지에 저장
         localStorage.setItem('token', 'jwt-token-here'); // 백엔드에서 토큰을 제공한다면 response.data.token 사용
         localStorage.setItem('user', JSON.stringify({ 
-          email: response.data.email 
+          email: response.data.email,
+          nickname: response.data.nickname 
         }));
+        localStorage.setItem('email', response.data.email);
         
         console.log('로그인 성공 - 저장된 데이터:', {
           token: localStorage.getItem('token'),

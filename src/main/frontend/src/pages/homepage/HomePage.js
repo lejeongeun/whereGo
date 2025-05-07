@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './HomePage.css';
+import api from '../../api';
 
 function HomePage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -30,12 +31,27 @@ function HomePage() {
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
   
+<<<<<<< HEAD
   // 도시 카드 클릭 핸들러
   const handleDestinationClick = (cityName) => {
     // /schedule 페이지로 이동하면서 검색할 도시 이름 전달
     navigate('/schedule', { state: { searchCity: cityName } });
   };
   
+=======
+  const [popularPosts, setPopularPosts] = useState([]);
+
+    useEffect(() => {
+      api.get('/community/list')
+        .then(res => {
+          const sorted = [...res.data].sort((a, b) =>
+            (b.likeCount + b.commentCount) - (a.likeCount + a.commentCount)
+          );
+          setPopularPosts(sorted.slice(0, 3));
+        });
+    }, []);
+
+>>>>>>> 572434b3832888d8abbb6d74cd48fdf0fbbb41a7
   return (
     <div className="home-page">
       <div className="content-container">
@@ -131,7 +147,7 @@ function HomePage() {
         </div>
         
         <div className="travel-tips">
-          <h2>여행 팁</h2>
+          <h2>인기게시물</h2>
           <div className="tips-grid">
             <div className="tip-card">
               <h3>여행 준비물</h3>
@@ -143,6 +159,14 @@ function HomePage() {
               <p>정확한 환율을 실시간으로 찾아보기</p>
               <Link to="/exchange" className="tip-link">자세히 보기</Link>
             </div>
+
+            {popularPosts.map((post) => (
+              <Link to={`/community/${post.id}`} className="tip-card" key={post.id}>
+                <h4 className="post-title">{post.title}</h4>
+                <p className="post-preview">{post.content.slice(0, 50)}...</p>
+              </Link>
+            ))}
+
           </div>
         </div>
       </div>

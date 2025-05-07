@@ -5,22 +5,13 @@ function CommunitySearch({ onSearch }) {
   const [keyword, setKeyword] = useState('');
 
   const handleChange = (e) => {
-    const newKeyword = e.target.value;
-    setKeyword(newKeyword);
-    if (onSearch) {
-      onSearch(newKeyword); // 실시간 검색
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (onSearch) {
-      onSearch(keyword); // 버튼 누를 때 검색
-    }
+    const value = e.target.value;
+    setKeyword(value);
+    onSearch(value);
   };
 
   return (
-    <form className="community-search-form" onSubmit={handleSubmit}>
+    <div className="community-search-form">
       <input
         type="text"
         className="community-search-input"
@@ -29,7 +20,7 @@ function CommunitySearch({ onSearch }) {
         onChange={handleChange}
       />
       <button type="submit" className="community-search-button">검색</button>
-    </form>
+    </div>
   );
 }
 
