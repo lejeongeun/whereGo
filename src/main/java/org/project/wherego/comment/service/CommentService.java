@@ -62,6 +62,7 @@ public class CommentService {
                 .map(comment -> CommentResponseDto.builder()
                         .commentId(comment.getId())
                         .nickname(comment.getMember().getNickname())
+                        .email(comment.getMember().getEmail())
                         .content(comment.getContent())
                         .createdAt(comment.getCreatedAt())
                 .build()

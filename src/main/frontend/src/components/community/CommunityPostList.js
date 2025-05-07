@@ -2,9 +2,17 @@ import { useState } from 'react';
 import CommunityPostItem from './CommunityPostItem';
 import './css/CommunityPostList.css';
 
-function CommunityPostList({ posts }) {
+function CommunityPostList({ posts, isSearching }) {
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 5;
+
+  if (!posts || posts.length === 0) {
+    return (
+      <div className="no-posts">
+        {isSearching ? '검색 결과가 없습니다.' : '등록된 게시글이 없습니다.'}
+      </div>
+    );
+  }
 
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -46,6 +54,7 @@ function CommunityPostList({ posts }) {
         </button>
       </div>
     </div>
+    
   );
 }
 

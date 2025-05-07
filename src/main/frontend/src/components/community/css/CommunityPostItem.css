@@ -1,37 +1,41 @@
-a {
-  text-decoration: none;
-}
-.post-card {
+.community-post-item .post-card {
   border-bottom: 1px solid #e5e5e5;
   padding: 20px 0;
   font-family: 'Pretendard', sans-serif;
 }
 
-.post-link-horizontal {
+.community-post-item .post-link-horizontal {
+  text-decoration: none;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
+  align-items: stretch;
   width: 100%;
-  text-decoration: none;
   color: inherit;
 }
 
-.post-left {
-  flex: 1;
+.community-post-item .post-left {
+  flex: 1 1 0%;
   display: flex;
   flex-direction: column;
-  min-width: 0; /* 줄바꿈 허용 */
+  justify-content: space-between;
+  min-width: 0;
 }
 
-.post-header {
+.community-post-item .post-header {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-bottom: 8px;
 }
 
-.author-name {
+.community-post-item .post-profile-image {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.community-post-item .author-name {
   background-color: #f1f3f5;
   color: #4b5563;
   font-size: 0.75rem;
@@ -41,47 +45,67 @@ a {
   white-space: nowrap;
 }
 
-.post-title {
+.community-post-item .post-title {
   font-size: 1.05rem;
   color: #1f2937;
   font-weight: bold;
-  margin-bottom: 5px;
+  padding-top: 10px;
+  margin-top: 10px;
 }
 
-.post-content {
+.community-post-item .post-content {
   color: #4b5563;
   font-size: 0.95rem;
   margin-bottom: 8px;
+  width: auto;
+  margin-left: 14px;
 }
 
-.post-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.8rem;
+.community-post-item .post-meta {
   color: #9ca3af;
+  font-size: 0.85rem;
+  margin-top: 10px;
+  margin-left: 14px;
 }
 
-.post-stats span {
-  margin-left: 10px;
+.community-post-item .post-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  min-width: 170px;
+  min-width: 200px;
+  max-width: 200px;
+  flex-shrink: 0; /* 줄어들지 않게 고정 */
+  margin-left: 16px; 
 }
 
-.post-card .profile-image {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
+.community-post-item .thumbnail-wrapper {
+  width: 170px;
+  height: 140px;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
-.post-thumbnail {
-  width: 100px;
-  height: 100px;
-  flex-shrink: 0;
-}
-
-.thumbnail-image {
+.community-post-item .post-thumbnail {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 8px;
+}
+
+.community-post-item .thumbnail-placeholder {
+  width: 100%;
+  height: 140px;
+  background-color: transparent;
+}
+
+.community-post-item .post-stats {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin-top: auto;
+  margin-right: 35px;
 }

@@ -20,67 +20,74 @@ function getRelativeTime(createdAt) {
   
   return createdDate.toISOString().slice(0, 10);
 }
+
 function CommunityPostItem({
     id, title, content, nickname, createdAt,
     likeCount, viewCount, commentCount,
     profileImage, imageUrls
   }) {
-    console.log("🧩 post 데이터:", {
-      id, title, content, nickname, createdAt,
-      likeCount, viewCount, commentCount,
-      profileImage, imageUrls
-    });
   
     const relativeTime = getRelativeTime(createdAt);
 
     const thumbnail = Array.isArray(imageUrls) && imageUrls.length > 0 ? imageUrls[0] : null;
   
-  
-  return (
-    <div className="post-card">
-      <Link
-        to={`/community/${id}`}
-        state={{
+  const maxLength = 100;
+  const previewContent = content.length > maxLength
+    ? content.slice(0, maxLength) + '...'
+    : content;
+
+    return (
+      <div className="community-post-item"> 
+      <div className="post-card">
+        <Link
+          to={`/community/${id}`}
+          state={{
             id, title, content, nickname, createdAt,
             likeCount, viewCount, commentCount,
             imageUrls, profileImage
           }}
-        className="post-link-horizontal"
-      >
-        <div className="post-left">
-          <div className="post-header">
+          className="post-link-horizontal"
+        >
+          <div className="post-left">
+            <div className="post-header">
             <img
-              src={profileImage || '/default-profile.png'}
-              alt="프로필"
-              className="profile-image"
+              src={
+                typeof profileImage === 'string' && profileImage.trim() !== ''
+                  ? `http://localhost:8080${profileImage.slice(profileImage.indexOf('/uploads/'))}`
+                  : '/default-profile.png'
+              }
+              alt={`${nickname}님의 프로필`}
+              className="post-profile-image"
             />
-            <span className="author-name">{nickname}</span>
-          </div>
-          <strong className="post-title">{title}</strong>
-          <p className="post-content">{content}</p>
-          <div className="post-footer">
+              <span className="author-name">{nickname}</span>
+            </div>
+            <strong className="post-title">{title}</strong>
+            <p className="post-content">{previewContent}</p>
             <span className="post-meta">{relativeTime}</span>
+          </div>
+    
+          <div className="post-right">
+            <div className="thumbnail-wrapper">
+              {thumbnail ? (
+                <img
+                  src={`http://localhost:8080${thumbnail}`}
+                  alt="썸네일"
+                  className="post-thumbnail"
+                />
+              ) : (
+                <div className="thumbnail-placeholder" />
+              )}
+            </div>
+
             <div className="post-stats">
               <span><AiOutlineLike /> {likeCount}</span>
               <span><LuEye /> {viewCount}</span>
               <span><FaRegComment /> {commentCount}</span>
             </div>
           </div>
-        </div>
-
-        {thumbnail && (
-          <div className="post-thumbnail">
-            <img
-              src={`http://localhost:8080${thumbnail}`}
-              alt="썸네일"
-              className="thumbnail-image"
-            />
-          </div>
-        )}
-      </Link>
-    </div>
-
-  );
-}
-
+        </Link>
+      </div>
+      </div>
+    );
+  }
 export default CommunityPostItem;

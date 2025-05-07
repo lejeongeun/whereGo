@@ -1,9 +1,16 @@
-.post-list-container {
+.no-posts {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 18px;
+  color: #777;
+  font-style: normal !important;
+}
+
+.post-list {
     padding: 1.5rem 0;
     display: flex;
     flex-direction: column;
-    
-    gap: 24px; /* 각 게시글 사이 간격 */
+    gap: 10px; 
   }
   
   .pagination {

@@ -1,4 +1,4 @@
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import './css/CommunityDetailPage.css';
 import { deletePost } from '../../api/communityApi';
@@ -9,120 +9,115 @@ import { AiOutlineLike } from "react-icons/ai";
 import { LuEye } from "react-icons/lu";
 import { FaRegComment } from "react-icons/fa";
 
-
 function CommunityDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
-  const [post, setPost] = useState(location.state || null);
+  const [post, setPost] = useState(null);
+  const loggedInEmail = localStorage.getItem('email');
+  const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-  
-    if (token) {
-      api.post(`/community/${id}/view`)
-        .then(() => {
-          console.log("조회수 증가 성공");
-        })
-        .catch((err) => {
-          console.error("조회수 증가 실패:", err);
-        });
-    } else {
-      console.warn("비로그인 상태, 조회수 증가 요청 안 보냄");
-    }
-  
-    if (!post) {
-      api.get(`/community/${id}`)
-        .then(res => {
-          setPost(res.data);
-        })
-        .catch(err => {
-          console.error('게시글 불러오기 실패:', err);
-          alert('게시글을 불러올 수 없습니다.');
-          navigate('/community');
-        });
-    }
-  }, [id, post, navigate]);
+    api.get(`/community/${id}`)
+      .then((res) => {
+        setPost(res.data);
+      })
+      .catch((err) => {
+        alert('게시글 불러오기 실패');
+        navigate('/community');
+      });
+  }, [id, navigate, loggedInEmail]);
 
-  if (!post) return <div>로딩중...</div>
+  if (!post) return <div>로딩중...</div>;
 
   const {
     title, content, nickname, createdAt,
     likeCount, viewCount, commentCount,
-    imageUrls
+    imageUrls, profileImage,
   } = post;
 
   const handleEdit = () => {
-    navigate(`/community/${id}/edit`, { state: { title, content } });
+    navigate(`/community/${id}/edit`, { state: { title, content, imageUrls } });
   };
 
   const handleDelete = () => {
-    const confirmDelete = window.confirm('정말 삭제하시겠습니까?');
-    if (!confirmDelete) return;
-
+    if (!window.confirm('정말 삭제하시겠습니까?')) return;
     deletePost(id)
-      .then(() => {
-        alert('삭제되었습니다.');
-        navigate('/community');
-      })
-      .catch((err) => {
-        console.error('삭제 실패! : ', err);
-        alert('삭제 중 오류 발생!!');
-      });
+      .then(() => navigate('/community'))
+      .catch(() => alert('삭제 실패'));
   };
 
   const handleLike = () => {
     api.post(`/community/${id}/like`)
       .then(() => api.get(`/community/${id}/like/count`))
-      .then((res) => {
-        setPost(prev => ({...prev, likeCount: res.data }));
-      })
-      .catch(err => {
-        console.error('좋아요 실패: ', err);
-        alert('좋아요 처리 중 오류 발생!');
-      });
+      .then((res) => setPost(prev => ({ ...prev, likeCount: res.data })))
+      .catch(() => alert('좋아요 실패'));
   };
-  
+
   return (
     <div className="detail-container">
       <h2 className="detail-title">{title}</h2>
       <div className="detail-meta">
-        <span className="author">{nickname}</span>
-        <div className="time-and-views">
-          <span className="time">{new Date(createdAt).toLocaleString()}</span>
-          <span className="views"><LuEye /> {viewCount}</span>
+        <div className="detail-author">
+          <img
+            src={
+              typeof profileImage === 'string' && profileImage.trim() !== ''
+                ? `http://localhost:8080${profileImage.slice(profileImage.indexOf('/uploads/'))}`
+                : '/default-profile.png'
+            }
+            alt={`${nickname}님의 프로필`}
+            className="post-profile-image"
+          />
+          <span className="author">{nickname}</span>
+        </div>
+
+        <div className="meta-right">
+          <div className="time-and-views">
+            <span className="time">{new Date(createdAt).toLocaleString()}</span>
+            <span className="views"><LuEye /> {viewCount}</span>
+          </div>
+
+
         </div>
       </div>
 
       <div className="detail-body">
-        <div className="detail-like">
-          <button onClick={handleLike} className="like-icon-button">
-            <AiOutlineLike /> {likeCount}
-          </button>
-          <span><FaRegComment /> {commentCount}</span>
-        </div>
+  <div className="detail-like-row">
+    <div className="detail-like">
+      <button onClick={handleLike} className="like-icon-button">
+        <AiOutlineLike /> {likeCount}
+      </button>
+      <span><FaRegComment /> {commentCount}</span>
+    </div>
+
+    {loggedInEmail && post?.email?.trim() === loggedInEmail.trim() && (
+      <div className="more-options-container">
+        <button className="more-button" onClick={() => setShowMenu(prev => !prev)}>⋯</button>
+        {showMenu && (
+          <div className="more-menu">
+            <button onClick={handleEdit} className="edit-button">수정</button>
+            <button onClick={handleDelete} className="delete-button">삭제</button>
+          </div>
+        )}
+      </div>
+    )}
+  </div>
 
         {Array.isArray(imageUrls) && imageUrls.length > 0 && (
-            <div className="detail-images">
-              {imageUrls.map((url, index) => (
-                  <img
-                      key={index}
-                      src={`http://localhost:8080${url}`}
-                      alt={`이미지-${index}`}
-                      className="detail-image"
-                  />
-              ))}
-            </div>
+          <div className="detail-images">
+            {imageUrls.map((url, index) => (
+              <img
+                key={index}
+                src={`http://localhost:8080${url}`}
+                alt={`이미지-${index}`}
+                className="detail-image"
+              />
+            ))}
+          </div>
         )}
 
         <div className="detail-content">
           <p>{content}</p>
         </div>
-      </div>
-
-      <div className="button-group">
-        <button className="edit-button" onClick={handleEdit}>수정</button>
-        <button className="delete-button" onClick={handleDelete}>삭제</button>
       </div>
 
       <CommentSection postId={id} />

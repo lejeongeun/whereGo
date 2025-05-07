@@ -1,53 +1,56 @@
 .sort-tabs-container {
-    display: flex; 
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.2rem;
-    margin-left: 110px;
-    margin-top: 16px; 
-    white-space: nowrap;
-  }
-  
-  .sort-tabs {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.95rem;
-    color: #999;
-  }
-  
-  .tab-item {
-    cursor: pointer;
-    color: #999;
-    font-weight: 400;
-  }
-  
-  .tab-item.active {
-    font-weight: 700;
-    color: #222;
-  }
-  
-  .dot {
-    margin: 0 6px;
-    color: #bbb;
-  }
-  
-  .sort-tabs-container .write-button {
-    background-color: white;
-    border: 1px solid #333;
-    color: #333;
-    padding: 8px 18px;
-    font-size: 0.95rem;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    margin-left: 470px;
-    white-space: nowrap;
-  }
-  
-  .sort-tabs-container .write-button:hover {
-    background-color: #e9e9e9;
-    transform: scale(1.05); /* ← 1.05배 확대 */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* 살짝 떠오르는 그림자 */
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 16px 0 1.2rem 0;
+  padding: 0 20px;
+}
+
+.sort-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: #999;
+}
+
+.tab-item {
+  cursor: pointer;
+  color: #999;
+  font-weight: 400;
+}
+
+.tab-item.active {
+  font-weight: 700;
+  color: #222;
+}
+
+.dot {
+  margin: 0 6px;
+  color: #bbb;
+}
+
+.post-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 중앙 정렬 */
+  justify-content: flex-start;
+  width: 160px;
+}
+
+.post-thumbnail {
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.thumbnail-placeholder {
+  height: 117px; /* 이미지 대신 자리만 차지 */
+}
+
+.post-stats {
+  margin-top: 2px;
+  color: #777;
+  font-size: 0.9rem;
+  margin-right: 10px;
+}
