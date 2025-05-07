@@ -104,12 +104,13 @@ function CommunityDetailPage() {
 
         {Array.isArray(imageUrls) && imageUrls.length > 0 && (
           <div className="detail-images">
-            {imageUrls.map((url, index) => (
+            {imageUrls.map((image, index) => (
               <img
-                key={index}
-                src={`http://localhost:8080${url}`}
+                key={image.id || index}
+                src={`http://localhost:8080${image.url}`}
                 alt={`이미지-${index}`}
                 className="detail-image"
+                onError={(e) => { e.target.src = '/placeholder-image.png'; }}
               />
             ))}
           </div>

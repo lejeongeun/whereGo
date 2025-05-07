@@ -6,6 +6,7 @@ import org.project.wherego.community.domain.Community;
 import org.project.wherego.community.domain.CommunityImage;
 import org.project.wherego.community.dto.CommunityRequestDto;
 import org.project.wherego.community.dto.CommunityResponseDto;
+import org.project.wherego.community.dto.ImageDto;
 import org.project.wherego.community.repository.CommunityRepository;
 import org.project.wherego.member.domain.Member;
 import org.project.wherego.member.repository.MemberRepository;
@@ -117,7 +118,10 @@ public class CommunityService {
                         .likeCount(community.getLikes().size())
                         .commentCount(community.getComments().size())
                         .imageUrls(community.getImages().stream()
-                                .map(CommunityImage::getImageUrl).collect(Collectors.toList()))
+                                .map(image -> ImageDto.builder()
+                                        .id(image.getId())
+                                        .url(image.getImageUrl())
+                                        .build()).collect(Collectors.toList()))
                         .profileImage(community.getMember().getProfileImage())
                         .build())
                 .collect(Collectors.toList());
@@ -143,7 +147,11 @@ public class CommunityService {
                 .viewCount(community.getViewCount())
                 .likeCount(community.getLikes().size()) // 좋아요 수
                 .commentCount(community.getComments().size()) // 댓글 수
-                .imageUrls(community.getImages().stream().map(CommunityImage::getImageUrl).collect(Collectors.toList())) // 이미지
+                .imageUrls(community.getImages().stream()
+                        .map(image -> ImageDto.builder()
+                                .id(image.getId())
+                                .url(image.getImageUrl())
+                                .build()).collect(Collectors.toList()))
                 .profileImage(community.getMember().getProfileImage())
                 .build();
     }
