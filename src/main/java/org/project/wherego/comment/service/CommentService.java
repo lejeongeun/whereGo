@@ -9,10 +9,6 @@ import org.project.wherego.community.domain.Community;
 import org.project.wherego.community.repository.CommunityRepository;
 import org.project.wherego.member.domain.Member;
 import org.project.wherego.member.repository.MemberRepository;
-<<<<<<< HEAD
-//import org.project.wherego.websocket.notification.service.NotificationService;
-=======
->>>>>>> 3ab141dea66a20f643b4ef1fe3ca58870c00102a
 import org.project.wherego.websocket.notification.service.NotificationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,13 +42,6 @@ public class CommentService {
 
         commentRepository.save(newComment);
 
-<<<<<<< HEAD
-
-        notificationService.sendNotification(community.getTitle() + " 게시물에 새로운 댓글이 등록되었습니다!");
-
-=======
->>>>>>> 3ab141dea66a20f643b4ef1fe3ca58870c00102a
-
         // 게시글 작성자
         Member postOwner = community.getMember();
 
@@ -61,10 +50,6 @@ public class CommentService {
             String message = "🔔 \"" + community.getTitle() + "\" 게시물에 댓글이 등록되었습니다!";
             notificationService.sendNotificationToUser(postOwner.getEmail(), message);
         }
-<<<<<<< HEAD
-
-=======
->>>>>>> 3ab141dea66a20f643b4ef1fe3ca58870c00102a
     }
 
     // 댓글 조회

@@ -23,7 +23,3 @@ const NotificationPage = ({ messages }) => {
 };
 
 export default NotificationPage;
-<<<<<<< HEAD
-
-=======
->>>>>>> 3ab141dea66a20f643b4ef1fe3ca58870c00102a
