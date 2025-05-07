@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './HomePage.css';
 
 function HomePage() {
+  const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   // 이미지 경로 배열
@@ -28,6 +29,12 @@ function HomePage() {
 
   const goToNextSlide = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+  
+  const navigateAndScrollTop = (to, e) => {
+    e.preventDefault();
+    navigate(to);
+    window.scrollTo(0, 0);
   };
   
   return (
@@ -114,17 +121,12 @@ function HomePage() {
             <div className="tip-card">
               <h3>여행 준비물</h3>
               <p>여행 전 꼭 챙겨야 할 필수 아이템들</p>
-              <Link to="/checklist" className="tip-link">자세히 보기</Link>
+              <Link to="/checklist" className="tip-link" onClick={(e) => navigateAndScrollTop('/checklist', e)}>자세히 보기</Link>
             </div>
             <div className="tip-card">
               <h3>환전 팁</h3>
-              <p>가장 좋은 환율을 얻는 방법</p>
-              <Link to="/exchange" className="tip-link">자세히 보기</Link>
-            </div>
-            <div className="tip-card">
-              <h3>안전 여행</h3>
-              <p>해외여행 시 알아야 할 안전 수칙</p>
-              <Link to="/safety" className="tip-link">자세히 보기</Link>
+              <p>가장 빠르고 정확한 환율 보러 가기</p>
+              <Link to="/exchange" className="tip-link" onClick={(e) => navigateAndScrollTop('/exchange', e)}>자세히 보기</Link>
             </div>
           </div>
         </div>
