@@ -289,7 +289,7 @@ function ScheduleResultPanel({
       order: idx + 1
     }));
     try {
-      console.log('orderList to send:', orderList); // 실제 전송 데이터 확인
+      // console.log('orderList to send:', orderList); // 실제 전송 데이터 확인
       await api.patch('/places/reorder', orderList);
       setDayPlaces(reordered);
     } catch (e) {
@@ -429,7 +429,7 @@ function ScheduleResultPanel({
                 <button
                   key={dayNumber}
                   onClick={async () => {
-                    console.log('Selected day:', dayNumber);
+                    // console.log('Selected day:', dayNumber);
                     setSelectedDay(dayNumber);
                     try {
                       await fetchDayPlaces(dayNumber);
