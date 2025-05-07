@@ -262,7 +262,7 @@ const WeatherWorld = () => {
   return (
     <div className="weather-container">
       <div className="blue-header">
-        <h2>전 세계 날씨 정보를 한눈에</h2>
+        {/* <h2>전 세계 날씨 정보를 한눈에</h2> */}
         
         <div className="search-bar">
           <select 
@@ -292,9 +292,21 @@ const WeatherWorld = () => {
 
       <div className="weather-cards-container">
         {weatherData.length === 0 ? (
+          <div className="country-selection-container">
+          <img 
+            src="/resources/img/summer_sunny.png" 
+            alt="여름 날씨" 
+            className="weather-image" 
+          />
           <div className="no-country">
             국가를 선택하여 날씨 정보를 확인하세요
           </div>
+          <img 
+            src="/resources/img/winter_snow.png" 
+            alt="겨울 날씨" 
+            className="weather-image" 
+          />
+        </div>
         ) : (
           <div className="weather-cards">
             {weatherData.map(data => (
