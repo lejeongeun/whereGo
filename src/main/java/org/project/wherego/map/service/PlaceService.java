@@ -7,6 +7,7 @@ import com.google.maps.model.PlacesSearchResponse;
 import org.project.wherego.map.domain.Place;
 import org.project.wherego.map.dto.PlaceSaveRequestDto;
 import org.project.wherego.map.dto.PlaceSearchResponse;
+import org.project.wherego.map.dto.PlaceOrderUpdateRequest;
 import org.project.wherego.map.repository.PlaceRepository;
 import org.project.wherego.member.domain.Member;
 import org.project.wherego.member.repository.MemberRepository;
@@ -60,16 +61,30 @@ public class PlaceService {
         Schedule schedule = scheduleRepository.findById(dto.getScheduleId())
                 .orElseThrow(() -> new IllegalArgumentException("일정 정보를 찾을 수 없습니다."));
 
+        int count = placeRepository.findByScheduleIdAndDayNumberOrderByOrderAsc(dto.getScheduleId(), dto.getDayNumber()).size();
+
         Place place = Place.builder()
                 .name(dto.getName())
                 .address(dto.getAddress())
                 .latitude(dto.getLatitude())
                 .longitude(dto.getLongitude())
+                .imageUrl(dto.getImageUrl())
                 .member(member)
                 .schedule(schedule)
+                .dayNumber(dto.getDayNumber())
+                .order(count + 1)
                 .build();
 
         return placeRepository.save(place);
+    }
+
+    public List<Place> getPlacesByScheduleAndDay(Long scheduleId, int dayNumber, String email) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+            .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다."));
+        if (!schedule.getMember().getEmail().equals(email)) {
+            throw new IllegalArgumentException("본인 일정만 조회할 수 있습니다.");
+        }
+        return placeRepository.findByScheduleIdAndDayNumberOrderByOrderAsc(scheduleId, dayNumber);
     }
 
     // 장소 정보 조회(PlacesApi 사용)  Google Place ID
@@ -80,9 +95,23 @@ public class PlaceService {
     // 장소 삭제
     @Transactional
     public void deletePlace(Long placeId, String email) {
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(()-> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
+        Place place = placeRepository.findById(placeId)
+                .orElseThrow(() -> new IllegalArgumentException("장소를 찾을 수 없습니다."));
+        
+        if (!place.getMember().getEmail().equals(email)) {
+            throw new IllegalArgumentException("본인의 장소만 삭제할 수 있습니다.");
+        }
 
-        placeRepository.deleteById(placeId);
+        placeRepository.delete(place);
+    }
+
+    @Transactional
+    public void reorderPlaces(List<PlaceOrderUpdateRequest> orderList) {
+        for (PlaceOrderUpdateRequest req : orderList) {
+            Place place = placeRepository.findById(req.getId())
+                .orElseThrow(() -> new IllegalArgumentException("장소를 찾을 수 없습니다."));
+            place.setOrder(req.getOrder());
+            // JPA dirty checking으로 자동 저장
+        }
     }
 }

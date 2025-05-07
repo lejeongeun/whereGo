@@ -5,7 +5,7 @@ import PlaceTypeFilter from './PlaceTypeFilter';
 import ScheduleList from '../schedule/ScheduleList';
 import api from '../../api';
 import travelAdvisorAPI from '../../api/travelAdvisorAPI';
-import './MapContainer.css';
+import './schedule.css';
 
 const containerStyle = {
   width: '100%',
@@ -19,7 +19,7 @@ const center = {
 
 const libraries = ['places'];
 
-const MapContainer = () => {
+const MapContainer = ({ setSelectedPlace, selectedPlace }) => {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -29,7 +29,6 @@ const MapContainer = () => {
   const [map, setMap] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [autocomplete, setAutocomplete] = useState(null);
-  const [selectedPlace, setSelectedPlace] = useState(null);
   const [schedulePlaces, setSchedulePlaces] = useState([]);
   const [currentScheduleId, setCurrentScheduleId] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -38,7 +37,53 @@ const MapContainer = () => {
   const onMapLoad = useCallback((mapInstance) => {
     setMap(mapInstance);
     if (mapInstance) {
-      searchNearbyPlaces({
+      searchNearbyPlaces({});
+      // Google Maps POI 클릭 이벤트 리스너 추가
+      mapInstance.addListener('click', (e) => {
+        if (e.placeId) {
+          e.stop(); // 기본 클릭 동작 방지
+          const service = new window.google.maps.places.PlacesService(mapInstance);
+          service.getDetails(
+            {
+              placeId: e.placeId,
+              fields: [
+                'name',
+                'formatted_address',
+                'geometry',
+                'formatted_phone_number',
+                'website',
+                'opening_hours',
+                'rating',
+                'photos',
+                'place_id'
+              ]
+            },
+            (place, status) => {
+              if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+                let imageUrl = '';
+                if (place.photos && place.photos.length > 0) {
+                  imageUrl = place.photos[0].getUrl({ maxWidth: 400 });
+                }
+                setSelectedPlace({
+                  id: place.place_id,
+                  name: place.name,
+                  address: place.formatted_address,
+                  latitude: place.geometry.location.lat(),
+                  longitude: place.geometry.location.lng(),
+                  description: place.formatted_address,
+                  rating: place.rating,
+                  imageUrl,
+                  details: {
+                    formattedPhoneNumber: place.formatted_phone_number,
+                    website: place.website,
+                    openingHours: place.opening_hours,
+                    photos: place.photos
+                  }
+                });
+              }
+            }
+          );
+        }
       });
     }
   }, []);
@@ -115,9 +160,6 @@ const MapContainer = () => {
       
       setMarkers(newMarkers);
       
-      if (results.length > 0 && !selectedPlace) {
-        setSelectedPlace(results[0]);
-      }
     } catch (error) {
       console.error('장소 검색 오류:', error);
     } finally {
@@ -198,16 +240,6 @@ const MapContainer = () => {
           ))}
         </GoogleMap>
       </div>
-      
-      <div className="place-info-wrapper">
-        {selectedPlace && (
-          <MapPlaceInfoCard 
-            place={selectedPlace} 
-            // onAdd={handleAddToSchedule} 
-          />
-        )}
-      </div>
-      
     </div>
   ) : (
     <div className="loading-map">지도를 불러오는 중...</div>

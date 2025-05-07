@@ -1,6 +1,6 @@
 import React from 'react';
 import Login from '../auth/Login';
-import './TripScheduleLogin.css';
+import './schedule.css';
 
 function TripScheduleLogin({ isLoginFormOpen, setIsLoginFormOpen, setIsLoggedIn }) {
   return (

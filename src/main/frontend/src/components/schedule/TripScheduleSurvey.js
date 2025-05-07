@@ -4,9 +4,20 @@ import ScheduleDatePanel from './ScheduleDatePanel';
 import WhoWithPanel from './WhoWithPanel';
 import TravelStylePanel from './TravelStylePanel';
 import ScheduleResultPanel from './ScheduleResultPanel';
-import './TripScheduleSurvey.css';
+import './schedule.css';
 
-function TripScheduleSurvey({ surveyStep, setSurveyStep, surveyAnswers, setSurveyAnswers }) {
+function TripScheduleSurvey({ 
+  surveyStep, 
+  setSurveyStep, 
+  surveyAnswers, 
+  setSurveyAnswers, 
+  onCreateSchedule,
+  selectedDay,
+  setSelectedDay,
+  dayPlaces,
+  setDayPlaces,
+  fetchDayPlaces
+}) {
   const handleGoBack = (currentStep) => {
     const updatedAnswers = { ...surveyAnswers };
     switch (currentStep) {
@@ -78,6 +89,7 @@ function TripScheduleSurvey({ surveyStep, setSurveyStep, surveyAnswers, setSurve
             onNext={() => setSurveyStep(5)}
             onGoBack={() => handleGoBack(4)}
             surveyAnswers={surveyAnswers}
+            onCreateSchedule={onCreateSchedule}
           />
         );
       case 5:
@@ -85,6 +97,11 @@ function TripScheduleSurvey({ surveyStep, setSurveyStep, surveyAnswers, setSurve
           <ScheduleResultPanel
             surveyAnswers={surveyAnswers}
             onReset={handleScheduleReset}
+            selectedDay={selectedDay}
+            setSelectedDay={setSelectedDay}
+            dayPlaces={dayPlaces}
+            setDayPlaces={setDayPlaces}
+            fetchDayPlaces={fetchDayPlaces}
           />
         );
       default:

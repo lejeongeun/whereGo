@@ -121,18 +121,25 @@ const ChecklistListPage = ({ checklists, onDeleteChecklist, onToggleItem, onAddI
         </div>
       </div>
       {/* Pagination 컴포넌트 */}
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '24px' }}>
+      <div className="pagination-container">
         <Pagination className="custom-dark-pagination">
+          <Pagination.Prev 
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >이전</Pagination.Prev>
           {[...Array(totalPages)].map((_, idx) => (
             <Pagination.Item
               key={idx + 1}
               active={currentPage === idx + 1}
-              onClick={() => totalPages > 1 && setCurrentPage(idx + 1)}
-              disabled={totalPages === 1}
+              onClick={() => setCurrentPage(idx + 1)}
             >
               {idx + 1}
             </Pagination.Item>
           ))}
+          <Pagination.Next 
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+          >다음</Pagination.Next>
         </Pagination>
       </div>
     </div>

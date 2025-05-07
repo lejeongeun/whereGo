@@ -84,7 +84,7 @@ function WhoWithPanel({ step, totalSteps, answer, onSelect, onNext, onGoBack }) 
             onClick={() => onSelect(option)}
             style={{
                   flex: '1 1 40%',
-                  minWidth: 120,
+                  minWidth: 160,
                   maxWidth: 160,
                   padding: '18px 0',
                   border: 'none',

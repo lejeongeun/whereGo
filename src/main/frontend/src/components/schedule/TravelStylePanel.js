@@ -18,7 +18,7 @@ function chunkArray(array, size) {
   return result;
 }
 
-function TravelStylePanel({ step, totalSteps, answer, onSelect, onNext, onGoBack, surveyAnswers }) {
+function TravelStylePanel({ step, totalSteps, answer, onSelect, onNext, onGoBack, surveyAnswers, onCreateSchedule }) {
   // answer는 배열
   const isSelected = (option) => Array.isArray(answer) && answer.includes(option);
   const optionRows = chunkArray(styleOptions, 2);
@@ -34,16 +34,18 @@ function TravelStylePanel({ step, totalSteps, answer, onSelect, onNext, onGoBack
   };
 
   // 일정 만들기 버튼 클릭 핸들러
-  const handleCreateSchedule = () => {
-    // localStorage에 일정 데이터 저장
+  const handleCreateSchedule = async () => {
     const scheduleData = {
       ...surveyAnswers,
+      title: (surveyAnswers.city ? `${surveyAnswers.city} 여행` : '나의 여행'),
+      description: '', // 필요시 입력란 추가 가능
       style: answer,
-      schedules: [], // 향후 일정이 추가될 공간
-      createdAt: new Date().toISOString() // 생성 시간 저장
+      createdAt: new Date().toISOString()
     };
-    localStorage.setItem('currentSchedule', JSON.stringify(scheduleData));
-    onNext(); // 다음 단계로 이동
+    if (onCreateSchedule) {
+      await onCreateSchedule(scheduleData);
+    }
+    onNext();
   };
 
   return (

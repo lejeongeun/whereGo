@@ -10,7 +10,7 @@ import './ChecklistPage.css';
 
 const ChecklistPage = () => {
   const navigate = useNavigate();
-  const [checklistGroups, setChecklistGroups] = useState([]);
+  const [checklistGroups, setChecklistGroups] = useState(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState(null);
 
@@ -28,7 +28,6 @@ const ChecklistPage = () => {
     const fetchChecklistGroups = async () => {
       try {
         const groups = await checklistApi.getAllGroups();
-        console.log('체크리스트 그룹 데이터:', groups);
         // 데이터 구조 확인 및 수정
         const formattedGroups = groups.map(group => ({
           ...group,
@@ -71,7 +70,7 @@ const ChecklistPage = () => {
           isChecked: item.checked ?? false
         }))
       };
-      console.log('저장되는 groupData:', groupData);
+      // console.log('저장되는 groupData:', groupData);
       await checklistApi.createGroup(groupData);
       
       const updatedGroups = await checklistApi.getAllGroups();
@@ -195,6 +194,15 @@ const ChecklistPage = () => {
       <div className="checklist-container">
         <h1>체크리스트</h1>
         <div className="error-message">{error}</div>
+      </div>
+    );
+  }
+
+  if (checklistGroups === undefined) {
+    return (
+      <div className="checklist-container">
+        <h1>체크리스트</h1>
+        <div style={{ minHeight: '500px' }}></div>
       </div>
     );
   }
