@@ -30,7 +30,9 @@ function CommunityPostItem({
   
     const relativeTime = getRelativeTime(createdAt);
 
-    const thumbnail = Array.isArray(imageUrls) && imageUrls.length > 0 ? imageUrls[0] : null;
+    const thumbnail = Array.isArray(imageUrls) && imageUrls.length > 0 && imageUrls[0]?.url
+    ? imageUrls[0].url
+    : null;
   
   const maxLength = 100;
   const previewContent = content.length > maxLength
@@ -76,6 +78,7 @@ function CommunityPostItem({
                   src={`http://localhost:8080${thumbnail}`}
                   alt="썸네일"
                   className="post-thumbnail"
+                  onError={(e) => { e.target.src = '/placeholder-image.png'; }}
                 />
               ) : (
                 <div className="thumbnail-placeholder" />

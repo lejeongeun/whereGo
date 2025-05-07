@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../api';
 import './css/CommunityEditPage.css';
 
 function CommunityEditPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [existingImages, setExistingImages] = useState([]);
@@ -18,16 +17,9 @@ function CommunityEditPage() {
       .then(res => {
         console.log("🔥 전체 응답:", res.data);
         console.log("🔥 이미지 응답:", res.data.imageUrls);
-        let images = res.data.imageUrls;
-  
-        // 문자열 배열일 경우 객체 배열로 변환
-        if (typeof images[0] === 'string') {
-          images = images.map((url, index) => ({ id: index, url }));
-        }
-  
         setTitle(res.data.title);
         setContent(res.data.content);
-        setExistingImages(images);
+        setExistingImages(res.data.imageUrls); // 이제 { id, url } 객체 배열
       })
       .catch(err => console.error('❌ 가져오기 실패:', err));
   }, [id]);
@@ -83,20 +75,20 @@ function CommunityEditPage() {
           onChange={(e) => setContent(e.target.value)}
         />
 
-<div className="image-preview-section">
-  {existingImages.map((img, index) => (
-    <div key={img.id} className="image-preview">
-      <img src={`http://localhost:8080${img.url}`} alt={`기존-${index}`} />
-      <label>
-        <input
-          type="checkbox"
-          onChange={() => handleImageDeleteToggle(img.id)}
-          checked={deleteImageIds.includes(img.id)}
-        /> 삭제
-      </label>
-    </div>
-  ))}
-</div>
+        <div className="image-preview-section">
+          {existingImages.map((img, index) => (
+            <div key={img.id} className="image-preview">
+              <img src={`http://localhost:8080${img.url}`} alt={`기존-${index}`} />
+              <label>
+                <input
+                  type="checkbox"
+                  onChange={() => handleImageDeleteToggle(img.id)}
+                  checked={deleteImageIds.includes(img.id)}
+                /> 삭제
+              </label>
+            </div>
+          ))}
+        </div>
 
         <input
           type="file"
