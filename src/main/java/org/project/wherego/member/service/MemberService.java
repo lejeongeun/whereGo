@@ -3,7 +3,6 @@ package org.project.wherego.member.service;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.project.wherego.checklist.domain.Checklist;
 import org.project.wherego.checklist.domain.ChecklistGroup;
 import org.project.wherego.checklist.dto.CheckListDto;
 import org.project.wherego.checklist.dto.CheckListGroupDto;
@@ -12,7 +11,6 @@ import org.project.wherego.community.domain.Community;
 import org.project.wherego.community.dto.CommunityResponseDto;
 import org.project.wherego.community.repository.CommunityRepository;
 import org.project.wherego.member.config.CustomUserDetails;
-import org.project.wherego.member.config.FileStorageProperties;
 import org.project.wherego.member.domain.Member;
 import org.project.wherego.member.dto.*;
 import org.project.wherego.member.repository.MemberRepository;
@@ -44,7 +42,6 @@ public class MemberService {
     private final CheckListGroupRepository checklistGroupRepository;
     private final CommunityRepository communityRepository;
     private final PasswordEncoder passwordEncoder;
-    private final FileStorageProperties fileStorageProperties;
     private final HttpServletRequest request; // HttpServletRequest를 사용하여 세션 정보에 접근
     private final ScheduleRepository scheduleRepository;
 
@@ -53,7 +50,6 @@ public class MemberService {
 
     @PostConstruct
     public void init() { // 절대경로 설정
-        String uploadDir = fileStorageProperties.getUploadDir();
         this.uploadDir = new File(System.getProperty("user.dir"), uploadDir).getAbsolutePath(); //user.dir"는 현재 작업 디렉토리
         System.out.println("uploadDir: " + this.uploadDir); // 디버깅 로그
     }
