@@ -48,11 +48,6 @@ public class MemberService {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
-    @PostConstruct
-    public void init() { // 절대경로 설정
-        this.uploadDir = new File(System.getProperty("user.dir"), uploadDir).getAbsolutePath(); //user.dir"는 현재 작업 디렉토리
-        System.out.println("uploadDir: " + this.uploadDir); // 디버깅 로그
-    }
 
     // 회원가입
     public SignupRequest insert(SignupRequest signupRequest) {
@@ -186,26 +181,50 @@ public class MemberService {
         }
 
         // 사용자별 디렉토리 생성 (예: /uploads/user@example.com/)
-        String userDir = uploadDir + File.separator + member.getEmail();
-        Files.createDirectories(Paths.get(userDir));
+        String relativePath = "/uploads/" + member.getEmail();
+        String absolutePath = getAbsoluteUploadDir() + File.separator + member.getEmail();
+        Files.createDirectories(Paths.get(absolutePath));
 
         // 기존 DB랑 디렉토리에 path랑 이미지가 있으면 삭제
         if (member.getProfileImage() != null) {
-            Files.deleteIfExists(Paths.get(member.getProfileImage()));
+            try {
+                // 삭제 시에는 절대경로로 변환해서 삭제
+                String existingImagePath = member.getProfileImage().replace("/", File.separator);  // 상대 경로 처리
+                if (!existingImagePath.startsWith(System.getProperty("user.dir"))) {  // 절대경로 중복 방지
+                    existingImagePath = System.getProperty("user.dir") + existingImagePath;
+                }
+                Files.deleteIfExists(Paths.get(existingImagePath));
+            } catch (IOException e) {
+                System.err.println("기존 프로필 이미지 삭제 실패: " + e.getMessage());
+            }
         }
 
         // 파일 이름 생성 (중복 방지를 위해 UUID 사용)
         String originalFileName = file.getOriginalFilename(); // image1
         String fileExtension = originalFileName.substring(originalFileName.lastIndexOf(".")); // .jpg
         String newFileName = UUID.randomUUID().toString() + fileExtension; // 1sd2fsf4fdfsdf.jpg
-        String filePath = userDir + File.separator + newFileName; // uploads/1sd2fsf4fdfsdf.jpg
+
+        String savedAbsoluteFilePath = absolutePath + File.separator + newFileName;
+        String savedRelativePath = relativePath + "/" + newFileName;
 
         // 파일 저장
-        file.transferTo(new File(filePath));
+        file.transferTo(new File(savedAbsoluteFilePath));
 
         // Member 엔티티에 파일 경로 저장
-        member.setProfileImage(filePath);
+        member.setProfileImage(savedRelativePath);
         memberRepository.save(member);
+    }
+
+    // uploads 폴더를 절대경로로 잡아주는 메서드
+    private String getAbsoluteUploadDir() {
+        File uploadFolder = new File(uploadDir);
+        if (!uploadFolder.isAbsolute()) {
+            uploadFolder = new File(System.getProperty("user.dir"), uploadDir);
+        }
+        if (!uploadFolder.exists()) {
+            uploadFolder.mkdirs();
+        }
+        return uploadFolder.getAbsolutePath();
     }
 
     @Transactional //  데이터베이스 작업을 하나의 트랜잭션으로 묶어 처리하고, 오류 발생 시 전체 작업을 롤백
