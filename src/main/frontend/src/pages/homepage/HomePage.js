@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './HomePage.css';
 
 function HomePage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const navigate = useNavigate();
   
   // 이미지 경로 배열
   const images = Array.from({ length: 9 }, (_, i) => `/resources/img/homepage_img${i + 1}.png`);
   
-  // 자동 슬라이드 기능
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
@@ -28,6 +28,12 @@ function HomePage() {
 
   const goToNextSlide = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+  
+  // 도시 카드 클릭 핸들러
+  const handleDestinationClick = (cityName) => {
+    // /schedule 페이지로 이동하면서 검색할 도시 이름 전달
+    navigate('/schedule', { state: { searchCity: cityName } });
   };
   
   return (
@@ -85,22 +91,38 @@ function HomePage() {
         <div className="popular-destinations">
           <h2>인기 여행지</h2>
           <div className="destinations-grid">
-            <div className="destination-card">
+            <div 
+              className="destination-card" 
+              onClick={() => handleDestinationClick('파리')}
+              style={{ cursor: 'pointer' }}
+            >
               <img src="/resources/img/paris.jpg" alt="파리" />
               <h3>파리</h3>
               <p>프랑스의 아름다운 수도</p>
             </div>
-            <div className="destination-card">
+            <div 
+              className="destination-card" 
+              onClick={() => handleDestinationClick('도쿄')}
+              style={{ cursor: 'pointer' }}
+            >
               <img src="/resources/img/tokyo.jpg" alt="도쿄" />
               <h3>도쿄</h3>
               <p>일본의 활기찬 도시</p>
             </div>
-            <div className="destination-card">
+            <div 
+              className="destination-card" 
+              onClick={() => handleDestinationClick('뉴욕')}
+              style={{ cursor: 'pointer' }}
+            >
               <img src="/resources/img/newyork.jpg" alt="뉴욕" />
               <h3>뉴욕</h3>
               <p>잠들지 않는 도시</p>
             </div>
-            <div className="destination-card">
+            <div 
+              className="destination-card" 
+              onClick={() => handleDestinationClick('로마')}
+              style={{ cursor: 'pointer' }}
+            >
               <img src="/resources/img/rome.jpg" alt="로마" />
               <h3>로마</h3>
               <p>이탈리아의 역사적인 도시</p>
@@ -118,13 +140,8 @@ function HomePage() {
             </div>
             <div className="tip-card">
               <h3>환전 팁</h3>
-              <p>가장 좋은 환율을 얻는 방법</p>
+              <p>정확한 환율을 실시간으로 찾아보기</p>
               <Link to="/exchange" className="tip-link">자세히 보기</Link>
-            </div>
-            <div className="tip-card">
-              <h3>안전 여행</h3>
-              <p>해외여행 시 알아야 할 안전 수칙</p>
-              <Link to="/safety" className="tip-link">자세히 보기</Link>
             </div>
           </div>
         </div>

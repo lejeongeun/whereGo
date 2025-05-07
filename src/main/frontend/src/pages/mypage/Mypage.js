@@ -19,7 +19,7 @@ const MyPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-  const [activeTab, setActiveTab] = useState('posts');
+  const [activeTab, setActiveTab] = useState('schedule');
   const navigate = useNavigate();
   
   // 상태 리셋 헬퍼 함수
@@ -66,10 +66,10 @@ const MyPage = () => {
       {/* 탭 메뉴 */}
       <div className="tabs-menu">
         <button 
-          className={`tab-button ${activeTab === 'posts' ? 'active' : ''}`}
-          onClick={() => setActiveTab('posts')}
+          className={`tab-button ${activeTab === 'schedule' ? 'active' : ''}`}
+          onClick={() => setActiveTab('schedule')}
         >
-          <FaList className="tab-icon" /> 내가 작성한 글
+          <FaCalendarAlt className="tab-icon" /> 일정 리스트
         </button>
         <button 
           className={`tab-button ${activeTab === 'checklist' ? 'active' : ''}`}
@@ -78,23 +78,23 @@ const MyPage = () => {
           <FaCheckSquare className="tab-icon" /> 체크리스트
         </button>
         <button 
-          className={`tab-button ${activeTab === 'schedule' ? 'active' : ''}`}
-          onClick={() => setActiveTab('schedule')}
+          className={`tab-button ${activeTab === 'posts' ? 'active' : ''}`}
+          onClick={() => setActiveTab('posts')}
         >
-          <FaCalendarAlt className="tab-icon" /> 일정 리스트
+          <FaList className="tab-icon" /> 내가 작성한 글
         </button>
       </div>
       
       {/* 탭 컨텐츠 */}
       <div className="tab-content">
-        {/* 내가 작성한 글 탭 */}
-        {activeTab === 'posts' && <PostsTab posts={userData.comunities} navigate={navigate} />}
+        {/* 일정 리스트 탭 */}
+        {activeTab === 'schedule' && <ScheduleTab userEmail={userData.email} />}
         
         {/* 체크리스트 탭 */}
         {activeTab === 'checklist' && <ChecklistTab userEmail={userData.email} viewOnly={true} />}
-        
-        {/* 일정 리스트 탭 */}
-        {activeTab === 'schedule' && <ScheduleTab userEmail={userData.email} />}
+
+        {/* 내가 작성한 글 탭 */}
+        {activeTab === 'posts' && <PostsTab posts={userData.comunities} navigate={navigate} />}
       </div>
       
       {/* 액션 버튼 섹션 */}

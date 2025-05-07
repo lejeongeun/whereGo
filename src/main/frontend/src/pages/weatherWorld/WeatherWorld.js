@@ -262,7 +262,7 @@ const WeatherWorld = () => {
   return (
     <div className="weather-container">
       <div className="blue-header">
-        <h2>전 세계 날씨 정보를 한눈에</h2>
+        {/* <h2>전 세계 날씨 정보를 한눈에</h2> */}
         
         <div className="search-bar">
           <select 

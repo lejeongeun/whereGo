@@ -15,7 +15,7 @@ getRestaurants: async (bounds) => {
         bl_longitude: bounds.bl_longitude || '126.95710022735595',
         tr_longitude: bounds.tr_longitude || '126.99889977264404',
         restaurant_tagcategory: '10591',
-        limit: '10',
+        limit: '5',
         currency: 'USD',
         open_now: 'false',
         lunit: 'km',
@@ -65,7 +65,7 @@ getRestaurants: async (bounds) => {
         tr_latitude: bounds.tr_latitude || '37.580105431907505',
         bl_longitude: bounds.bl_longitude || '126.95710022735595',
         tr_longitude: bounds.tr_longitude || '126.99889977264404',
-        limit: '10',
+        limit: '5',
         currency: 'USD',
         lunit: 'km',
         lang: 'ko_KR'

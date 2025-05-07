@@ -205,7 +205,7 @@
   }
 .notification-modal {
   position: fixed;
-  top: 70px; /* Navbar 바로 밑 */
+  top: 70px; 
   right: 20px;
   width: 300px;
   max-height: 400px;

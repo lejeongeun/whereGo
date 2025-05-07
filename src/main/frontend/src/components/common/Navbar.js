@@ -12,7 +12,7 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showNotificationModal, setShowNotificationModal] = useState(false);
   const [hasNewNotification, setHasNewNotification] = useState(false);
-  const [messages, setMessages] = useState([]); // 알림 메시지 저장
+  const [messages, setMessages] = useState([]);
   const navigate = useNavigate();
 
   const checkLoginStatus = () => {
@@ -85,7 +85,6 @@ function Navbar() {
     // 로그인 상태 변경 이벤트 발생시키기
     window.dispatchEvent(new Event('loginStateChanged'));
     
-    // 홈으로 이동
     navigate('/');
   };
 

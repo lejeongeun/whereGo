@@ -131,9 +131,7 @@ const ProfileSection = ({ userData, setSuccess, setError, resetMessages }) => {
   return (
     <div className="profile-section">
       <div className="profile-image-container">
-        {isUploading ? (
-          <div className="loading-spinner">업로드 중...</div>
-        ) : selectedImage ? (
+        {selectedImage ? (
           <img 
             src={selectedImage} 
             alt="프로필 이미지" 

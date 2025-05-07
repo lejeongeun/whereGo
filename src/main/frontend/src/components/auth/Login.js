@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './Login.css';
 import api from '../../api.js';
 
@@ -9,7 +9,7 @@ function Login(props) {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

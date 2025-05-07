@@ -324,21 +324,17 @@ h2 {
 
 /* 페이징처리 */
 .pagination {
-  margin-top: 16px;
-  display: flex;
-  gap: 8px;
-  justify-content: center;
+  margin-top: 20px;
 }
 .pagination button {
-  padding: 6px 10px;
-  border: 1px solid #ccc;
-  background: white;
-  cursor: pointer;
+  padding: 6px 12px;
+  transition: background-color 0.2s;
+  border-radius: 4px;
+  font-size: 14px;
 }
 .pagination .active-page {
-  background-color: #007bff;
-  color: white;
-  font-weight: bold;
+  background-color: rgb(238, 238, 238);
+    border-color: rgb(224, 224, 224);
 }
 
 /* 체크리스트css */
