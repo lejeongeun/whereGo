@@ -81,13 +81,14 @@
   margin-bottom: 10px;
 }
 
-.footer-links a {
+.footer-links a, .footer-links .custom-link {
   color: #ecf0f1;
   text-decoration: none;
   transition: color 0.3s ease;
+  cursor: pointer;
 }
 
-.footer-links a:hover {
+.footer-links a:hover, .footer-links .custom-link:hover {
   color: #3498db;
 }
 

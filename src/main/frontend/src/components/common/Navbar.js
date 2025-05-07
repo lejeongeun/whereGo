@@ -76,6 +76,16 @@ function Navbar() {
     setHasNewNotification(false); // 모달 열면 새 알림 표시 없앰
   };
 
+  // 페이지 이동과 동시에 스크롤을 최상단으로 올리는 함수
+  const navigateAndScrollTop = (to, e) => {
+    e.preventDefault();
+    window.scrollTo(0, 0);
+    navigate(to);
+    if (menuOpen) {
+      setMenuOpen(false);
+    }
+  };
+
   // WebSocket 연결: 알림 수신 및 저장
   useEffect(() => {
     // 로그인된 경우에만 웹소켓 연결
@@ -105,7 +115,7 @@ function Navbar() {
     <>
       <nav className="navbar">
         <div className="navbar-container">
-          <Link to="/" className="logo-link">
+          <Link to="/" className="logo-link" onClick={(e) => navigateAndScrollTop('/', e)}>
             <div className="logo">어디GO</div>
           </Link>
 
@@ -114,11 +124,11 @@ function Navbar() {
           </div>
 
           <ul className={menuOpen ? 'nav-menu active' : 'nav-menu'}>
-            <li className="nav-item"><Link to="/schedule" className="nav-link" onClick={() => setMenuOpen(false)}>일정리스트</Link></li>
-            <li className="nav-item"><Link to="/weather" className="nav-link" onClick={() => setMenuOpen(false)}>나라별 날씨</Link></li>
-            <li className="nav-item"><Link to="/exchange" className="nav-link" onClick={() => setMenuOpen(false)}>나라별 환율</Link></li>
-            <li className="nav-item"><Link to="/checklist" className="nav-link" onClick={() => setMenuOpen(false)}>체크리스트</Link></li>
-            <li className="nav-item"><Link to="/community" className="nav-link" onClick={() => setMenuOpen(false)}>커뮤니티</Link></li>
+            <li className="nav-item"><Link to="/schedule" className="nav-link" onClick={(e) => navigateAndScrollTop('/schedule', e)}>일정리스트</Link></li>
+            <li className="nav-item"><Link to="/weather" className="nav-link" onClick={(e) => navigateAndScrollTop('/weather', e)}>나라별 날씨</Link></li>
+            <li className="nav-item"><Link to="/exchange" className="nav-link" onClick={(e) => navigateAndScrollTop('/exchange', e)}>나라별 환율</Link></li>
+            <li className="nav-item"><Link to="/checklist" className="nav-link" onClick={(e) => navigateAndScrollTop('/checklist', e)}>체크리스트</Link></li>
+            <li className="nav-item"><Link to="/community" className="nav-link" onClick={(e) => navigateAndScrollTop('/community', e)}>커뮤니티</Link></li>
 
             {isLoggedIn && (
               <li className="nav-item notification-icon" onClick={toggleNotificationModal}>
@@ -131,13 +141,13 @@ function Navbar() {
               <div className="auth-links">
                 {isLoggedIn ? (
                   <>
-                    <Link to="/mypage" className="auth-link" onClick={() => setMenuOpen(false)}>mypage</Link>
+                    <Link to="/mypage" className="auth-link" onClick={(e) => navigateAndScrollTop('/mypage', e)}>mypage</Link>
                     <span className="auth-link" onClick={handleLogout}>logout</span>
                   </>
                 ) : (
                   <>
-                    <span className="auth-link" onClick={() => { navigate('/login'); setMenuOpen(false); }}>login</span>
-                    <span className="auth-link" onClick={() => { navigate('/signup'); setMenuOpen(false); }}>join</span>
+                    <span className="auth-link" onClick={() => { navigate('/login'); setMenuOpen(false); window.scrollTo(0, 0); }}>login</span>
+                    <span className="auth-link" onClick={() => { navigate('/signup'); setMenuOpen(false); window.scrollTo(0, 0); }}>join</span>
                   </>
                 )}
               </div>
