@@ -15,8 +15,6 @@ function CommunityEditPage() {
   useEffect(() => {
     api.get(`/community/${id}`)
       .then(res => {
-        console.log("🔥 전체 응답:", res.data);
-        console.log("🔥 이미지 응답:", res.data.imageUrls);
         setTitle(res.data.title);
         setContent(res.data.content);
         setExistingImages(res.data.imageUrls); // 이제 { id, url } 객체 배열
