@@ -55,7 +55,7 @@ public class PlaceController {
     }
 
     @PatchMapping("/reorder")
-    public ResponseEntity<Void> reorderPlaces(@RequestBody List<PlaceOrderUpdateRequest> orderList) {
+    public ResponseEntity<?> reorderPlaces(@RequestBody List<PlaceOrderUpdateRequest> orderList) {
         placeService.reorderPlaces(orderList);
         return ResponseEntity.ok().build();
     }

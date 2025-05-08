@@ -52,4 +52,25 @@ public class ScheduleController {
         return ResponseEntity.ok("일정이 삭제되었습니다.");
     }
 
+    // 일정 단건 조회
+    @GetMapping("/{scheduleId}")
+    public ResponseEntity<ScheduleResponseDto> getSchedule(
+            @PathVariable Long scheduleId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        String email = userDetails.getMember().getEmail();
+        ScheduleResponseDto schedule = scheduleService.getSchedule(scheduleId, email);
+        return ResponseEntity.ok(schedule);
+    }
+
+    // 일정 정보 수정
+    @PutMapping("/{scheduleId}")
+    public ResponseEntity<ScheduleResponseDto> updateSchedule(
+            @PathVariable Long scheduleId,
+            @RequestBody ScheduleRequestDto requestDto,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        String email = userDetails.getMember().getEmail();
+        ScheduleResponseDto updated = scheduleService.updateSchedule(scheduleId, requestDto, email);
+        return ResponseEntity.ok(updated);
+    }
+
 }

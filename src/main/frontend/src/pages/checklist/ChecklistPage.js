@@ -70,7 +70,6 @@ const ChecklistPage = () => {
           isChecked: item.checked ?? false
         }))
       };
-      // console.log('저장되는 groupData:', groupData);
       await checklistApi.createGroup(groupData);
       
       const updatedGroups = await checklistApi.getAllGroups();
@@ -192,7 +191,6 @@ const ChecklistPage = () => {
   if (error) {
     return (
       <div className="checklist-container">
-        <h1>체크리스트</h1>
         <div className="error-message">{error}</div>
       </div>
     );
@@ -201,7 +199,6 @@ const ChecklistPage = () => {
   if (checklistGroups === undefined) {
     return (
       <div className="checklist-container">
-        <h1>체크리스트</h1>
         <div style={{ minHeight: '500px' }}></div>
       </div>
     );
@@ -209,7 +206,6 @@ const ChecklistPage = () => {
 
   return (
     <div className="checklist-container">
-      <h1>체크리스트</h1>
       {checklistGroups.length > 0 ? (
         <ChecklistListPage
           checklists={checklistGroups}

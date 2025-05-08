@@ -21,6 +21,7 @@ import './App.css';
 import CommunityEditPage from './pages/community/CommunityEditPage';
 import MapContainer from './components/schedule/MapContainer';
 import NotificationPage from './notification/NotificationPage';
+import ScheduleListPage from './pages/schedule/ScheduleListPage';
 
 function App() {
   return (
@@ -44,11 +45,13 @@ function App() {
                 <Route path="/community/:id" element={<CommunityDetailPage />} />
                 <Route path="/community/write" element={<CommunityWritePage />} />
                 <Route path="/schedule" element={<TripSchedulePage />} />
+                <Route path="/schedule/:id" element={<TripSchedulePage isEditMode={true} />} />
                 <Route path="/community/:id/edit" element={<CommunityEditPage />} />
                 <Route path="/mypage" element={<MyPage />} />
                 <Route path="/changePwd" element={<ChangePwd />} />
                 <Route path='/notification' element={<NotificationPage />} />
-                <Route path="/weather" element={<WeatherWorld />} /> 
+                <Route path="/weather" element={<WeatherWorld />} />
+                <Route path="/schedules" element={<ScheduleListPage />} />
               </Routes>
             </div>
             <Footer className="footer" />
