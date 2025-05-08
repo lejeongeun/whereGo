@@ -14,6 +14,9 @@ function TripScheduleLogin({ isLoginFormOpen, setIsLoginFormOpen, setIsLoggedIn 
         />
       ) : (
         <div className="login-prompt">
+          <div style={{marginBottom: '5px', fontSize: '2.5rem'}}>
+        <span role="img" aria-label="lock">🔒</span>
+      </div>
           <div className="login-message">로그인을 해주세요</div>
           <button 
             className="login-button"

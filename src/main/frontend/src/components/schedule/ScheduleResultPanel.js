@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getPlacesByScheduleAndDay, deletePlaceFromSchedule, addPlaceToSchedule } from '../../api/scheduleApi';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import api from '../../api';
+import { useNavigate } from 'react-router-dom';
 
 // 나라별 추천 장소 더미 데이터
 const recommendedPlacesByCountry = {
@@ -202,12 +203,14 @@ function ScheduleResultPanel({
   setSelectedDay,
   dayPlaces,
   setDayPlaces,
-  fetchDayPlaces
+  fetchDayPlaces,
+  scheduleId,
+  isEditMode 
 }) {
   // localStorage에서 저장된 일정 데이터 불러오기
   const [scheduleData, setScheduleData] = useState(null);
-  const [scheduleId, setScheduleId] = useState(null);
   const [hoveredIdx, setHoveredIdx] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -217,7 +220,6 @@ function ScheduleResultPanel({
       if (savedSchedule) {
         const parsedSchedule = JSON.parse(savedSchedule);
         setScheduleData(parsedSchedule);
-        if (parsedSchedule.id) setScheduleId(parsedSchedule.id);
       }
     }
   }, []);
@@ -226,8 +228,7 @@ function ScheduleResultPanel({
     if (scheduleId && selectedDay) {
       fetchDayPlaces(selectedDay);
     }
-    // eslint-disable-next-line
-  }, [scheduleId, selectedDay]);
+  }, [scheduleId, selectedDay, fetchDayPlaces]);
 
   // 장소 추가 후 즉시 UI 업데이트를 위한 함수
   const handlePlaceAdded = (newPlace) => {
@@ -256,6 +257,7 @@ function ScheduleResultPanel({
 
   // 추천 장소를 일정에 추가하는 함수
   const onAddRecommendedPlace = async (place) => {
+    // console.log('추천 장소 추가 시 scheduleId:', scheduleId, 'selectedDay:', selectedDay);
     try {
       const savedPlace = await addPlaceToSchedule({
         name: place.name,
@@ -283,17 +285,15 @@ function ScheduleResultPanel({
   const handleDragEnd = async (result) => {
     if (!result.destination) return;
     const reordered = reorder(dayPlaces, result.source.index, result.destination.index);
-    // order 1부터 재정렬
     const orderList = reordered.map((place, idx) => ({
       id: place.id,
       order: idx + 1
     }));
     try {
-      // console.log('orderList to send:', orderList); // 실제 전송 데이터 확인
       await api.patch('/places/reorder', orderList);
       setDayPlaces(reordered);
     } catch (e) {
-      console.error('순서 저장 에러:', e); // 에러 상세 출력
+      console.error('순서 저장 에러:', e);
       alert('순서 저장에 실패했습니다.');
     }
   };
@@ -428,15 +428,7 @@ function ScheduleResultPanel({
               return (
                 <button
                   key={dayNumber}
-                  onClick={async () => {
-                    // console.log('Selected day:', dayNumber);
-                    setSelectedDay(dayNumber);
-                    try {
-                      await fetchDayPlaces(dayNumber);
-                    } catch (error) {
-                      console.error('Error fetching places for day:', dayNumber, error);
-                    }
-                  }}
+                  onClick={() => setSelectedDay(dayNumber)}
                   style={{
                     flex: '0 0 100px',
                     padding: '6px 0',
@@ -594,13 +586,17 @@ function ScheduleResultPanel({
         </div>
       </div>
 
-      {/* 새로운 일정 짜기 버튼 */}
+      {/* 저장 후 목록으로 돌아가기기 버튼 */}
       <button
-        onClick={handleNewSchedule}
+        onClick={() => {
+          if (window.confirm('정말 목록으로 돌아가시겠습니까?')) {
+            navigate('/schedules');
+          }
+        }}
         style={{
           width: '100%',
           padding: '16px 0',
-          background: '#4f8cff',
+          background: '#27ae60', // 초록색
           color: '#fff',
           border: 'none',
           borderRadius: '10px',
@@ -608,10 +604,10 @@ function ScheduleResultPanel({
           fontWeight: 700,
           cursor: 'pointer',
           transition: 'background 0.15s',
-          boxShadow: '0 2px 8px rgba(79,140,255,0.12)',
+          boxShadow: '0 2px 8px rgba(39,174,96,0.12)',
         }}
       >
-        새로운 일정 짜기
+        저장 후 목록으로 돌아가기
       </button>
     </div>
   );

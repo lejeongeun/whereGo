@@ -79,4 +79,46 @@ public class ScheduleService {
 
 
     }
+
+    // 일정 단건 조회
+    public ScheduleResponseDto getSchedule(Long scheduleId, String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자 정보 없음"));
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다."));
+        if (!schedule.getMember().getId().equals(member.getId())) {
+            throw new IllegalArgumentException("본인 소유 일정만 조회할 수 있습니다.");
+        }
+        return ScheduleResponseDto.builder()
+                .id(schedule.getId())
+                .title(schedule.getTitle())
+                .description(schedule.getDescription())
+                .startDate(schedule.getStartDate())
+                .endDate(schedule.getEndDate())
+                .build();
+    }
+
+    // 일정 정보 수정
+    @Transactional
+    public ScheduleResponseDto updateSchedule(Long scheduleId, ScheduleRequestDto requestDto, String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자 정보 없음"));
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다."));
+        if (!schedule.getMember().getId().equals(member.getId())) {
+            throw new IllegalArgumentException("본인 소유 일정만 수정할 수 있습니다.");
+        }
+        schedule.setTitle(requestDto.getTitle());
+        schedule.setDescription(requestDto.getDescription());
+        schedule.setStartDate(requestDto.getStartDate());
+        schedule.setEndDate(requestDto.getEndDate());
+        // 저장은 JPA dirty checking에 의해 자동 반영
+        return ScheduleResponseDto.builder()
+                .id(schedule.getId())
+                .title(schedule.getTitle())
+                .description(schedule.getDescription())
+                .startDate(schedule.getStartDate())
+                .endDate(schedule.getEndDate())
+                .build();
+    }
 }
