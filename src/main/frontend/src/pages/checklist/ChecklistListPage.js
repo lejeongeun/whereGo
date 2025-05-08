@@ -38,7 +38,6 @@ const ChecklistListPage = ({ checklists, onDeleteChecklist, onToggleItem, onAddI
         text: newItemText.trim(),
         checked: false
       };
-      console.log('ChecklistListPage에서 전달되는 newItem:', newItem);
       onAddItem(checklistId, newItem);
     }
     setEditingChecklistId(null);

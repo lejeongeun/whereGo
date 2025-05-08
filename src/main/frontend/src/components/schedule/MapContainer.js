@@ -140,8 +140,8 @@ const MapContainer = ({ setSelectedPlace, selectedPlace }) => {
         case 'attractions':
           results = await travelAdvisorAPI.getAttractions(bounds);
           break;
-        default:
-          results = await travelAdvisorAPI.getRestaurants(bounds);
+        // default:
+        //   results = await travelAdvisorAPI.getRestaurants(bounds);
       }
       
       const newMarkers = results

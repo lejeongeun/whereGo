@@ -41,9 +41,9 @@ const clearAuthData = () => {
 // API 인스턴스 생성
 const api = axios.create({
   baseURL: '/api',
-  headers: {
-    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-  },
+  // headers: {
+  //   'Authorization': `Bearer ${localStorage.getItem('token')}`,
+  // },
   withCredentials: true,
 });
 
@@ -51,9 +51,26 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
-    if (token) {
+
+    // 인증이 필요한 경로
+    const authRequiredPaths = [
+      '/community/create',
+      '/community/update',
+      '/community/delete',
+      '/comment',
+      '/member',
+      '/profile',
+      '/like'
+    ];
+
+    const needsAuth = authRequiredPaths.some(path => config.url?.includes(path));
+
+    if (token && needsAuth) {
       config.headers['Authorization'] = `Bearer ${token}`;
+    } else {
+      delete config.headers['Authorization']; // 헤더 제거
     }
+
     return config;
   },
   (error) => Promise.reject(error)
@@ -68,16 +85,21 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    // 이미 로그아웃 중이면 추가 처리 방지
+    const status = error.response?.status;
+    const requestUrl = error.config?.url;
+
+    // 예외 처리: community/list는 로그인 없이도 접근 가능
+    const isPublicRequest =
+    requestUrl?.includes('/community/list') ||
+    requestUrl?.includes('/community/posts/');
+
     if (isLoggingOut) {
       return Promise.reject(error);
     }
-    
-    // 401 Unauthorized 에러 (인증 실패 또는 서버 연결 문제)
-    if (error.response?.status === 401) {
+
+    if (status === 401 && !isPublicRequest) {
       isLoggingOut = true;
-      
-      // 현재 페이지 URL 저장 (로그인 후 리다이렉트용)
+
       const currentPath = window.location.pathname;
       if (currentPath !== '/login') {
         sessionStorage.setItem('redirectAfterLogin', currentPath);
