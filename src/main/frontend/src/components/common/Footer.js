@@ -1,11 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Footer.css';
 import { FaFacebook, FaInstagramSquare } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 
 function Footer() {
   const currentYear = new Date().getFullYear();
+  const navigate = useNavigate();
+  
+  // 페이지 이동과 동시에 스크롤을 최상단으로 올리는 함수
+  const navigateAndScrollTop = (to) => {
+    navigate(to);
+    window.scrollTo(0, 0);
+  };
 
   return (
     <footer className="footer">
@@ -20,10 +27,10 @@ function Footer() {
               <FaFacebook size={24}/>
             </a>
             <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-            <FaXTwitter size={24}/>
+              <FaXTwitter size={24}/>
             </a>
             <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-            <FaInstagramSquare size={24}/>
+              <FaInstagramSquare size={24}/>
             </a>
           </div>
         </div>
@@ -34,26 +41,26 @@ function Footer() {
             <div className="footer-links-column">
               <ul className="footer-links">
                 <li>
-                  <Link to="/">홈</Link>
+                  <span className="custom-link" onClick={() => navigateAndScrollTop('/')}>홈</span>
                 </li>
                 <li>
-                  <Link to="/schedule">여행 일정</Link>
+                  <span className="custom-link" onClick={() => navigateAndScrollTop('/schedule')}>여행 일정</span>
                 </li>
                 <li>
-                  <Link to="/weather">나라별 날씨</Link>
+                  <span className="custom-link" onClick={() => navigateAndScrollTop('/weather')}>나라별 날씨</span>
                 </li>
               </ul>
             </div>
             <div className="footer-links-column">
               <ul className="footer-links">
                 <li>
-                  <Link to="/exchange">나라별 환율</Link>
+                  <span className="custom-link" onClick={() => navigateAndScrollTop('/exchange')}>나라별 환율</span>
                 </li>
                 <li>
-                  <Link to="/checklist">체크리스트</Link>
+                  <span className="custom-link" onClick={() => navigateAndScrollTop('/checklist')}>체크리스트</span>
                 </li>
                 <li>
-                  <Link to="/community">커뮤니티</Link>
+                  <span className="custom-link" onClick={() => navigateAndScrollTop('/community')}>커뮤니티</span>
                 </li>
               </ul>
             </div>

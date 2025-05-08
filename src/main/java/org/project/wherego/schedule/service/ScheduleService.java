@@ -23,9 +23,8 @@ import java.util.stream.Collectors;
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final MemberRepository memberRepository;
-    private final PlaceRepository placeRepository;
 
-
+    // 일정 리스트 생성
     public Schedule createSchedule(String email,
                                    ScheduleRequestDto requestDto) {
         Member member = memberRepository.findByEmail(email)
@@ -33,7 +32,6 @@ public class ScheduleService {
 
         Schedule schedule = Schedule.builder()
                 .title(requestDto.getTitle())
-                // .description(requestDto.getDescription()) // description 주석처리
                 .startDate(requestDto.getStartDate())
                 .endDate(requestDto.getEndDate())
                 .member(member)

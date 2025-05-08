@@ -25,6 +25,7 @@
   display: flex;
   align-items: center;
   margin-bottom: 8px;
+  margin-left: 13px;
 }
 
 .community-post-item .post-profile-image,

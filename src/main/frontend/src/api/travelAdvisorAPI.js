@@ -2,10 +2,8 @@ import axios from 'axios';
 
 const API_KEY = process.env.REACT_APP_RAPID_API_TRAVEL_API_KEY;
 
-// Trip Advisor API 호출을 위한 기본 설정
 const travelAdvisorAPI = {
   // 지역 경계 내 레스토랑 검색
- // 지역 경계 내 레스토랑 검색 (개선된 버전)
 getRestaurants: async (bounds) => {
   try {
     const { data } = await axios.get('https://travel-advisor.p.rapidapi.com/restaurants/list-in-boundary', {
@@ -56,25 +54,25 @@ getRestaurants: async (bounds) => {
 },
 
   // 지역 경계 내 관광지 검색
-  getAttractions: async (bounds) => {
-    const options = {
-      method: 'GET',
-      url: 'https://travel-advisor.p.rapidapi.com/attractions/list-in-boundary',
-      params: {
-        bl_latitude: bounds.bl_latitude || '37.552892082641534', 
-        tr_latitude: bounds.tr_latitude || '37.580105431907505',
-        bl_longitude: bounds.bl_longitude || '126.95710022735595',
-        tr_longitude: bounds.tr_longitude || '126.99889977264404',
-        limit: '5',
-        currency: 'USD',
-        lunit: 'km',
-        lang: 'ko_KR'
-      },
-      headers: {
-        'x-rapidapi-key': API_KEY,
-        'x-rapidapi-host': 'travel-advisor.p.rapidapi.com'
-      }
-    };
+getAttractions: async (bounds) => {
+  const options = {
+    method: 'GET',
+    url: 'https://travel-advisor.p.rapidapi.com/attractions/list-in-boundary',
+    params: {
+      bl_latitude: bounds.bl_latitude || '37.552892082641534', 
+      tr_latitude: bounds.tr_latitude || '37.580105431907505',
+      bl_longitude: bounds.bl_longitude || '126.95710022735595',
+      tr_longitude: bounds.tr_longitude || '126.99889977264404',
+      limit: '5',
+      currency: 'USD',
+      lunit: 'km',
+      lang: 'ko_KR'
+    },
+    headers: {
+      'x-rapidapi-key': API_KEY,
+      'x-rapidapi-host': 'travel-advisor.p.rapidapi.com'
+    }
+  };
 
     try {
       const response = await axios.request(options);
