@@ -11,7 +11,6 @@ function ScheduleListPage() {
 
   useEffect(() => {
     api.get('/schedule/allPlaces').then(res => {
-      // console.log('allPlaces 응답:', res.data);
       setSchedules(res.data);
     });
   }, []);

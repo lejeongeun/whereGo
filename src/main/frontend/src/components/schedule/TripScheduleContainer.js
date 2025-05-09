@@ -81,7 +81,6 @@ function TripScheduleContainer({ isEditMode, id }) {
   }, [scheduleId, selectedDay]);
 
   React.useEffect(() => {
-    // console.log('Selected day changed:', selectedDay);
   }, [selectedDay]);
 
   React.useEffect(() => {

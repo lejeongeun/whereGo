@@ -257,7 +257,6 @@ function ScheduleResultPanel({
 
   // 추천 장소를 일정에 추가하는 함수
   const onAddRecommendedPlace = async (place) => {
-    // console.log('추천 장소 추가 시 scheduleId:', scheduleId, 'selectedDay:', selectedDay);
     try {
       const savedPlace = await addPlaceToSchedule({
         name: place.name,
