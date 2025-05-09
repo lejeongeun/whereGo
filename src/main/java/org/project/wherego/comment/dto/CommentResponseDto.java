@@ -15,4 +15,5 @@ public class CommentResponseDto {
     private String content; // 댓글 내용
     private LocalDateTime createdAt;
     private String email;
+    private String profileImage;
 }

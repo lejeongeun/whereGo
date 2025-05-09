@@ -64,6 +64,7 @@ public class CommentService {
                         .email(comment.getMember().getEmail())
                         .content(comment.getContent())
                         .createdAt(comment.getCreatedAt())
+                        .profileImage(comment.getMember().getProfileImage())
                 .build()
         ).collect(Collectors.toList());
     }
