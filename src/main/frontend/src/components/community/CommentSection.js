@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../../api';
 import './css/CommentSection.css';
 import { updateComment, deleteComment } from '../../api/communityApi';
+import { BsPersonCircle } from 'react-icons/bs';
 
 function getRelativeTime(createdAt) {
   if (!createdAt) return '시간 정보 없음';
@@ -186,6 +187,15 @@ function CommentSection({ postId }) {
                     <>
                       <div className="comment-header">
                         <div className="comment-header-top">
+                        {typeof comment.profileImage === 'string' && comment.profileImage.trim() !== '' ? (
+                            <img
+                              src={`http://localhost:8080${comment.profileImage.slice(comment.profileImage.indexOf('/uploads/'))}`}
+                              alt={`${comment.nickname}님의 프로필`}
+                              className="comment-profile-img"
+                            />
+                          ) : (
+                            <BsPersonCircle className="comment-profile-img" size={32} color="#6c757d" />
+                          )}
                           <span className="comment-nickname">{comment.nickname}</span>
 
                           {isOwner && (
@@ -207,6 +217,7 @@ function CommentSection({ postId }) {
                       </div>
 
                       <div className="comment-content">{comment.content}</div>
+                      <div className="comment-relative-time">{getRelativeTime(comment.createdAt)}</div>
                     </>
                   )}
                 </li>
