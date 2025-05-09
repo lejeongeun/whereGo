@@ -7,6 +7,7 @@ function CommunityWritePage() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [images, setImages] = useState([]); 
+  const [previewUrls, setPreviewUrls] = useState([]);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -17,12 +18,11 @@ function CommunityWritePage() {
     formData.append('content', content);
 
     images.forEach((img) => {
-      formData.append('image', img); // ✅ 여러 장 첨부
+      formData.append('image', img); // 여러 장 첨부
     });
 
     api.post('/community/create', formData, {
-      headers: {'Content-Type': 'multipart/form-data'}
-
+      headers: { 'Content-Type': 'multipart/form-data' }
     })
     .then(() => {
       alert('게시글이 생성되었습니다.');
@@ -32,10 +32,13 @@ function CommunityWritePage() {
       console.error('게시글 생성 실패:', err);
       alert('생성 중 오류가 발생했습니다.');
     });
-};
+  };
 
   const handleImageChange = (e) => {
-    setImages([...e.target.files]);
+    const files = Array.from(e.target.files);
+    setImages(files);
+    const previews = files.map(file => URL.createObjectURL(file));
+    setPreviewUrls(previews);
   };
 
   return (
@@ -57,16 +60,22 @@ function CommunityWritePage() {
           onChange={(e) => setContent(e.target.value)}
         />
 
-        {/* 이미지 업로드 input 추가 */}
+        {/* 이미지 업로드 input */}
         <input
           type="file"
-          accept="image/*"
           multiple
+          accept="image/*"
           onChange={handleImageChange}
-          className="image-input"
         />
 
-        {images && <p className="image-name">선택된 파일: {images.name}</p>}
+        {/* 이미지 미리보기 */}
+        <div className="image-preview-section">
+          {previewUrls.map((url, idx) => (
+            <div key={idx} className="image-preview">
+              <img src={url} alt={`미리보기-${idx}`} />
+            </div>
+          ))}
+        </div>
 
         <div className="button-group">
           <button type="submit" className="submit-button">작성 완료</button>

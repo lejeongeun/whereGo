@@ -1,10 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CommunityPostItem from './CommunityPostItem';
 import './css/CommunityPostList.css';
 
 function CommunityPostList({ posts, isSearching }) {
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 5;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [posts]);
 
   if (!posts || posts.length === 0) {
     return (
