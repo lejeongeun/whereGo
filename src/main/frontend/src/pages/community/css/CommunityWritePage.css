@@ -68,3 +68,7 @@ form {
 .write-container .submit-button:hover {
   background-color: #357ABD; /* 효과 추가 */
 }
+
+.hidden-file-input {
+  margin-top: 10px;
+}

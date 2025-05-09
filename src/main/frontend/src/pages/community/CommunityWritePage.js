@@ -61,11 +61,14 @@ function CommunityWritePage() {
         />
 
         {/* 이미지 업로드 input */}
+      
         <input
+          id="file-upload"
           type="file"
           multiple
           accept="image/*"
           onChange={handleImageChange}
+          className="hidden-file-input"
         />
 
         {/* 이미지 미리보기 */}

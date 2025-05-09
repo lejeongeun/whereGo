@@ -75,7 +75,7 @@
 
 .write-button {
   white-space: nowrap;
-  padding: 8px 16px;
+  padding: 10px 20px;
   font-weight: bold;
   background-color: #4A90E2;
   color: white;
@@ -83,6 +83,8 @@
   border-radius: 6px;
   cursor: pointer;
   text-decoration: none;
+  font-size: 15px;
+  margin-right: 20px;
 }
 
 .search-write-bar .write-button:hover {

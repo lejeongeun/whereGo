@@ -85,7 +85,7 @@ function CommunityPage() {
       <div className="search-write-bar">  
         <CommunitySearch onSearch={handleSearch} />
         <button className="write-button" onClick={handleWriteClick}>
-          ✏️ 글쓰기
+          글쓰기
         </button>
       </div>
     </div>

@@ -103,6 +103,7 @@ function CommunityEditPage() {
           multiple
           accept="image/*"
           onChange={handleNewImageChange}
+          className="hidden-file-input"
         />
 
         <div className="image-preview-section">
