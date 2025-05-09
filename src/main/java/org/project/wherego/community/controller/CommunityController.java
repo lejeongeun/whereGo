@@ -64,11 +64,15 @@ public class CommunityController {
 
     // 게시글 상세 조회
     @GetMapping("/{id}")
-    public ResponseEntity<CommunityResponseDto> getPost(@PathVariable Long id){
-        communityService.increaseViewCount(id);
+    public ResponseEntity<CommunityResponseDto> getPost(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "true") boolean increaseView // ⬅️ 추가!
+    ) {
+        if (increaseView) {
+            communityService.increaseViewCount(id);
+        }
         CommunityResponseDto post = communityService.getPosts(id);
         return ResponseEntity.ok(post);
-
     }
 
     // 게시글 삭제

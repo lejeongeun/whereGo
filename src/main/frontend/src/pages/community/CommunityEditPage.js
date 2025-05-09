@@ -45,10 +45,10 @@ function CommunityEditPage() {
     );
     
     api.put(`/community/${id}/edit`, formData)
-      .then(() => {
-        alert('게시글이 수정되었습니다.');
-        navigate(`/community/${id}`);
-      })
+  .then(() => {
+    alert('게시글이 수정되었습니다.');
+    navigate(`/community/${id}?fromEdit=true`);
+  })
       .catch(err => {
         console.error('수정 실패:', err);
         alert('수정 중 오류 발생');
