@@ -99,6 +99,7 @@ public class CommunityService {
             }
         }
     }
+
     @Transactional
     public void increaseViewCount(Long communityId) {
         Community community = communityRepository.findById(communityId)

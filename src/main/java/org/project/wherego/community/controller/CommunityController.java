@@ -66,7 +66,7 @@ public class CommunityController {
     @GetMapping("/{id}")
     public ResponseEntity<CommunityResponseDto> getPost(
             @PathVariable Long id,
-            @RequestParam(defaultValue = "true") boolean increaseView // ⬅️ 추가!
+            @RequestParam(defaultValue = "true") boolean increaseView
     ) {
         if (increaseView) {
             communityService.increaseViewCount(id);
