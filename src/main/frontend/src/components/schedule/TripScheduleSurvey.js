@@ -16,7 +16,8 @@ function TripScheduleSurvey({
   setSelectedDay,
   dayPlaces,
   setDayPlaces,
-  fetchDayPlaces
+  fetchDayPlaces,
+  scheduleId
 }) {
   const handleGoBack = (currentStep) => {
     const updatedAnswers = { ...surveyAnswers };
@@ -102,6 +103,7 @@ function TripScheduleSurvey({
             dayPlaces={dayPlaces}
             setDayPlaces={setDayPlaces}
             fetchDayPlaces={fetchDayPlaces}
+            scheduleId={scheduleId}
           />
         );
       default:

@@ -4,7 +4,7 @@ import CommunitySortTabs from '../../components/community/CommunitySortTabs';
 import CommunityPostList from '../../components/community/CommunityPostList';
 import './css/CommunityPage.css';
 import api from '../../api';
-import { Link } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom'; // ✅ 추가
 
 function CommunityPage() {
   const [posts, setPosts] = useState([]);
@@ -12,6 +12,9 @@ function CommunityPage() {
   const [sortOrder, setSortOrder] = useState('최신순');
   const [popularPosts, setPopularPosts] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+
+  const navigate = useNavigate();
+  const isLoggedIn = !!localStorage.getItem('token'); // ✅ 로그인 여부 확인
 
   useEffect(() => {
     api.get('/community/list')
@@ -33,37 +36,42 @@ function CommunityPage() {
     setSortOrder(criteria);
     let sortedPosts = [...posts];
     if (criteria === '최신순') {
-      sortedPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // 최신순 정렬
+      sortedPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     } else if (criteria === '답변많은순') {
-      sortedPosts.sort((a, b) => b.commentCount - a.commentCount); // 답변 많은 순 정렬
+      sortedPosts.sort((a, b) => b.commentCount - a.commentCount);
     } else if (criteria === '좋아요순') {
-      sortedPosts.sort((a, b) => b.likeCount - a.likeCount); // 좋아요 많은 순 정렬
+      sortedPosts.sort((a, b) => b.likeCount - a.likeCount);
     } else if (criteria === '인기순') {
-      sortedPosts.sort((a, b) => (b.likeCount + b.commentCount) - (a.likeCount + a.commentCount)); // 좋아요 많은 순 정렬
+      sortedPosts.sort((a, b) => (b.likeCount + b.commentCount) - (a.likeCount + a.commentCount));
     }
-    setFilteredPosts(sortedPosts); // 정렬된 게시물 상태로 업데이트
+    setFilteredPosts(sortedPosts);
   };
 
   const handleSearch = (keyword) => {
     if (!keyword) {
       setFilteredPosts(posts);
-      setIsSearching(false); // 검색 중 아님
+      setIsSearching(false);
       return;
     }
-  
-    const result = posts.filter(p => 
+
+    const result = posts.filter(p =>
       p.title.includes(keyword) || p.content.includes(keyword)
     );
-  
+
     setFilteredPosts(result);
-    setIsSearching(true); // 검색 중
+    setIsSearching(true);
+  };
+
+  const handleWriteClick = () => {
+    if (!isLoggedIn) {
+      alert('글을 작성하려면 로그인이 필요합니다.');
+      return;
+    }
+    navigate('/community/write');
   };
 
   return (
-    
     <div className="community-container">
-      <h1 className="community-title">커뮤니티</h1>
-
       <div className="sort-tabs-wrapper">
         <CommunitySortTabs onSort={handleSort} />
       </div>
@@ -72,26 +80,15 @@ function CommunityPage() {
         <div className="left-content">
           <CommunityPostList posts={filteredPosts} isSearching={isSearching}/>
         </div>
-
-        {/* <div className="right-sidebar">
-          <h3>인기 게시물</h3>
-          <div className="popular-posts">
-            {popularPosts.map(post => (
-              <div key={post.id} className="popular-post-item">
-                <h4>{post.title}</h4>
-                <p>{post.content}</p>
-              </div>
-            ))}
-          </div>
-        </div> */}
-
       </div>
 
       <div className="search-write-bar">  
         <CommunitySearch onSearch={handleSearch} />
-          <Link to="/community/write" className="write-button">✏️ 글쓰기</Link>
-        </div>
+        <button className="write-button" onClick={handleWriteClick}>
+          ✏️ 글쓰기
+        </button>
       </div>
+    </div>
   );
 }
 

@@ -10,7 +10,6 @@ function Login(props) {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-//  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -114,7 +113,7 @@ function Login(props) {
           
           <button 
             type="submit" 
-            className="login-button"
+            className="login-buttons"
             disabled={isLoading}
           >
             {isLoading ? '로그인 중...' : '로그인'}

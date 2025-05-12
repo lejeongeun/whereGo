@@ -42,6 +42,6 @@ public class LikeService {
         Community community = communityRepository.findById(postId)
                 .orElseThrow(()-> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
-        return likeRepository.countByCommunity(community);
+        return likeRepository.countByCommunity(community); //Jpa는 엔티티 비교를 ID 기준으로 처리
     }
 }

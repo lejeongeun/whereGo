@@ -6,6 +6,7 @@ import org.project.wherego.community.domain.Community;
 import org.project.wherego.community.domain.CommunityImage;
 import org.project.wherego.community.dto.CommunityRequestDto;
 import org.project.wherego.community.dto.CommunityResponseDto;
+import org.project.wherego.community.dto.ImageDto;
 import org.project.wherego.community.repository.CommunityRepository;
 import org.project.wherego.member.domain.Member;
 import org.project.wherego.member.repository.MemberRepository;
@@ -63,9 +64,12 @@ public class CommunityService {
     }
 
     @Transactional
-    public void edit(Long id, CommunityRequestDto requestDto, List<MultipartFile> newImages, List<Long> deleteImageIds) {
+    public void edit(Long id, String email, CommunityRequestDto requestDto, List<MultipartFile> newImages, List<Long> deleteImageIds) {
         Community community = communityRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+        if (!community.getMember().getEmail().equals(email)) {
+            throw new SecurityException("작성자만 수정할 수 있습니다.");
+        }
 
         // 제목, 내용 수정
         community.setTitle(requestDto.getTitle());
@@ -95,6 +99,7 @@ public class CommunityService {
             }
         }
     }
+
     @Transactional
     public void increaseViewCount(Long communityId) {
         Community community = communityRepository.findById(communityId)
@@ -117,41 +122,50 @@ public class CommunityService {
                         .likeCount(community.getLikes().size())
                         .commentCount(community.getComments().size())
                         .imageUrls(community.getImages().stream()
-                                .map(CommunityImage::getImageUrl).collect(Collectors.toList()))
+                                .map(image -> ImageDto.builder()
+                                        .id(image.getId())
+                                        .url(image.getImageUrl())
+                                        .build()).collect(Collectors.toList()))
                         .profileImage(community.getMember().getProfileImage())
                         .build())
                 .collect(Collectors.toList());
+
     }
 
     // 한개의 게시물 가져오기
     @Transactional(readOnly = true)
-    public CommunityResponseDto getPosts(Long id, Member member) {
+    public CommunityResponseDto getPosts(Long id) {
         Community community = communityRepository.findById(id)
                 .orElseThrow(()-> new IllegalArgumentException("게시물 존재하지 않습니다."));
-
-        Member members = memberRepository.findByEmail(member.getEmail())
-                .orElseThrow(()-> new IllegalArgumentException("사용자가 존재하지 않습니다."));
 
         communityRepository.save(community);
 
         return CommunityResponseDto.builder()
                 .title(community.getTitle())
                 .content(community.getContent())
-                .nickname(members.getNickname())
+                .nickname(community.getMember().getNickname())
                 .email(community.getMember().getEmail())
                 .createdAt(community.getCreatedAt())
                 .viewCount(community.getViewCount())
                 .likeCount(community.getLikes().size()) // 좋아요 수
                 .commentCount(community.getComments().size()) // 댓글 수
-                .imageUrls(community.getImages().stream().map(CommunityImage::getImageUrl).collect(Collectors.toList())) // 이미지
+                .imageUrls(community.getImages().stream()
+                        .map(image -> ImageDto.builder()
+                                .id(image.getId())
+                                .url(image.getImageUrl())
+                                .build()).collect(Collectors.toList()))
                 .profileImage(community.getMember().getProfileImage())
                 .build();
     }
     // 삭제 하기
     @Transactional
-    public void delete (Long id){
+    public void delete (Long id, String email){
         Community community = communityRepository.findById(id)
                 .orElseThrow(()-> new IllegalArgumentException("게시글이 존재하지 않습니다. "));
+
+        if (!community.getMember().getEmail().equals(email)){
+            throw new SecurityException("작성자만 삭제 가능합니다.");
+        }
         communityRepository.delete(community);
     }
 

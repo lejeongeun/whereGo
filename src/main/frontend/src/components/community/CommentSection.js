@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../../api';
 import './css/CommentSection.css';
 import { updateComment, deleteComment } from '../../api/communityApi';
+import { BsPersonCircle } from 'react-icons/bs';
 
 function getRelativeTime(createdAt) {
   if (!createdAt) return '시간 정보 없음';
@@ -39,12 +40,15 @@ function getFormattedTime(createdAt) {
 function CommentSection({ postId }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
-  const [editingStates, setEditingStates] = useState({}); 
-  const [editContents, setEditContents] = useState({});    
+  const [editingStates, setEditingStates] = useState({});
+  const [editContents, setEditContents] = useState({});
   const [showMenuId, setShowMenuId] = useState(null);
   const [loggedInEmail, setLoggedInEmail] = useState(localStorage.getItem('email') || '');
+  const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [currentPage, setCurrentPage] = useState(1);
   const commentsPerPage = 5;
+
+  const isLoggedIn = !!token;
 
   const fetchComments = async () => {
     try {
@@ -57,11 +61,10 @@ function CommentSection({ postId }) {
 
   useEffect(() => {
     const handleLoginStateChange = () => {
-      const updatedEmail = localStorage.getItem('email') || '';
-      console.log('📢 [loginStateChanged] 업데이트된 email:', updatedEmail);
-      setLoggedInEmail(updatedEmail);
+      setLoggedInEmail(localStorage.getItem('email') || '');
+      setToken(localStorage.getItem('token') || '');
     };
-  
+
     window.addEventListener('loginStateChanged', handleLoginStateChange);
     return () => {
       window.removeEventListener('loginStateChanged', handleLoginStateChange);
@@ -132,105 +135,113 @@ function CommentSection({ postId }) {
 
   return (
     <>
-    <div className="comment-divider"></div>
-    <div className="comment-section">
-      <h3>댓글</h3>
-      <form onSubmit={handleSubmit} className="comment-form">
-        <textarea
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-          placeholder="댓글을 입력하세요"
-        />
-        <button type="submit">등록</button>
-      </form>
-      
+      <div className="comment-divider"></div>
+      <div className="comment-section">
+        <h3>댓글</h3>
 
-      <ul className="comment-list">
-        {
-        comments.length === 0 ? (
-          <p className="no-comments">댓글이 없습니다.</p>
+        {isLoggedIn ? (
+          <form onSubmit={handleSubmit} className="comment-form">
+            <textarea
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="댓글을 입력하세요"
+            />
+            <button type="submit">등록</button>
+          </form>
         ) : (
-        
-        currentComments.map((comment) => {
-          const isEditing = editingStates[comment.commentId] === true;
+          <p className="no-comments">로그인해야 댓글을 작성할 수 있습니다.</p>
+        )}
 
-          console.log('🔎 comment.email:', comment.email);
-          console.log('🔎 loggedInEmail:', loggedInEmail);
-          console.log('🔎 canEditOrDelete:', comment.email === loggedInEmail);
+        <ul className="comment-list">
+          {comments.length === 0 ? (
+            <p className="no-comments">댓글이 없습니다.</p>
+          ) : (
+            currentComments.map((comment) => {
+              const isEditing = editingStates[comment.commentId] === true;
+              const isOwner = isLoggedIn && comment.email === loggedInEmail;
 
-          return (
-            <li key={comment.commentId} className="comment-item">
-  {isEditing ? (
-    <>
-      <textarea
-        value={editContents[comment.commentId] || ''}
-        onChange={(e) =>
-          setEditContents(prev => ({
-            ...prev,
-            [comment.commentId]: e.target.value,
-          }))
-        }
-      />
-      <div className="comment-actions">
-        <button onClick={() => handleEditSubmit(comment.commentId)}>저장</button>
-        <button onClick={() =>
-          setEditingStates(prev => ({
-            ...prev,
-            [comment.commentId]: false,
-          }))
-        }>취소</button>
-      </div>
-    </>
-  ) : (
-    <>
-<div className="comment-header">
-  <div className="comment-header-top">
-    <span className="comment-nickname">{comment.nickname}</span>
+              return (
+                <li key={comment.commentId} className="comment-item">
+                  {isEditing ? (
+                    <>
+                      <textarea
+                        value={editContents[comment.commentId] || ''}
+                        onChange={(e) =>
+                          setEditContents(prev => ({
+                            ...prev,
+                            [comment.commentId]: e.target.value,
+                          }))
+                        }
+                      />
+                      <div className="comment-actions">
+                        <button onClick={() => handleEditSubmit(comment.commentId)}>저장</button>
+                        <button onClick={() =>
+                          setEditingStates(prev => ({
+                            ...prev,
+                            [comment.commentId]: false,
+                          }))
+                        }>취소</button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="comment-header">
+                        <div className="comment-header-top">
+                        {typeof comment.profileImage === 'string' && comment.profileImage.trim() !== '' ? (
+                            <img
+                              src={`http://localhost:8080${comment.profileImage.slice(comment.profileImage.indexOf('/uploads/'))}`}
+                              alt={`${comment.nickname}님의 프로필`}
+                              className="comment-profile-img"
+                            />
+                          ) : (
+                            <BsPersonCircle className="comment-profile-img" size={32} color="#6c757d" />
+                          )}
+                          <span className="comment-nickname">{comment.nickname}</span>
 
-    {loggedInEmail === comment.email && (
-      <div className="comment-more-container">
-        <button className="comment-more-button" onClick={() => toggleMenu(comment.commentId)}>⋯</button>
-        {showMenuId === comment.commentId && (
-          <div className="comment-more-menu">
-            <button onClick={() => startEditing(comment)}>수정</button>
-            <button onClick={() => handleDelete(comment.commentId)}>삭제</button>
+                          {isOwner && (
+                            <div className="comment-more-container">
+                              <button className="comment-more-button" onClick={() => toggleMenu(comment.commentId)}>⋯</button>
+                              {showMenuId === comment.commentId && (
+                                <div className="comment-more-menu">
+                                  <button onClick={() => startEditing(comment)}>수정</button>
+                                  <button onClick={() => handleDelete(comment.commentId)}>삭제</button>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="comment-time-under">
+                          {getFormattedTime(comment.createdAt)}
+                        </div>
+                      </div>
+
+                      <div className="comment-content">{comment.content}</div>
+                      <div className="comment-relative-time">{getRelativeTime(comment.createdAt)}</div>
+                    </>
+                  )}
+                </li>
+              );
+            })
+          )}
+        </ul>
+
+        {comments.length > 0 && (
+          <div className="pagination">
+            <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}>이전</button>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i + 1}
+                onClick={() => setCurrentPage(i + 1)}
+                className={currentPage === i + 1 ? 'active' : ''}
+              >
+                {i + 1}
+              </button>
+            ))}
+            <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>다음</button>
           </div>
         )}
       </div>
-    )}
-  </div>
-
-  <div className="comment-time-under">
-    {getFormattedTime(comment.createdAt)}
-  </div>
-</div>
-
-<div className="comment-content">{comment.content}</div>
-
-    </>
-  )}
-</li>
-          );
-        })
-      )}
-      </ul>
-
-      {comments.length > 0 && (
-        <div className="pagination">
-          <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}>이전</button>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => setCurrentPage(i + 1)}
-              className={currentPage === i + 1 ? 'active' : ''}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>다음</button>
-        </div>
-      )}
-    </div>
     </>
   );
 }

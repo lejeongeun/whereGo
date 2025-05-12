@@ -1,33 +1,24 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../api';
 import './css/CommunityEditPage.css';
 
 function CommunityEditPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [existingImages, setExistingImages] = useState([]);
   const [deleteImageIds, setDeleteImageIds] = useState([]);
   const [newImages, setNewImages] = useState([]);
+  const [newImagePreviews, setNewImagePreviews] = useState([]);
 
   useEffect(() => {
     api.get(`/community/${id}`)
       .then(res => {
-        console.log("🔥 전체 응답:", res.data);
-        console.log("🔥 이미지 응답:", res.data.imageUrls);
-        let images = res.data.imageUrls;
-  
-        // 문자열 배열일 경우 객체 배열로 변환
-        if (typeof images[0] === 'string') {
-          images = images.map((url, index) => ({ id: index, url }));
-        }
-  
         setTitle(res.data.title);
         setContent(res.data.content);
-        setExistingImages(images);
+        setExistingImages(res.data.imageUrls); // 이제 { id, url } 객체 배열
       })
       .catch(err => console.error('❌ 가져오기 실패:', err));
   }, [id]);
@@ -37,6 +28,15 @@ function CommunityEditPage() {
       prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
     );
   };
+
+
+      const handleNewImageChange = (e) => {
+        const files = Array.from(e.target.files);        // 선택한 파일들을 배열로 바꿈
+        setNewImages(files);                              // 선택한 파일들 상태 저장
+        const previewUrls = files.map(file => URL.createObjectURL(file)); // 미리보기 주소 생성
+        setNewImagePreviews(previewUrls);                // 화면에 보여줄 미리보기 주소 저장
+      };
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -55,10 +55,10 @@ function CommunityEditPage() {
     );
     
     api.put(`/community/${id}/edit`, formData)
-      .then(() => {
-        alert('게시글이 수정되었습니다.');
-        navigate(`/community/${id}`);
-      })
+  .then(() => {
+    alert('게시글이 수정되었습니다.');
+    navigate(`/community/${id}?fromEdit=true`);
+  })
       .catch(err => {
         console.error('수정 실패:', err);
         alert('수정 중 오류 발생');
@@ -83,27 +83,35 @@ function CommunityEditPage() {
           onChange={(e) => setContent(e.target.value)}
         />
 
-<div className="image-preview-section">
-  {existingImages.map((img, index) => (
-    <div key={img.id} className="image-preview">
-      <img src={`http://localhost:8080${img.url}`} alt={`기존-${index}`} />
-      <label>
-        <input
-          type="checkbox"
-          onChange={() => handleImageDeleteToggle(img.id)}
-          checked={deleteImageIds.includes(img.id)}
-        /> 삭제
-      </label>
-    </div>
-  ))}
-</div>
+        <div className="image-preview-section">
+          {existingImages.map((img, index) => (
+            <div key={img.id} className="image-preview">
+              <img src={`http://localhost:8080${img.url}`} alt={`기존-${index}`} />
+              <label>
+                <input
+                  type="checkbox"
+                  onChange={() => handleImageDeleteToggle(img.id)}
+                  checked={deleteImageIds.includes(img.id)}
+                /> 삭제
+              </label>
+            </div>
+          ))}
+        </div>
 
         <input
           type="file"
           multiple
           accept="image/*"
-          onChange={(e) => setNewImages(Array.from(e.target.files))}
+          onChange={handleNewImageChange}
         />
+
+        <div className="image-preview-section">
+          {newImagePreviews.map((url, idx) => (
+            <div key={idx} className="image-preview">
+              <img src={url} alt={`새 이미지 ${idx}`} />
+            </div>
+          ))}
+        </div>
 
         <div className="button-group">
           <button type="submit" className="save-button">저장</button>

@@ -1,10 +1,10 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import './css/CommunityDetailPage.css';
 import { deletePost } from '../../api/communityApi';
 import api from '../../api';
 import CommentSection from '../../components/community/CommentSection';
-
+import { BsPersonCircle } from 'react-icons/bs';
 import { AiOutlineLike } from "react-icons/ai";
 import { LuEye } from "react-icons/lu";
 import { FaRegComment } from "react-icons/fa";
@@ -13,11 +13,19 @@ function CommunityDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
-  const loggedInEmail = localStorage.getItem('email');
   const [showMenu, setShowMenu] = useState(false);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const fromEdit = queryParams.get('fromEdit');
+
+  const token = localStorage.getItem('token');
+  const loggedInEmail = localStorage.getItem('email');
+  const isLoggedIn = !!token;
 
   useEffect(() => {
-    api.get(`/community/${id}`)
+    const increaseView = fromEdit !== 'true'; // 수정에서 안 온 경우만 true
+  
+    api.get(`/community/${id}?increaseView=${increaseView}`)
       .then((res) => {
         setPost(res.data);
       })
@@ -25,7 +33,7 @@ function CommunityDetailPage() {
         alert('게시글 불러오기 실패');
         navigate('/community');
       });
-  }, [id, navigate, loggedInEmail]);
+  }, [id, navigate, location.search]);
 
   if (!post) return <div>로딩중...</div>;
 
@@ -33,7 +41,10 @@ function CommunityDetailPage() {
     title, content, nickname, createdAt,
     likeCount, viewCount, commentCount,
     imageUrls, profileImage,
+    email: authorEmail,
   } = post;
+
+  const isAuthor = isLoggedIn && loggedInEmail === authorEmail;
 
   const handleEdit = () => {
     navigate(`/community/${id}/edit`, { state: { title, content, imageUrls } });
@@ -58,15 +69,15 @@ function CommunityDetailPage() {
       <h2 className="detail-title">{title}</h2>
       <div className="detail-meta">
         <div className="detail-author">
-          <img
-            src={
-              typeof profileImage === 'string' && profileImage.trim() !== ''
-                ? `http://localhost:8080${profileImage.slice(profileImage.indexOf('/uploads/'))}`
-                : '/default-profile.png'
-            }
-            alt={`${nickname}님의 프로필`}
-            className="post-profile-image"
-          />
+          {typeof profileImage === 'string' && profileImage.trim() !== '' ? (
+            <img
+              src={`http://localhost:8080${profileImage.slice(profileImage.indexOf('/uploads/'))}`}
+              alt={`${nickname}님의 프로필`}
+              className="post-profile-image"
+            />
+          ) : (
+            <BsPersonCircle className="post-profile-image" size={32} color="#6c757d" />
+          )}
           <span className="author">{nickname}</span>
         </div>
 
@@ -75,41 +86,40 @@ function CommunityDetailPage() {
             <span className="time">{new Date(createdAt).toLocaleString()}</span>
             <span className="views"><LuEye /> {viewCount}</span>
           </div>
-
-
         </div>
       </div>
 
       <div className="detail-body">
-  <div className="detail-like-row">
-    <div className="detail-like">
-      <button onClick={handleLike} className="like-icon-button">
-        <AiOutlineLike /> {likeCount}
-      </button>
-      <span><FaRegComment /> {commentCount}</span>
-    </div>
-
-    {loggedInEmail && post?.email?.trim() === loggedInEmail.trim() && (
-      <div className="more-options-container">
-        <button className="more-button" onClick={() => setShowMenu(prev => !prev)}>⋯</button>
-        {showMenu && (
-          <div className="more-menu">
-            <button onClick={handleEdit} className="edit-button">수정</button>
-            <button onClick={handleDelete} className="delete-button">삭제</button>
+        <div className="detail-like-row">
+          <div className="detail-like">
+            <button onClick={handleLike} className="like-icon-button">
+              <AiOutlineLike /> {likeCount}
+            </button>
+            <span><FaRegComment /> {commentCount}</span>
           </div>
-        )}
-      </div>
-    )}
-  </div>
+
+          {isAuthor && (
+            <div className="more-options-container">
+              <button className="more-button" onClick={() => setShowMenu(prev => !prev)}>⋯</button>
+              {showMenu && (
+                <div className="more-menu">
+                  <button onClick={handleEdit} className="edit-button">수정</button>
+                  <button onClick={handleDelete} className="delete-button">삭제</button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         {Array.isArray(imageUrls) && imageUrls.length > 0 && (
           <div className="detail-images">
-            {imageUrls.map((url, index) => (
+            {imageUrls.map((image, index) => (
               <img
-                key={index}
-                src={`http://localhost:8080${url}`}
+                key={image.id || index}
+                src={`http://localhost:8080${image.url}`}
                 alt={`이미지-${index}`}
                 className="detail-image"
+                onError={(e) => { e.target.src = '/placeholder-image.png'; }}
               />
             ))}
           </div>
@@ -120,7 +130,7 @@ function CommunityDetailPage() {
         </div>
       </div>
 
-      <CommentSection postId={id} />
+      <CommentSection postId={id} isLoggedIn={isLoggedIn} currentUserEmail={loggedInEmail} />
     </div>
   );
 }
