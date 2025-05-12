@@ -202,7 +202,6 @@
 
 .comment-header-top {
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 
@@ -217,4 +216,21 @@
   font-size: 0.8rem;
   color: #999;
   margin-left: 2px;
+  margin-top: 5px;
+}
+
+.comment-relative-time {
+  font-size: 12px;
+  color: #888;
+  margin-top: 4px;
+  margin-left: auto;
+  align-self: flex-end;
+}
+
+.comment-profile-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 8px;
 }

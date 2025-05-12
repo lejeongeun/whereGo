@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import './css/CommunityDetailPage.css';
 import { deletePost } from '../../api/communityApi';
@@ -14,13 +14,18 @@ function CommunityDetailPage() {
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const fromEdit = queryParams.get('fromEdit');
 
   const token = localStorage.getItem('token');
   const loggedInEmail = localStorage.getItem('email');
   const isLoggedIn = !!token;
 
   useEffect(() => {
-    api.get(`/community/${id}`)
+    const increaseView = fromEdit !== 'true'; // 수정에서 안 온 경우만 true
+  
+    api.get(`/community/${id}?increaseView=${increaseView}`)
       .then((res) => {
         setPost(res.data);
       })
@@ -28,7 +33,7 @@ function CommunityDetailPage() {
         alert('게시글 불러오기 실패');
         navigate('/community');
       });
-  }, [id, navigate]);
+  }, [id, navigate, location.search]);
 
   if (!post) return <div>로딩중...</div>;
 

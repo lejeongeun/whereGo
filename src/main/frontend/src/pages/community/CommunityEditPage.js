@@ -11,6 +11,7 @@ function CommunityEditPage() {
   const [existingImages, setExistingImages] = useState([]);
   const [deleteImageIds, setDeleteImageIds] = useState([]);
   const [newImages, setNewImages] = useState([]);
+  const [newImagePreviews, setNewImagePreviews] = useState([]);
 
   useEffect(() => {
     api.get(`/community/${id}`)
@@ -27,6 +28,15 @@ function CommunityEditPage() {
       prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
     );
   };
+
+
+      const handleNewImageChange = (e) => {
+        const files = Array.from(e.target.files);        // 선택한 파일들을 배열로 바꿈
+        setNewImages(files);                              // 선택한 파일들 상태 저장
+        const previewUrls = files.map(file => URL.createObjectURL(file)); // 미리보기 주소 생성
+        setNewImagePreviews(previewUrls);                // 화면에 보여줄 미리보기 주소 저장
+      };
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -45,10 +55,10 @@ function CommunityEditPage() {
     );
     
     api.put(`/community/${id}/edit`, formData)
-      .then(() => {
-        alert('게시글이 수정되었습니다.');
-        navigate(`/community/${id}`);
-      })
+  .then(() => {
+    alert('게시글이 수정되었습니다.');
+    navigate(`/community/${id}?fromEdit=true`);
+  })
       .catch(err => {
         console.error('수정 실패:', err);
         alert('수정 중 오류 발생');
@@ -92,8 +102,16 @@ function CommunityEditPage() {
           type="file"
           multiple
           accept="image/*"
-          onChange={(e) => setNewImages(Array.from(e.target.files))}
+          onChange={handleNewImageChange}
         />
+
+        <div className="image-preview-section">
+          {newImagePreviews.map((url, idx) => (
+            <div key={idx} className="image-preview">
+              <img src={url} alt={`새 이미지 ${idx}`} />
+            </div>
+          ))}
+        </div>
 
         <div className="button-group">
           <button type="submit" className="save-button">저장</button>

@@ -55,14 +55,14 @@ function CommunityPostItem({
             <div className="post-header">
 
             {typeof profileImage === 'string' && profileImage.trim() !== '' ? (
-  <img
-    src={profileImage.slice(profileImage.indexOf('/uploads/'))}
-    alt={`${nickname}님의 프로필`}
-    className="post-profile-image"
-  />
-) : (
-  <BsPersonCircle className="post-profile-icon" size={32} color="#999" />
-)}
+                <img
+                  src={profileImage.slice(profileImage.indexOf('/uploads/'))}
+                  alt={`${nickname}님의 프로필`}
+                  className="post-profile-image"
+                />
+              ) : (
+                <BsPersonCircle className="post-profile-icon" size={32} color="#999" />
+              )}
 
               <span className="author-name">{nickname}</span>
             </div>
