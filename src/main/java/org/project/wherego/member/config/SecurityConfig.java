@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -76,6 +75,8 @@ public class SecurityConfig {
     // 실제 유저 정보를 조회하고 비밀번호를 비교하는 작업은 DaoAuthenticationProvider
     // DaoAuthenticationProvider는 우리가 만든 CustomUserDetailsService로 유저를 찾고, BCryptPasswordEncoder로 비밀번호를 비교
 
+    //AuthenticationManager는 UserDetailsService를 통해 사용자 정보를 확인하고,
+    //PasswordEncoder로 비밀번호 검증을 합니다
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
