@@ -9,6 +9,8 @@ server:
         secure: true
 
 spring:
+  profiles:
+    active: local
   datasource:
     url: jdbc:mysql://localhost:3306/wherego
     username: root

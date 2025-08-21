@@ -11,6 +11,8 @@ import org.project.wherego.community.repository.CommunityRepository;
 import org.project.wherego.member.domain.Member;
 import org.project.wherego.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -37,7 +40,6 @@ public class CommunityService {
 
     @Transactional
     public void create(CommunityRequestDto requestDto, String email, List<MultipartFile> imageFiles) {
-
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(()-> new IllegalArgumentException("회원이 존재하지 않습니다. 다시 로그인 해주세요."));
 
@@ -62,6 +64,7 @@ public class CommunityService {
         communityRepository.save(community);
 
     }
+
 
     @Transactional
     public void edit(Long id, String email, CommunityRequestDto requestDto, List<MultipartFile> newImages, List<Long> deleteImageIds) {
@@ -109,8 +112,8 @@ public class CommunityService {
     }
 
     @Transactional(readOnly = true)
-    public List<CommunityResponseDto> getAllPosts() {
-        return communityRepository.findAll().stream()
+    public Page<CommunityResponseDto> getPagedPosts(Pageable pageable) {
+        return communityRepository.findByIsDeletedFalse(pageable)
                 .map(community -> CommunityResponseDto.builder()
                         .id(community.getId())
                         .title(community.getTitle())
@@ -127,15 +130,14 @@ public class CommunityService {
                                         .url(image.getImageUrl())
                                         .build()).collect(Collectors.toList()))
                         .profileImage(community.getMember().getProfileImage())
-                        .build())
-                .collect(Collectors.toList());
+                        .build());
 
     }
 
     // 한개의 게시물 가져오기
     @Transactional(readOnly = true)
     public CommunityResponseDto getPosts(Long id) {
-        Community community = communityRepository.findById(id)
+        Community community = communityRepository.findWithAllById(id)
                 .orElseThrow(()-> new IllegalArgumentException("게시물 존재하지 않습니다."));
 
         communityRepository.save(community);

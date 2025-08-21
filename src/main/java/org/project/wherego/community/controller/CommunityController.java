@@ -1,17 +1,18 @@
 package org.project.wherego.community.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.wherego.community.dto.CommunityRequestDto;
 import org.project.wherego.community.dto.CommunityResponseDto;
 import org.project.wherego.community.service.CommunityService;
 import org.project.wherego.member.config.CustomUserDetails;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -28,6 +29,7 @@ public class CommunityController {
                                          @RequestPart("content") String content,
                                          @RequestPart(value = "image", required = false) List<MultipartFile> imageFiles){
         String email = userDetails.getMember().getEmail();
+
         CommunityRequestDto requestDto = CommunityRequestDto.builder()
                 .title(title)
                 .content(content)
@@ -58,16 +60,19 @@ public class CommunityController {
     }
     // 게시글 전체 확인
     @GetMapping("/list")
-    public ResponseEntity<List<CommunityResponseDto>> getAllPosts(){;
-        return ResponseEntity.ok(communityService.getAllPosts());
+    public ResponseEntity<Page<CommunityResponseDto>> getPagedPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CommunityResponseDto> pageList = communityService.getPagedPosts(pageable);
+        return ResponseEntity.ok(pageList);
     }
 
     // 게시글 상세 조회
     @GetMapping("/{id}")
     public ResponseEntity<CommunityResponseDto> getPost(
             @PathVariable Long id,
-            @RequestParam(defaultValue = "true") boolean increaseView
-    ) {
+            @RequestParam(defaultValue = "true") boolean increaseView) {
         if (increaseView) {
             communityService.increaseViewCount(id);
         }
