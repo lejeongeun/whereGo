@@ -3,7 +3,6 @@ server:
   servlet:
     session:
       timeout: 60m
-
       cookie:
         same-site: none
         secure: true
@@ -11,30 +10,40 @@ server:
 spring:
   profiles:
     active: local
+
   datasource:
     url: jdbc:mysql://localhost:3306/wherego
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 30
+      minimum-idle: 10
+      connection-timeout: 30000
 
   jpa:
     hibernate:
       ddl-auto: update
-
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+
   servlet:
-    multipart: # 파일 업로드 크기 제한 설정.
-      max-file-size: 20MB # 파일 최대 크기
-      max-request-size: 20MB # 요청 최대 크기
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
   web:
     resources:
-      static-locations: file:./uploads/,classpath:/static/ #디렉토리를 정적 리소스로 제공.
+      static-locations: file:./uploads/,classpath:/static/
+
+logging:
+  level:
+    org.springdoc: DEBUG
 
 file:
-  upload-dir: uploads # 파일 저장 디렉토리
+  upload-dir: uploads
 
 exchangerate:
   api:

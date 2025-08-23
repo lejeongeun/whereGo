@@ -7,7 +7,9 @@ import org.project.wherego.like.domain.Like;
 import org.project.wherego.member.domain.Member;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -40,14 +42,14 @@ public class Community extends BaseEntity {
     private Long viewCount = 0L; // 조회수
 
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> likes;
+    private Set<Like> likes = new HashSet<>();
 
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments;
+    private Set<Comment> comments = new HashSet<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CommunityImage> images = new ArrayList<>();
+    private Set<CommunityImage> images = new HashSet<>();
 
 
 }

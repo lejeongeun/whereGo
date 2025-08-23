@@ -16,7 +16,7 @@ public interface CommunityRepository extends JpaRepository<Community, Long> {
     @EntityGraph(attributePaths = {"member", "images", "likes", "comments"})
     Page<Community> findByIsDeletedFalse(Pageable pageable); // 삭제 안 된 글만 페이징 처리
 
-    @EntityGraph(attributePaths = {"member", "image", "likes", "comments"})
+    @EntityGraph(attributePaths = {"member", "images", "likes", "comments"})
     Optional<Community> findWithAllById(Long id); // 상세 조회용
 
     List<Community> findByMemberAndIsDeletedFalse(Member member);

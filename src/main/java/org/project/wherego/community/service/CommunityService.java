@@ -65,7 +65,6 @@ public class CommunityService {
 
     }
 
-
     @Transactional
     public void edit(Long id, String email, CommunityRequestDto requestDto, List<MultipartFile> newImages, List<Long> deleteImageIds) {
         Community community = communityRepository.findById(id)
@@ -112,26 +111,9 @@ public class CommunityService {
     }
 
     @Transactional(readOnly = true)
-    public Page<CommunityResponseDto> getPagedPosts(Pageable pageable) {
-        return communityRepository.findByIsDeletedFalse(pageable)
-                .map(community -> CommunityResponseDto.builder()
-                        .id(community.getId())
-                        .title(community.getTitle())
-                        .content(community.getContent())
-                        .nickname(community.getMember().getNickname())
-                        .email(community.getMember().getEmail())
-                        .createdAt(community.getCreatedAt())
-                        .viewCount(community.getViewCount())
-                        .likeCount(community.getLikes().size())
-                        .commentCount(community.getComments().size())
-                        .imageUrls(community.getImages().stream()
-                                .map(image -> ImageDto.builder()
-                                        .id(image.getId())
-                                        .url(image.getImageUrl())
-                                        .build()).collect(Collectors.toList()))
-                        .profileImage(community.getMember().getProfileImage())
-                        .build());
-
+    public Page<CommunityResponseDto> getAllPages(Pageable pageable) {
+        Page<Community> page = communityRepository.findByIsDeletedFalse(pageable);
+        return page.map(CommunityResponseDto::from);
     }
 
     // 한개의 게시물 가져오기

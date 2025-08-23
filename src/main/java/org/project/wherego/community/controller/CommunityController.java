@@ -8,6 +8,8 @@ import org.project.wherego.member.config.CustomUserDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -61,11 +63,8 @@ public class CommunityController {
     // 게시글 전체 확인
     @GetMapping("/list")
     public ResponseEntity<Page<CommunityResponseDto>> getPagedPosts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size){
-        Pageable pageable = PageRequest.of(page, size);
-        Page<CommunityResponseDto> pageList = communityService.getPagedPosts(pageable);
-        return ResponseEntity.ok(pageList);
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
+        return ResponseEntity.ok(communityService.getAllPages(pageable));
     }
 
     // 게시글 상세 조회
