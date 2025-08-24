@@ -25,7 +25,7 @@ public class CommunityController {
     private final CommunityService communityService;
 
     // 게시글 생성
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<String> create(@AuthenticationPrincipal CustomUserDetails userDetails,
                                          @RequestPart("title") String title,
                                          @RequestPart("content") String content,
@@ -61,7 +61,7 @@ public class CommunityController {
         return ResponseEntity.ok("글 수정 완료");
     }
     // 게시글 전체 확인
-    @GetMapping("/list")
+    @GetMapping
     public ResponseEntity<Page<CommunityResponseDto>> getPagedPosts(
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
         return ResponseEntity.ok(communityService.getAllPages(pageable));

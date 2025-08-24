@@ -54,6 +54,10 @@ dependencies {
     // google map api
     implementation 'com.google.maps:google-maps-services:0.18.0'
 
+    // AWS S3 SDK
+    implementation platform("software.amazon.awssdk:bom:2.20.111") // 최신 안정 버전을 사용
+    implementation "software.amazon.awssdk:s3"
+    
     // webSocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 

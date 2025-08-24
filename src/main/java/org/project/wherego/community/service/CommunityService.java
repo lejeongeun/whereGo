@@ -8,6 +8,7 @@ import org.project.wherego.community.dto.CommunityRequestDto;
 import org.project.wherego.community.dto.CommunityResponseDto;
 import org.project.wherego.community.dto.ImageDto;
 import org.project.wherego.community.repository.CommunityRepository;
+import org.project.wherego.global.s3.S3Service;
 import org.project.wherego.member.domain.Member;
 import org.project.wherego.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,9 +35,9 @@ import java.util.stream.Collectors;
 public class CommunityService {
     private final CommunityRepository communityRepository;
     private final MemberRepository memberRepository;
+    private final S3Service s3Service;
 
-    @Value("${file.upload-dir}")
-    private String uploadDir;
+    private static final String COMMUNITY_IMAGE_FOLDER = "community/";
 
     @Transactional
     public void create(CommunityRequestDto requestDto, String email, List<MultipartFile> imageFiles) {
@@ -50,17 +51,23 @@ public class CommunityService {
                 .isDeleted(false)
                 .build();
 
-
-        if (imageFiles != null){
-            for (MultipartFile imageFile : imageFiles){
-                String imageUrl = saveImageFile(imageFile);
-                CommunityImage image = CommunityImage.builder()
-                        .imageUrl(imageUrl)
-                        .community(community)
-                        .build();
-                community.getImages().add(image);
+        if (imageFiles != null) {
+            for (MultipartFile file : imageFiles) {
+                String key = COMMUNITY_IMAGE_FOLDER + UUID.randomUUID() + getExtension(file.getOriginalFilename());
+                try {
+                    String s3Url = s3Service.uploadFile(key, file);
+                    CommunityImage image = CommunityImage.builder()
+                            .imageUrl(s3Url)
+                            .community(community)
+                            .build();
+                    community.getImages().add(image);
+                    log.info("✅ 업로드된 S3 URL: {}", s3Url);
+                } catch (IOException e) {
+                    throw new RuntimeException("이미지 업로드 실패", e);
+                }
             }
         }
+
         communityRepository.save(community);
 
     }
@@ -77,131 +84,83 @@ public class CommunityService {
         community.setTitle(requestDto.getTitle());
         community.setContent(requestDto.getContent());
 
+        // 삭제할 이미지 처리
         if (deleteImageIds != null && !deleteImageIds.isEmpty()) {
-            List<CommunityImage> imagesToRemove = new ArrayList<>();
+            List<CommunityImage> toRemove = new ArrayList<>();
             for (CommunityImage image : community.getImages()) {
                 if (deleteImageIds.contains(image.getId())) {
-                    deleteImageFile(image.getImageUrl()); // 실제 이미지 삭제
-                    image.setCommunity(null); // 연관관계 제거
-                    imagesToRemove.add(image);
+                    deleteS3Image(image.getImageUrl());
+                    image.setCommunity(null);
+                    toRemove.add(image);
                 }
             }
-            community.getImages().removeAll(imagesToRemove);
+            community.getImages().removeAll(toRemove);
         }
 
         // 새 이미지 추가
         if (newImages != null && !newImages.isEmpty()) {
-            for (MultipartFile imageFile : newImages) {
-                String imageUrl = saveImageFile(imageFile);
-                CommunityImage image = CommunityImage.builder()
-                        .imageUrl(imageUrl)
-                        .community(community) // 연관관계 설정
-                        .build();
-                community.getImages().add(image);
+            for (MultipartFile file : newImages) {
+                String key = COMMUNITY_IMAGE_FOLDER + UUID.randomUUID() + getExtension(file.getOriginalFilename());
+                try {
+                    String s3Url = s3Service.uploadFile(key, file);
+                    CommunityImage image = CommunityImage.builder()
+                            .imageUrl(s3Url)
+                            .community(community)
+                            .build();
+                    community.getImages().add(image);
+                } catch (IOException e) {
+                    throw new RuntimeException("이미지 업로드 실패", e);
+                }
             }
         }
     }
 
-    @Transactional
-    public void increaseViewCount(Long communityId) {
-        Community community = communityRepository.findById(communityId)
-                .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
-
-        community.setViewCount(community.getViewCount() + 1);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<CommunityResponseDto> getAllPages(Pageable pageable) {
-        Page<Community> page = communityRepository.findByIsDeletedFalse(pageable);
-        return page.map(CommunityResponseDto::from);
-    }
-
-    // 한개의 게시물 가져오기
-    @Transactional(readOnly = true)
-    public CommunityResponseDto getPosts(Long id) {
-        Community community = communityRepository.findWithAllById(id)
-                .orElseThrow(()-> new IllegalArgumentException("게시물 존재하지 않습니다."));
-
-        communityRepository.save(community);
-
-        return CommunityResponseDto.builder()
-                .title(community.getTitle())
-                .content(community.getContent())
-                .nickname(community.getMember().getNickname())
-                .email(community.getMember().getEmail())
-                .createdAt(community.getCreatedAt())
-                .viewCount(community.getViewCount())
-                .likeCount(community.getLikes().size()) // 좋아요 수
-                .commentCount(community.getComments().size()) // 댓글 수
-                .imageUrls(community.getImages().stream()
-                        .map(image -> ImageDto.builder()
-                                .id(image.getId())
-                                .url(image.getImageUrl())
-                                .build()).collect(Collectors.toList()))
-                .profileImage(community.getMember().getProfileImage())
-                .build();
-    }
     // 삭제 하기
     @Transactional
     public void delete (Long id, String email){
         Community community = communityRepository.findById(id)
                 .orElseThrow(()-> new IllegalArgumentException("게시글이 존재하지 않습니다. "));
-
         if (!community.getMember().getEmail().equals(email)){
             throw new SecurityException("작성자만 삭제 가능합니다.");
         }
+        for (CommunityImage image : community.getImages()) {
+            deleteS3Image(image.getImageUrl());
+        }
+
         communityRepository.delete(community);
     }
-
-    // 이미지 저장
-    private String saveImageFile(MultipartFile imageFile) {
-        String originalFilename = imageFile.getOriginalFilename();
-        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-        String newFileName = UUID.randomUUID() + extension;
-
-        String absoluteUploadPath = getAbsoluteUploadDir(); // 절대경로 얻기
-        File file = new File(absoluteUploadPath, newFileName);
-
-        try{
-            imageFile.transferTo(file);
-        }catch (IOException e){
-            throw new RuntimeException("이미지 저장 실패", e);
-        }
-        return "/uploads/" + newFileName;
+    @Transactional
+    public void increaseViewCount(Long communityId) {
+        Community community = communityRepository.findById(communityId)
+                .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
+        community.setViewCount(community.getViewCount() + 1);
+    }
+    @Transactional(readOnly = true)
+    public Page<CommunityResponseDto> getAllPages(Pageable pageable) {
+        Page<Community> page = communityRepository.findByIsDeletedFalse(pageable);
+        return page.map(CommunityResponseDto::from);
+    }
+    @Transactional(readOnly = true)
+    public CommunityResponseDto getPosts(Long id) {
+        Community community = communityRepository.findWithAllById(id)
+                .orElseThrow(()-> new IllegalArgumentException("게시물 존재하지 않습니다."));
+        communityRepository.save(community);
+        return CommunityResponseDto.from(community);
     }
 
-
-    // uploads 폴더를 절대경로로 잡아주는 메서드
-    private String getAbsoluteUploadDir() {
-        File uploadFolder = new File(uploadDir);
-        if (!uploadFolder.isAbsolute()) {
-            uploadFolder = new File(System.getProperty("user.dir"), uploadDir);
-        }
-        if (!uploadFolder.exists()) {
-            uploadFolder.mkdirs();
-        }
-        return uploadFolder.getAbsolutePath();
+    // 확장자 추출
+    private String getExtension(String filename) {
+        return filename.substring(filename.lastIndexOf("."));
     }
 
-    // 이미지 파일 삭제
-    private void deleteImageFile(String imageUrl) {
-        if (imageUrl == null || imageUrl.isBlank()) return;
-
+    // S3 이미지 삭제
+    private void deleteS3Image(String imageUrl) {
         try {
-            // /uploads/abc.jpg → abc.jpg (상대경로 추출)
-            String relativePath = imageUrl.replaceFirst("^/uploads/", "");
-
-            // uploads/abc.jpg → 절대 경로
-            Path path = Paths.get(getAbsoluteUploadDir(), relativePath);
-
-            // 실제 파일 삭제
-            Files.deleteIfExists(path);
-            log.info("✅ 이미지 파일 삭제 성공: {}", path.toAbsolutePath());
-        } catch (IOException e) {
-            log.error("❌ 이미지 파일 삭제 실패: {}", e.getMessage());
+            String key = imageUrl.substring(imageUrl.indexOf("community/"));
+            s3Service.deleteFile(key);
+            log.info("✅ S3 이미지 삭제 완료: {}", key);
+        } catch (Exception e) {
+            log.warn("❌ S3 이미지 삭제 실패: {}", imageUrl);
         }
     }
-
-
-
 }

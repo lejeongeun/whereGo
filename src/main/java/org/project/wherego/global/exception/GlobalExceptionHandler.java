@@ -1,4 +1,4 @@
-package org.project.wherego.exception;
+package org.project.wherego.global.exception;
 
 
 import org.springframework.http.HttpStatus;
